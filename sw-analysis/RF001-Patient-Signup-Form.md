@@ -44,9 +44,8 @@ Permitir a los usuarios registrarse como pacientes en la plataforma VitalGo, gar
 1. Usuario hace clic en "Crear cuenta"
 2. Sistema valida todos los datos
 3. Sistema crea usuario en base de datos
-4. Sistema envía email de verificación
-5. Sistema realiza auto-login
-6. Sistema redirige a completar datos médicos
+4. Sistema realiza auto-login
+5. Sistema redirige a completar datos médicos
 
 ## 6. Campos del Formulario
 
@@ -159,7 +158,6 @@ Permitir a los usuarios registrarse como pacientes en la plataforma VitalGo, gar
 
 ### 9.1 Validaciones de Seguridad
 - Rate limiting: máximo 3 intentos por IP por hora
-- Google reCAPTCHA v3 invisible
 - Validación CSRF token
 - Sanitización de inputs
 - Validación tanto frontend como backend
@@ -171,7 +169,9 @@ Permitir a los usuarios registrarse como pacientes en la plataforma VitalGo, gar
 - Log de intentos de registro por IP
 
 ### 9.3 Verificación Post-Registro
-- Email de confirmación de creación de cuenta automático
+- **is_verified = TRUE por defecto**: Usuarios pueden acceder inmediatamente
+- **Verificación futura**: Cuando se implemente email, se usará API para cambiar estado
+- **Seguridad**: Campo is_verified permite bloquear usuarios si es necesario
 
 ## 10. Modelo de Datos
 
@@ -201,6 +201,10 @@ CREATE TABLE patients (
     document_number VARCHAR(20) UNIQUE NOT NULL,
     phone_international VARCHAR(20) NOT NULL,
     birth_date DATE NOT NULL,
+    accept_terms BOOLEAN NOT NULL,
+    accept_terms_date TIMESTAMP NOT NULL,
+    accept_policy BOOLEAN NOT NULL,
+    accept_policy_date TIMESTAMP NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -215,6 +219,60 @@ CREATE TABLE document_types (
     description TEXT,
     is_active BOOLEAN DEFAULT TRUE
 );
+```
+
+### 10.4 Documentación de Campos de Base de Datos
+
+#### Tabla Users
+| Campo | Tipo | Descripción | Restricciones |
+|-------|------|-------------|---------------|
+| **id** | UUID | Identificador único del usuario | PRIMARY KEY, auto-generado |
+| **email** | VARCHAR(255) | Correo electrónico del usuario | UNIQUE, NOT NULL, formato RFC 5322 |
+| **password_hash** | VARCHAR(255) | Contraseña hasheada con bcrypt | NOT NULL, salt rounds = 12 |
+| **user_type** | VARCHAR(20) | Tipo de usuario en el sistema | DEFAULT 'patient', valores: 'patient', 'doctor', 'admin' |
+| **is_verified** | BOOLEAN | Estado de verificación del usuario | DEFAULT TRUE, indica si puede acceder al sistema |
+| **created_at** | TIMESTAMP | Fecha y hora de creación del registro | DEFAULT CURRENT_TIMESTAMP |
+| **updated_at** | TIMESTAMP | Fecha y hora de última actualización | DEFAULT CURRENT_TIMESTAMP, actualizado automáticamente |
+| **last_login** | TIMESTAMP | Fecha y hora del último inicio de sesión | NULL permitido, actualizado en cada login exitoso |
+| **failed_login_attempts** | INTEGER | Contador de intentos fallidos de login | DEFAULT 0, se resetea en login exitoso |
+| **locked_until** | TIMESTAMP | Fecha hasta cuando la cuenta está bloqueada | NULL permitido, por seguridad tras múltiples intentos fallidos |
+
+#### Tabla Patients
+| Campo | Tipo | Descripción | Restricciones |
+|-------|------|-------------|---------------|
+| **id** | UUID | Identificador único del paciente | PRIMARY KEY, auto-generado, usado en QR codes |
+| **user_id** | UUID | Referencia al usuario asociado | FOREIGN KEY → users.id, CASCADE DELETE |
+| **full_name** | VARCHAR(100) | Nombre completo del paciente | NOT NULL, mínimo 2 palabras |
+| **document_type_id** | INTEGER | Tipo de documento de identidad | FOREIGN KEY → document_types.id |
+| **document_number** | VARCHAR(20) | Número de documento de identidad | UNIQUE, NOT NULL, formato según tipo |
+| **phone_international** | VARCHAR(20) | Teléfono en formato internacional | NOT NULL, formato +573123456789 |
+| **birth_date** | DATE | Fecha de nacimiento del paciente | NOT NULL, debe ser mayor de 18 años |
+| **accept_terms** | BOOLEAN | Aceptación de términos y condiciones | NOT NULL, debe ser TRUE para registro |
+| **accept_terms_date** | TIMESTAMP | Fecha de aceptación de términos | NOT NULL, timestamp del momento de aceptación |
+| **accept_policy** | BOOLEAN | Aceptación de política de privacidad | NOT NULL, debe ser TRUE para registro |
+| **accept_policy_date** | TIMESTAMP | Fecha de aceptación de política | NOT NULL, timestamp del momento de aceptación |
+| **created_at** | TIMESTAMP | Fecha y hora de creación del registro | DEFAULT CURRENT_TIMESTAMP |
+| **updated_at** | TIMESTAMP | Fecha y hora de última actualización | DEFAULT CURRENT_TIMESTAMP, actualizado automáticamente |
+
+#### Tabla Document Types
+| Campo | Tipo | Descripción | Restricciones |
+|-------|------|-------------|---------------|
+| **id** | SERIAL | Identificador único del tipo de documento | PRIMARY KEY, auto-incremental |
+| **code** | VARCHAR(5) | Código corto del tipo de documento | UNIQUE, NOT NULL, ej: 'CC', 'CE', 'PA' |
+| **name** | VARCHAR(50) | Nombre completo del tipo de documento | NOT NULL, ej: 'Cédula de Ciudadanía' |
+| **description** | TEXT | Descripción detallada del tipo de documento | Opcional, información adicional |
+| **is_active** | BOOLEAN | Estado activo del tipo de documento | DEFAULT TRUE, para desactivar tipos obsoletos |
+
+#### Datos Iniciales Document Types
+```sql
+INSERT INTO document_types (code, name, description, is_active) VALUES
+('CC', 'Cédula de Ciudadanía', 'Documento de identidad para ciudadanos colombianos mayores de edad', TRUE),
+('TI', 'Tarjeta de Identidad', 'Documento para menores de edad (registro solo por tutor legal)', TRUE),
+('CE', 'Cédula de Extranjería', 'Documento para extranjeros residentes en Colombia', TRUE),
+('PA', 'Pasaporte', 'Documento de identidad internacional', TRUE),
+('RC', 'Registro Civil', 'Documento para menores (registro solo por tutor legal)', TRUE),
+('AS', 'Adulto sin Identificar', 'Para casos especiales de adultos sin documentación', TRUE),
+('MS', 'Menor sin Identificar', 'Para casos especiales de menores (registro solo por tutor legal)', TRUE);
 ```
 
 ## 11. API Endpoints
@@ -233,9 +291,8 @@ CREATE TABLE document_types (
     "email": "string",
     "password": "string",
     "confirmPassword": "string",
-    "acceptTerms": true,
-    "acceptPrivacy": true,
-    "captchaToken": "string"
+    "acceptTerms": "boolean",
+    "acceptPrivacy": "boolean"
 }
 ```
 
@@ -336,7 +393,6 @@ backend/slices/signup/
 - ✅ Validación de documento único
 - ✅ Validación de política de contraseñas
 - ✅ Activación de botón solo con checkboxes marcados
-- ✅ Envío de email de verificación
 - ✅ Auto-login después del registro
 
 ### 14.2 Pruebas de Seguridad
@@ -358,12 +414,11 @@ backend/slices/signup/
 2. **CA002:** Todos los campos obligatorios deben validarse en tiempo real
 3. **CA003:** Botón "Crear cuenta" se habilita solo con checkboxes marcados
 4. **CA004:** Sistema crea usuario y paciente exitosamente con datos válidos
-5. **CA005:** Email de verificación se envía automáticamente
-6. **CA006:** Usuario es redirigido a completar perfil médico después del registro
-7. **CA007:** NavBar permite regresar a página de inicio
-8. **CA008:** Enlaces legales funcionan correctamente
-9. **CA009:** Formulario es responsive en móviles y desktop
-10. **CA010:** Rate limiting previene spam de registros
+5. **CA005:** Usuario es redirigido a completar perfil médico después del registro
+6. **CA006:** NavBar permite regresar a página de inicio
+7. **CA007:** Enlaces legales funcionan correctamente
+8. **CA008:** Formulario es responsive en móviles y desktop
+9. **CA009:** Rate limiting previene spam de registros
 
 ## 16. Dependencias Técnicas
 
@@ -389,6 +444,8 @@ backend/slices/signup/
 - Implementar logging detallado para auditoría
 - Considerar internacionalización futura (i18n)
 - Optimizar rendimiento para carga rápida en móviles
+- **CRÍTICO**: Los campos `acceptTerms` y `acceptPrivacy` deben capturarse del frontend y almacenarse con timestamp para cumplimiento legal
+- **NOTA**: Implementación básica sin CAPTCHA ni envío de emails por ahora
 
 ---
 
