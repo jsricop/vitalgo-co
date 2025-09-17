@@ -37,9 +37,8 @@ from shared.database import Base
 # Import test model for initial migration testing
 from shared.database.models_test import TestModel
 
-# TODO: Import all actual models for autogenerate when ready
-# from slices.auth.domain.models import user_model
-# from slices.signup.domain.models import patient_model
+# Import signup models for autogenerate
+from slices.signup.domain.models import User, Patient, DocumentType
 
 target_metadata = Base.metadata
 

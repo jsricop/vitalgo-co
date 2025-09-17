@@ -139,9 +139,36 @@ theme: {
 
 ## Testing Standards
 
+### Testing Architecture (Hybrid Approach)
+Follow slice-first principle but centralize shared testing infrastructure:
+
+```
+frontend/
+├── src/slices/
+│   └── [slice]/
+│       └── tests/
+│           ├── e2e/          # Slice-specific E2E tests
+│           └── unit/         # Slice-specific unit tests
+├── tests/
+│   ├── e2e/
+│   │   ├── flows/           # Cross-slice user flows
+│   │   └── integration/     # Integration tests
+│   ├── fixtures/            # Test data
+│   ├── helpers/             # Test utilities
+│   └── pages/               # Page Object Models
+└── playwright.config.ts
+```
+
+### Testing Rules & Location
+- **Slice-specific tests**: `src/slices/[slice]/tests/`
+- **Cross-slice flows**: `tests/e2e/flows/`
+- **Shared utilities**: `tests/helpers/`
+- **Page Object Models**: `tests/pages/` (centralized for reuse)
+- **Test data**: `tests/fixtures/` (reusable across tests)
+
 ### Frontend Testing Strategy
 - **Unit/Integration**: Jest + Testing Library for components
-- **E2E**: Playwright for critical user flows only (login, checkout, core features)
+- **E2E**: Playwright for critical user flows only (signup, login, core features)
 - **Coverage**: 80% minimum
 
 ### Playwright Selectors (MANDATORY)

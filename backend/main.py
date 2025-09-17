@@ -6,6 +6,9 @@ Main FastAPI application entry point
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+# Import routers
+from slices.signup.infrastructure.api import patient_signup_router, validation_router
+
 # Create FastAPI app instance
 app = FastAPI(
     title="VitalGo API",
@@ -21,6 +24,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Register routers
+app.include_router(patient_signup_router)
+app.include_router(validation_router)
 
 
 @app.get("/")

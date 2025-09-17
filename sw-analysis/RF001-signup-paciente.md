@@ -1,4 +1,4 @@
-# RF001 - Patient Signup Form
+# RF001 - Signup Paciente (/signup/paciente)
 
 **Fecha:** 2025-09-17
 **Versión:** 1.0
@@ -35,7 +35,7 @@ Permitir a los usuarios registrarse como pacientes en la plataforma VitalGo, gar
 
 ### 5.2 Completar formulario
 1. Usuario completa todos los campos obligatorios
-2. Sistema valida en tiempo real cada campo
+2. Sistema valida cada campo al salir del campo (onBlur)
 3. Usuario acepta términos y condiciones
 4. Usuario acepta política de privacidad
 5. Sistema habilita botón "Crear cuenta"
@@ -100,7 +100,7 @@ Permitir a los usuarios registrarse como pacientes en la plataforma VitalGo, gar
   - CE: 6-9 dígitos
   - PA: 6-12 caracteres alfanuméricos
 - Único en todo el sistema
-- Validación en tiempo real
+- **Validación onBlur**: Verificación de unicidad al salir del campo
 
 ### 7.4 Teléfono
 - Selector de país con bandera
@@ -121,7 +121,7 @@ Permitir a los usuarios registrarse como pacientes en la plataforma VitalGo, gar
 - Validación con regex RFC 5322
 - Único en todo el sistema
 - Conversión automática a minúsculas
-- Verificación de dominio válido
+- **Validación onBlur**: Verificación de unicidad y dominio al salir del campo
 
 ### 7.7 Política de Contraseñas
 **Requisitos obligatorios:**
@@ -146,7 +146,9 @@ Permitir a los usuarios registrarse como pacientes en la plataforma VitalGo, gar
 - Diseño centrado y responsive
 - Campos organizados en secciones lógicas
 - Indicadores visuales de campos obligatorios (*)
-- Mensajes de error en tiempo real
+- **Mensajes de error onBlur**: Validación al salir de cada campo
+- **Estados visuales**: neutral → validando → válido/error
+- Loading spinner durante validaciones asíncronas (documento, email)
 - Confirmación visual de validación exitosa
 
 ### 8.3 Botones y Enlaces
@@ -164,7 +166,8 @@ Permitir a los usuarios registrarse como pacientes en la plataforma VitalGo, gar
 
 ### 9.2 Almacenamiento Seguro
 - Contraseñas hasheadas con bcrypt (salt rounds = 12)
-- UUID para IDs de pacientes (para QR codes)
+- **UUID separado para QR codes**: `qr_code` field, no expone primary key
+- **Renovación de QR**: Campo `qr_code` actualizable sin romper relaciones
 - Datos personales encriptados en base de datos
 - Log de intentos de registro por IP
 
@@ -196,6 +199,7 @@ CREATE TABLE users (
 CREATE TABLE patients (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    qr_code UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
     full_name VARCHAR(100) NOT NULL,
     document_type_id INTEGER REFERENCES document_types(id),
     document_number VARCHAR(20) UNIQUE NOT NULL,
@@ -240,7 +244,8 @@ CREATE TABLE document_types (
 #### Tabla Patients
 | Campo | Tipo | Descripción | Restricciones |
 |-------|------|-------------|---------------|
-| **id** | UUID | Identificador único del paciente | PRIMARY KEY, auto-generado, usado en QR codes |
+| **id** | UUID | Identificador único del paciente | PRIMARY KEY, auto-generado, uso interno |
+| **qr_code** | UUID | Código QR del paciente | UNIQUE, auto-generado, expuesto en QR codes |
 | **user_id** | UUID | Referencia al usuario asociado | FOREIGN KEY → users.id, CASCADE DELETE |
 | **full_name** | VARCHAR(100) | Nombre completo del paciente | NOT NULL, mínimo 2 palabras |
 | **document_type_id** | INTEGER | Tipo de documento de identidad | FOREIGN KEY → document_types.id |
@@ -389,11 +394,12 @@ backend/slices/signup/
 
 ### 14.1 Pruebas Funcionales
 - ✅ Registro exitoso con datos válidos
-- ✅ Validación de email único
-- ✅ Validación de documento único
-- ✅ Validación de política de contraseñas
+- ✅ Validación de email único (onBlur)
+- ✅ Validación de documento único (onBlur)
+- ✅ Validación de política de contraseñas (onBlur)
 - ✅ Activación de botón solo con checkboxes marcados
 - ✅ Auto-login después del registro
+- ✅ Loading states durante validaciones asíncronas
 
 ### 14.2 Pruebas de Seguridad
 - ✅ Rate limiting por IP
@@ -411,7 +417,7 @@ backend/slices/signup/
 ## 15. Criterios de Aceptación
 
 1. **CA001:** Usuario puede acceder al formulario desde botón "Soy Paciente"
-2. **CA002:** Todos los campos obligatorios deben validarse en tiempo real
+2. **CA002:** Todos los campos obligatorios deben validarse al salir del campo (onBlur)
 3. **CA003:** Botón "Crear cuenta" se habilita solo con checkboxes marcados
 4. **CA004:** Sistema crea usuario y paciente exitosamente con datos válidos
 5. **CA005:** Usuario es redirigido a completar perfil médico después del registro
@@ -426,7 +432,7 @@ backend/slices/signup/
 - React Hook Form (manejo de formularios)
 - react-phone-number-input (input de teléfono)
 - date-fns (manejo de fechas)
-- Google reCAPTCHA v3
+- ~~Google reCAPTCHA v3~~ (eliminado temporalmente)
 - Radix UI (componentes base)
 
 ### 16.2 Backend
@@ -436,16 +442,37 @@ backend/slices/signup/
 - python-jose (JWT tokens)
 - pydantic (validaciones)
 
-## 17. Notas de Implementación
+## 17. Estrategia de Validación
+
+### 17.1 Validaciones onBlur (Rendimiento)
+- **Documento**: Verificación de unicidad solo al salir del campo
+- **Email**: Validación de formato + unicidad + dominio al salir del campo
+- **Teléfono**: Validación de formato según país al salir del campo
+- **Contraseña**: Validación de política al salir del campo
+- **Fecha nacimiento**: Cálculo de edad al salir del campo
+
+### 17.2 Estados Visuales
+```
+Estado neutral → [Usuario sale del campo] → Validando (spinner) → Válido/Error
+```
+
+### 17.3 Validaciones Inmediatas (onChange)
+- **Solo formato básico**: longitud máxima, caracteres permitidos
+- **Sin llamadas API**: Para evitar sobrecarga del sistema
+- **Feedback visual**: Indicadores de progreso, no errores
+
+## 18. Notas de Implementación
 
 - Implementar validaciones tanto en frontend como backend
-- Usar UUIDs para IDs de pacientes (requerido para QR codes)
+- Usar UUID separado `qr_code` para QR codes (seguridad: no exponer PK)
+- Campo `qr_code` renovable sin afectar relaciones de BD
 - Configurar rate limiting a nivel de nginx/servidor web
 - Implementar logging detallado para auditoría
 - Considerar internacionalización futura (i18n)
 - Optimizar rendimiento para carga rápida en móviles
 - **CRÍTICO**: Los campos `acceptTerms` y `acceptPrivacy` deben capturarse del frontend y almacenarse con timestamp para cumplimiento legal
 - **NOTA**: Implementación básica sin CAPTCHA ni envío de emails por ahora
+- **RENDIMIENTO**: Validaciones pesadas (API calls) solo en onBlur, no onChange
 
 ---
 
