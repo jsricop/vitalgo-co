@@ -1,3 +1,4 @@
+'use client';
 /**
  * Privacy Policy Page
  * URL: /politica-de-privacidad

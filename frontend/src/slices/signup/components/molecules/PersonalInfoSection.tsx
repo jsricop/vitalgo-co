@@ -5,25 +5,31 @@ import React from 'react';
 import { TextInput } from '../atoms/TextInput';
 import { DocumentTypeSelect } from '../atoms/DocumentTypeSelect';
 import { DateInput } from '../atoms/DateInput';
+import { PhoneInputGroup } from './PhoneInputGroup';
 import { DocumentType, FieldValidationState } from '../../types';
+import { Country } from '../../data/countries';
 
 interface PersonalInfoSectionProps {
   fullName: string;
   documentType: string;
   documentNumber: string;
   birthDate: string;
-  phoneInternational: string;
+  // New phone fields
+  countryCode: string;
+  phoneNumber: string;
   onInputChange: (field: string, value: string) => void;
   onFieldBlur: (field: string) => void;
+  onCountryChange: (country: Country) => void;
   documentTypes: DocumentType[];
   validationStates: {
     fullName?: FieldValidationState;
     documentNumber?: FieldValidationState;
-    phoneInternational?: FieldValidationState;
+    phone?: FieldValidationState;
   };
   errors: {
     documentType?: string;
     birthDate?: string;
+    phone?: string;
   };
 }
 
@@ -32,9 +38,11 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   documentType,
   documentNumber,
   birthDate,
-  phoneInternational,
+  countryCode,
+  phoneNumber,
   onInputChange,
   onFieldBlur,
+  onCountryChange,
   documentTypes,
   validationStates,
   errors
@@ -91,19 +99,18 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           data-testid="documentNumber-input"
         />
 
-        <TextInput
-          id="phoneInternational"
-          name="phoneInternational"
-          label="Teléfono"
-          placeholder="Ej: +57 300 123 4567"
-          value={phoneInternational}
-          onChange={(e) => onInputChange('phoneInternational', e.target.value)}
-          onBlur={() => onFieldBlur('phoneInternational')}
-          validation={validationStates.phoneInternational}
-          required
-          maxLength={20}
-          data-testid="phone-input"
-        />
+        <div className="md:col-span-2">
+          <PhoneInputGroup
+            countryCode={countryCode}
+            phoneNumber={phoneNumber}
+            onCountryChange={onCountryChange}
+            onPhoneChange={(value) => onInputChange('phoneNumber', value)}
+            onPhoneBlur={() => onFieldBlur('phone')}
+            validation={validationStates.phone}
+            error={errors.phone}
+            data-testid="phone-input-group"
+          />
+        </div>
 
         <DateInput
           id="birthDate"

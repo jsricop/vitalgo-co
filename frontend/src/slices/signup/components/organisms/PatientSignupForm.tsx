@@ -9,28 +9,38 @@ import { CheckboxWithLink } from '../atoms/CheckboxWithLink';
 import { SubmitButton } from '../atoms/SubmitButton';
 import { SignupApiService } from '../../services/signupApi';
 import { DocumentType, PatientRegistrationForm, FieldValidationState, RegistrationResponse } from '../../types';
+import { Country, getDefaultCountry } from '../../data/countries';
 
 interface PatientSignupFormProps {
   onSuccess: (response: RegistrationResponse) => void;
   onError: (error: string) => void;
+  allowedDocumentTypes?: string[]; // Filter document types - if undefined, show all
 }
 
 export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
   onSuccess,
-  onError
+  onError,
+  allowedDocumentTypes
 }) => {
   // Form state
   const [formData, setFormData] = useState<PatientRegistrationForm>({
     fullName: '',
     documentType: '',
     documentNumber: '',
-    phoneInternational: '',
+    phoneInternational: '', // Computed from country + phone
     birthDate: '',
     email: '',
     password: '',
     confirmPassword: '',
     acceptTerms: false,
     acceptPrivacy: false
+  });
+
+  // New phone fields state
+  const [phoneState, setPhoneState] = useState({
+    countryCode: getDefaultCountry().code, // Default to Colombia
+    dialCode: getDefaultCountry().dialCode,
+    phoneNumber: ''
   });
 
   // Document types
@@ -52,23 +62,64 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
     const loadDocumentTypes = async () => {
       try {
         const types = await SignupApiService.getDocumentTypes();
-        setDocumentTypes(types);
+
+        // Filter document types if allowedDocumentTypes is provided
+        const filteredTypes = allowedDocumentTypes
+          ? types.filter(type => allowedDocumentTypes.includes(type.code))
+          : types;
+
+        setDocumentTypes(filteredTypes);
       } catch (error) {
         onError('Error cargando tipos de documento');
       }
     };
 
     loadDocumentTypes();
-  }, [onError]);
+  }, [onError, allowedDocumentTypes]);
 
   // Handle input changes
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    if (field === 'phoneNumber') {
+      setPhoneState(prev => {
+        const newState = { ...prev, phoneNumber: value as string };
+        // Update computed phoneInternational field
+        const cleanNumber = (value as string).replace(/\D/g, '');
+        if (cleanNumber) {
+          setFormData(prevForm => ({
+            ...prevForm,
+            phoneInternational: `${newState.dialCode} ${cleanNumber}`
+          }));
+        }
+        return newState;
+      });
+    } else {
+      setFormData(prev => ({ ...prev, [field]: value }));
+    }
 
     // Clear field error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
+  };
+
+  // Handle country change
+  const handleCountryChange = (country: Country) => {
+    setPhoneState(prev => {
+      const newState = {
+        ...prev,
+        countryCode: country.code,
+        dialCode: country.dialCode
+      };
+      // Update computed phoneInternational field
+      const cleanNumber = prev.phoneNumber.replace(/\D/g, '');
+      if (cleanNumber) {
+        setFormData(prevForm => ({
+          ...prevForm,
+          phoneInternational: `${country.dialCode} ${cleanNumber}`
+        }));
+      }
+      return newState;
+    });
   };
 
   // Handle field blur validation
@@ -104,8 +155,8 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
         case 'confirmPassword':
           validateConfirmPassword(value as string);
           break;
-        case 'phoneInternational':
-          validatePhone(value as string);
+        case 'phone':
+          validatePhone(phoneState.phoneNumber, phoneState.countryCode);
           break;
         case 'birthDate':
           validateBirthDate(value as string);
@@ -224,16 +275,44 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
     }));
   };
 
-  const validatePhone = (phone: string) => {
-    // Basic international phone validation
-    const isValid = /^\+?[\d\s\-()]{10,20}$/.test(phone);
+  const validatePhone = (phoneNumber: string, countryCode: string) => {
+    const cleanNumber = phoneNumber.replace(/\D/g, '');
+
+    // Validation based on country
+    let isValid = false;
+    let errorMessage = '';
+
+    if (!cleanNumber) {
+      errorMessage = 'Número de teléfono requerido';
+    } else {
+      // Country-specific validation
+      switch (countryCode) {
+        case 'CO': // Colombia
+          isValid = /^3\d{9}$/.test(cleanNumber);
+          errorMessage = isValid ? '' : 'Número móvil colombiano debe empezar con 3 y tener 10 dígitos';
+          break;
+        case 'US':
+        case 'CA': // North America
+          isValid = /^\d{10}$/.test(cleanNumber);
+          errorMessage = isValid ? '' : 'Número debe tener 10 dígitos';
+          break;
+        case 'MX': // México
+          isValid = /^\d{10}$/.test(cleanNumber);
+          errorMessage = isValid ? '' : 'Número mexicano debe tener 10 dígitos';
+          break;
+        default:
+          // Generic validation for other countries
+          isValid = cleanNumber.length >= 7 && cleanNumber.length <= 15;
+          errorMessage = isValid ? '' : 'Número debe tener entre 7 y 15 dígitos';
+      }
+    }
 
     setValidationStates(prev => ({
       ...prev,
-      phoneInternational: {
+      phone: {
         isValidating: false,
         isValid,
-        error: isValid ? null : 'Formato de teléfono inválido (ej: +57 300 123 4567)'
+        error: isValid ? null : errorMessage
       }
     }));
   };
@@ -260,7 +339,7 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
       formData.fullName,
       formData.documentType,
       formData.documentNumber,
-      formData.phoneInternational,
+      phoneState.phoneNumber,
       formData.birthDate,
       formData.email,
       formData.password,
@@ -311,18 +390,21 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
         documentType={formData.documentType}
         documentNumber={formData.documentNumber}
         birthDate={formData.birthDate}
-        phoneInternational={formData.phoneInternational}
+        countryCode={phoneState.countryCode}
+        phoneNumber={phoneState.phoneNumber}
         onInputChange={handleInputChange}
         onFieldBlur={handleFieldBlur}
+        onCountryChange={handleCountryChange}
         documentTypes={documentTypes}
         validationStates={{
           fullName: validationStates.fullName,
           documentNumber: validationStates.documentNumber,
-          phoneInternational: validationStates.phoneInternational
+          phone: validationStates.phone
         }}
         errors={{
           documentType: errors.documentType,
-          birthDate: errors.birthDate
+          birthDate: errors.birthDate,
+          phone: errors.phone
         }}
       />
 

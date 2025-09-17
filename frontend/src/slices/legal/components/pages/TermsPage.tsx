@@ -1,3 +1,4 @@
+'use client';
 /**
  * Terms and Conditions Page
  * URL: /terminos-y-condiciones

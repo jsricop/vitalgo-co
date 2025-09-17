@@ -1,13 +1,13 @@
 'use client';
 /**
- * Patient Signup Page
- * URL: /signup/paciente
+ * Internal Patient Signup Page (Example for staff/admin use)
+ * Shows all document types - demonstrates reusability
  */
 import React, { useState } from 'react';
 import { PatientSignupForm } from '../organisms/PatientSignupForm';
 import { RegistrationResponse } from '../../types';
 
-export default function PatientSignupPage() {
+export default function InternalPatientSignupPage() {
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -15,9 +15,9 @@ export default function PatientSignupPage() {
     setErrorMessage('');
     setSuccessMessage(response.message);
 
-    // Auto-redirect after successful registration
+    // Different redirect for internal users
     setTimeout(() => {
-      window.location.href = response.redirect_url || '/completar-perfil-medico';
+      window.location.href = response.redirect_url || '/admin/patients';
     }, 2000);
   };
 
@@ -32,7 +32,7 @@ export default function PatientSignupPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header/Navbar */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-white shadow-sm border-b border-blue-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
@@ -41,13 +41,16 @@ export default function PatientSignupPage() {
                 alt="VitalGo"
                 className="h-8"
               />
+              <span className="ml-4 text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">
+                Modo Interno
+              </span>
             </div>
             <a
-              href="/"
+              href="/admin"
               className="text-gray-600 hover:text-gray-900 font-medium"
-              data-testid="back-to-home"
+              data-testid="back-to-admin"
             >
-              Volver al inicio
+              Volver al panel de administración
             </a>
           </div>
         </div>
@@ -60,11 +63,17 @@ export default function PatientSignupPage() {
             {/* Page Header */}
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                Registro de Paciente
+                Registro Interno de Paciente
               </h1>
               <p className="text-gray-600">
-                Crea tu cuenta para acceder a tus expedientes médicos digitales
+                Registro para staff médico - Todos los tipos de documento disponibles
               </p>
+              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                <p className="text-blue-800 text-sm">
+                  <strong>Modo interno:</strong> Este formulario incluye todos los tipos de documento colombianos
+                  para uso por parte del personal médico autorizado.
+                </p>
+              </div>
             </div>
 
             {/* Success Message */}
@@ -77,7 +86,7 @@ export default function PatientSignupPage() {
                   <span className="text-green-800 font-medium">{successMessage}</span>
                 </div>
                 <p className="text-green-700 text-sm mt-1">
-                  Redirigiendo en unos segundos...
+                  Redirigiendo al panel de administración...
                 </p>
               </div>
             )}
@@ -94,12 +103,12 @@ export default function PatientSignupPage() {
               </div>
             )}
 
-            {/* Registration Form */}
+            {/* Registration Form - NO FILTER = ALL DOCUMENT TYPES */}
             {!successMessage && (
               <PatientSignupForm
                 onSuccess={handleSuccess}
                 onError={handleError}
-                allowedDocumentTypes={['CC', 'CE', 'PA']}
+                // No allowedDocumentTypes prop = shows all document types
               />
             )}
           </div>
@@ -107,9 +116,9 @@ export default function PatientSignupPage() {
           {/* Additional Info */}
           <div className="mt-8 text-center">
             <p className="text-sm text-gray-600">
-              Al registrarte, podrás acceder de forma segura a tus expedientes médicos,
-              compartir información con profesionales de la salud autorizados y
-              gestionar tu historial médico digital.
+              Formulario para registro interno por personal médico autorizado.
+              Incluye todos los tipos de documento del sistema colombiano para
+              máxima flexibilidad en el registro de pacientes.
             </p>
           </div>
         </div>

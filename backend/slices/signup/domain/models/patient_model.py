@@ -21,6 +21,12 @@ class Patient(Base):
     full_name = Column(String(100), nullable=False)
     document_type_id = Column(Integer, ForeignKey("document_types.id"), nullable=False)
     document_number = Column(String(20), unique=True, nullable=False, index=True)
+    # Phone fields - new separated structure
+    country_code = Column(String(2), nullable=True)  # "CO", "US", etc.
+    dial_code = Column(String(5), nullable=True)     # "+57", "+1", etc.
+    phone_number = Column(String(15), nullable=True) # "3001234567"
+
+    # Legacy field - maintained for backward compatibility
     phone_international = Column(String(20), nullable=False)
     birth_date = Column(Date, nullable=False)
     accept_terms = Column(Boolean, nullable=False)
@@ -33,6 +39,35 @@ class Patient(Base):
     # Relationships
     user = relationship("User", backref="patient")
     document_type = relationship("DocumentType", backref="patients")
+
+    def set_phone_data(self, country_code: str, dial_code: str, phone_number: str):
+        """Set phone data using new separated fields and update legacy field"""
+        self.country_code = country_code
+        self.dial_code = dial_code
+        self.phone_number = phone_number
+        # Update legacy field for backward compatibility
+        self.phone_international = f"{dial_code} {phone_number}"
+
+    @property
+    def formatted_phone_international(self) -> str:
+        """Get international phone number from new fields if available, fallback to legacy"""
+        if self.dial_code and self.phone_number:
+            return f"{self.dial_code} {self.phone_number}"
+        return self.phone_international
+
+    @property
+    def clean_phone_number(self) -> str:
+        """Get only the numeric part of the phone number"""
+        if self.phone_number:
+            return ''.join(filter(str.isdigit, self.phone_number))
+        # Fallback to extracting from legacy field
+        if self.phone_international:
+            # Remove dial code and non-digits
+            parts = self.phone_international.split(' ', 1)
+            if len(parts) > 1:
+                return ''.join(filter(str.isdigit, parts[1]))
+            return ''.join(filter(str.isdigit, self.phone_international))
+        return ""
 
     def __repr__(self):
         return f"<Patient(full_name='{self.full_name}', document_number='{self.document_number}')>"
