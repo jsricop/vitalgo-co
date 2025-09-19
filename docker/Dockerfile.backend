@@ -1,0 +1,54 @@
+# Backend Dockerfile for VitalGo
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Poetry
+RUN pip install poetry
+
+# Configure Poetry
+ENV POETRY_NO_INTERACTION=1 \
+    POETRY_VENV_IN_PROJECT=1 \
+    POETRY_CACHE_DIR=/tmp/poetry_cache
+
+# Create non-root user first
+RUN useradd --create-home --shell /bin/bash app
+
+# Copy poetry files and set ownership
+COPY --chown=app:app backend/pyproject.toml backend/poetry.lock ./
+
+# Switch to app user and set proper directory ownership
+USER app
+WORKDIR /app
+
+# Install dependencies as app user
+RUN poetry install --only=main --no-root
+
+# Copy backend code
+COPY --chown=app:app backend/ ./
+
+# Copy initialization script and set permissions
+COPY --chown=app:app scripts/init-database.sh ./scripts/
+RUN chmod +x ./scripts/init-database.sh
+
+# Copy entrypoint script and set permissions
+COPY --chown=app:app docker/entrypoint.sh ./
+RUN chmod +x ./entrypoint.sh
+
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Run application with entrypoint
+CMD ["./entrypoint.sh"]

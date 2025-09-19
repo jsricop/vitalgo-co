@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  vitalgo-backend:
+    image: ${DOCKERHUB_USERNAME}/vitalgo-backend:latest
+    container_name: vitalgo-backend-prod
+    environment:
+      # Database Configuration
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@${RDS_ENDPOINT}:5432/${DB_NAME}
+
+      # Application Settings
+      ENVIRONMENT: production
+      DEBUG: false
+      SECRET_KEY: ${SECRET_KEY}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+
+      # CORS Settings
+      ALLOWED_ORIGINS: http://${EC2_PUBLIC_IP}:3000,https://${EC2_PUBLIC_IP}:3000
+
+      # Security
+      BCRYPT_ROUNDS: 12
+
+      # Logging
+      LOG_LEVEL: INFO
+
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s  # Give more time for DB migrations
+    depends_on:
+      - redis
+    networks:
+      - vitalgo-network
+
+  vitalgo-frontend:
+    image: ${DOCKERHUB_USERNAME}/vitalgo-frontend:latest
+    container_name: vitalgo-frontend-prod
+    environment:
+      # API Configuration
+      NEXT_PUBLIC_API_URL: http://${EC2_PUBLIC_IP}:8000
+      NEXT_PUBLIC_ENVIRONMENT: production
+
+      # Next.js Configuration
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: 1
+
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      - vitalgo-backend
+    networks:
+      - vitalgo-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: vitalgo-redis-prod
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_prod_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - vitalgo-network
+    command: redis-server --appendonly yes
+
+volumes:
+  redis_prod_data:
+    driver: local
+
+networks:
+  vitalgo-network:
+    driver: bridge

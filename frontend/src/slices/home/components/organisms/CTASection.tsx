@@ -5,7 +5,7 @@ import { Button } from '../atoms/Button'
 export function CTASection() {
   return (
     <section
-      className="py-16 lg:py-24 bg-gradient-to-r from-green-500 to-green-600"
+      className="py-16 lg:py-24 bg-gradient-to-r from-vitalgo-green to-vitalgo-green/90"
       data-testid="home-cta-section"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -28,7 +28,7 @@ export function CTASection() {
             <Link href="/signup/paciente">
               <Button
                 size="lg"
-                className="bg-white text-green-500 hover:bg-gray-100 px-8 py-4 text-lg"
+                className="bg-white text-vitalgo-green hover:bg-gray-100 px-8 py-4 text-lg"
                 data-testid="home-cta-patient-button"
               >
                 Registrarse como Paciente

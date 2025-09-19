@@ -5,20 +5,20 @@ import { Badge } from '../atoms/Badge'
 import { StatCard } from '../molecules/StatCard'
 
 const stats = [
-  { number: "10K+", label: "Pacientes Confían en Nosotros", icon: <ArrowRight className="h-5 w-5 text-green-500" /> },
-  { number: "500+", label: "Centros de Salud Conectados", icon: <Stethoscope className="h-5 w-5 text-green-500" /> },
-  { number: "70%", label: "Menos Tiempo de Espera", icon: <Globe className="h-5 w-5 text-green-500" /> },
-  { number: "24/7", label: "Siempre Disponible", icon: <ArrowRight className="h-5 w-5 text-green-500" /> }
+  { number: "10K+", label: "Pacientes Confían en Nosotros", icon: <ArrowRight className="h-5 w-5 text-vitalgo-green" /> },
+  { number: "500+", label: "Centros de Salud Conectados", icon: <Stethoscope className="h-5 w-5 text-vitalgo-green" /> },
+  { number: "70%", label: "Menos Tiempo de Espera", icon: <Globe className="h-5 w-5 text-vitalgo-green" /> },
+  { number: "24/7", label: "Siempre Disponible", icon: <ArrowRight className="h-5 w-5 text-vitalgo-green" /> }
 ]
 
 export function HeroSection() {
   return (
     <section
-      className="relative overflow-hidden bg-gradient-to-br from-white via-green-500/5 to-white py-16 lg:py-24"
+      className="relative overflow-hidden bg-gradient-to-br from-white via-vitalgo-green/5 to-white py-16 lg:py-24"
       data-testid="home-hero-section"
     >
       <div className="absolute inset-0">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-500/10 rounded-full blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-vitalgo-green/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl" />
       </div>
 
@@ -35,7 +35,7 @@ export function HeroSection() {
           </div>
 
           <Badge
-            className="mb-6 bg-green-500/10 text-green-500 hover:bg-green-500/20"
+            className="mb-6 bg-vitalgo-green/10 text-vitalgo-green hover:bg-vitalgo-green/20"
             data-testid="home-hero-badge"
           >
             <Globe className="w-3 h-3 mr-1" />
@@ -48,7 +48,7 @@ export function HeroSection() {
           >
             Tu salud.
             <br />
-            <span className="text-green-500 font-normal">Simplificada.</span>
+            <span className="text-vitalgo-green font-normal">Simplificada.</span>
           </h2>
 
           <p
@@ -57,14 +57,14 @@ export function HeroSection() {
           >
             Tu expediente médico digital completo y seguro. Acceso inmediato a tu historial clínico,
             exámenes, diagnósticos y tratamientos desde cualquier centro de salud autorizado.
-            Consultas más rápidas que te ahorran hasta <strong className="text-green-500">70%</strong> del tiempo de espera.
+            Consultas más rápidas que te ahorran hasta <strong className="text-vitalgo-green">70%</strong> del tiempo de espera.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
             <Link href="/signup/paciente">
               <Button
                 size="lg"
-                className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 text-lg"
+                className="bg-vitalgo-green hover:bg-vitalgo-green/90 text-white px-8 py-4 text-lg"
                 data-testid="home-hero-patient-button"
               >
                 Soy Paciente

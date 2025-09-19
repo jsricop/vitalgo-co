@@ -4,34 +4,34 @@ import { FeatureCard } from '../molecules/FeatureCard'
 
 const features = [
   {
-    icon: <FileText className="h-6 w-6 text-green-500" />,
+    icon: <FileText className="h-6 w-6 text-vitalgo-green" />,
     title: "Tu Historial Siempre Contigo",
     description: "Toda tu información médica organizada en un solo lugar. Consulta tus datos desde cualquier dispositivo cuando los necesites.",
     badge: "Popular"
   },
   {
-    icon: <QrCode className="h-6 w-6 text-green-500" />,
+    icon: <QrCode className="h-6 w-6 text-vitalgo-green" />,
     title: "QR para Emergencias",
     description: "Un código QR que puede salvarte la vida. Los paramédicos acceden al instante a tus alergias y condiciones médicas críticas.",
     badge: "Vital"
   },
   {
-    icon: <Clock className="h-6 w-6 text-green-500" />,
+    icon: <Clock className="h-6 w-6 text-vitalgo-green" />,
     title: "Consultas Más Rápidas",
     description: "El médico ya tiene tu historial antes de verte. Consultas más eficientes que te ahorran hasta 70% del tiempo de espera."
   },
   {
-    icon: <Shield className="h-6 w-6 text-green-500" />,
+    icon: <Shield className="h-6 w-6 text-vitalgo-green" />,
     title: "Máxima Seguridad",
     description: "Tus datos médicos protegidos con los más altos estándares de seguridad. Solo tú decides quién puede verlos."
   },
   {
-    icon: <Stethoscope className="h-6 w-6 text-green-500" />,
+    icon: <Stethoscope className="h-6 w-6 text-vitalgo-green" />,
     title: "Ideal para Profesionales",
     description: "Si eres médico o paramédico, accede rápidamente a la información de tus pacientes para brindar mejor atención."
   },
   {
-    icon: <Smartphone className="h-6 w-6 text-green-500" />,
+    icon: <Smartphone className="h-6 w-6 text-vitalgo-green" />,
     title: "Acceso Multiplataforma",
     description: "Disponible desde computadores, tablets y móviles. Tu expediente médico seguro desde cualquier dispositivo autorizado."
   }
@@ -46,7 +46,7 @@ export function FeaturesSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <Badge
-            className="mb-4 bg-green-500/10 text-green-500"
+            className="mb-4 bg-vitalgo-green/10 text-vitalgo-green"
             data-testid="home-features-badge"
           >
             Funcionalidades

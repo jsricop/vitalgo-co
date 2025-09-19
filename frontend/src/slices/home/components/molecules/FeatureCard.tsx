@@ -12,12 +12,12 @@ interface FeatureCardProps {
 export function FeatureCard({ icon, title, description, badge }: FeatureCardProps) {
   return (
     <Card
-      className="h-full hover:shadow-lg transition-all duration-300 border-gray-100 hover:border-green-500/20"
+      className="h-full hover:shadow-lg transition-all duration-300 border-gray-100 hover:border-vitalgo-green/20"
       data-testid="home-feature-card"
     >
       <CardContent className="p-6">
         <div className="flex items-start space-x-4">
-          <div className="flex-shrink-0 w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center">
+          <div className="flex-shrink-0 w-12 h-12 bg-vitalgo-green/10 rounded-xl flex items-center justify-center">
             {icon}
           </div>
           <div className="flex-1">

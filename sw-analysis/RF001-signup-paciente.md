@@ -137,8 +137,9 @@ Permitir a los usuarios registrarse como pacientes en la plataforma VitalGo, gar
 ## 8. Elementos de Interfaz
 
 ### 8.1 NavBar
-- Logo horizontal azul VitalGo (lado izquierdo)
-- Botón "Volver al inicio" (lado derecho)
+- **Componente**: `PublicNavbar` del sistema compartido (`/src/shared/components/organisms/PublicNavbar.tsx`)
+- **Configuración**: `showBackButton={true}`, `backUrl="/"`, `backText="Volver al inicio"`
+- Logo horizontal azul VitalGo con navegación inteligente
 - Fondo blanco con borde inferior
 - Responsive design
 
@@ -358,8 +359,7 @@ src/slices/signup/components/
 │   ├── AccountSection.tsx
 │   └── AgreementsSection.tsx
 ├── organisms/
-│   ├── PatientSignupForm.tsx
-│   └── SignupNavbar.tsx
+│   └── PatientSignupForm.tsx
 ├── templates/
 │   └── SignupLayout.tsx
 └── pages/
@@ -434,6 +434,9 @@ backend/slices/signup/
 - date-fns (manejo de fechas)
 - ~~Google reCAPTCHA v3~~ (eliminado temporalmente)
 - Radix UI (componentes base)
+- **Componentes Compartidos**:
+  - `PublicNavbar` (navbar para usuarios no autenticados)
+  - `PublicFooter` (footer completo con enlaces legales, soporte y redes sociales)
 
 ### 16.2 Backend
 - FastAPI (framework web)
@@ -463,6 +466,8 @@ Estado neutral → [Usuario sale del campo] → Validando (spinner) → Válido/
 
 ## 18. Notas de Implementación
 
+- **Navbar Compartido**: Usar `PublicNavbar` del sistema de componentes compartidos en `/src/shared/components/organisms/PublicNavbar.tsx`
+- **Footer Compartido**: Usar `PublicFooter` del sistema de componentes compartidos en `/src/shared/components/organisms/PublicFooter.tsx`
 - Implementar validaciones tanto en frontend como backend
 - Usar UUID separado `qr_code` para QR codes (seguridad: no exponer PK)
 - Campo `qr_code` renovable sin afectar relaciones de BD
@@ -477,5 +482,5 @@ Estado neutral → [Usuario sale del campo] → Validando (spinner) → Válido/
 ---
 
 **Documento preparado por:** AI Assistant
-**Revisado por:** [Pendiente]
-**Aprobado por:** [Pendiente]
+**Revisado por:** [Jhonatan Rico]
+**Aprobado por:** [Jhonatan Rico]

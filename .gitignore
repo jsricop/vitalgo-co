@@ -1,8 +1,14 @@
-# Environment variables
+# Environment variables - SECURITY CRITICAL
 .env
+.env.*
 .env.local
 .env.production
 .env.staging
+.env.aws
+docker/.env*
+terraform/*.tfvars
+terraform/.terraform/
+terraform/terraform.tfstate*
 
 # Dependencies
 node_modules/
@@ -50,3 +56,40 @@ backend/alembic/versions/*.py
 # Docker volumes
 postgres_dev_data/
 redis_dev_data/
+
+# Security - Additional protection
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+secrets/
+.secrets/
+
+# Deployment specific
+.aws/
+.terraform/
+*.plan
+*.backup
+
+# Test outputs
+test-results/
+playwright-report/
+screenshots/
+debug-*.png
+
+# Local development
+debug-test.js
+temp/
+tmp/
+
+# Production deployment files with sensitive data - NEVER COMMIT
+AWS_DEPLOYMENT_PLAN.md
+migrate.py
+production_migration.sql
+terraform/user_data.sh
+
+# Migration scripts with production credentials
+*migration*.sql
+*migration*.py

@@ -1,0 +1,18 @@
+# Terraform Variables Example
+# Copy this to terraform.tfvars and fill with actual values
+
+aws_region = "us-east-1"
+
+# AWS Key Pair (create this in AWS Console first)
+key_pair_name = "vitalgo-keypair"
+
+# Database Configuration
+db_name     = "vitalgo_prod"
+db_username = "vitalgo_user"
+db_password = "generate-secure-password-here"
+
+# DockerHub Configuration
+dockerhub_username = "your-dockerhub-username"
+
+# Generate secure password:
+# openssl rand -base64 32

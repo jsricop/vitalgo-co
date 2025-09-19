@@ -231,9 +231,73 @@ Infrastructure → Application → Domain
 Components → Services → Shared
 ```
 
-**Domain layer**: Zero external dependencies  
-**Application layer**: Can import domain only  
+**Domain layer**: Zero external dependencies
+**Application layer**: Can import domain only
 **Infrastructure layer**: Can import application and domain
+
+## Production Database Management
+
+### Database Initialization and Lifecycle
+```bash
+# Initial Production Setup - Clean Start
+1. Create fresh database instance (empty schema)
+2. Run initial migrations to create schema structure
+3. Seed with essential system data only (configurations, admin users)
+4. Verify database connectivity and structure
+
+# Post-Deployment - Data Persistence Guarantee
+CRITICAL: Production data is PERMANENT and PROTECTED
+- NO destructive operations allowed in production
+- Data modifications only through controlled application logic
+- All schema changes must be additive and backwards compatible
+- Mandatory backups before any database changes
+```
+
+### Production Database Protection Rules
+```sql
+-- ❌ NEVER ALLOWED in production:
+DROP TABLE users;                    -- Data loss
+TRUNCATE TABLE orders;               -- Data loss
+DELETE FROM patients;                -- Bulk data loss
+ALTER TABLE users DROP COLUMN;      -- Potential data loss
+
+-- ✅ SAFE operations in production:
+ALTER TABLE users ADD COLUMN created_at TIMESTAMP;     -- Additive change
+CREATE INDEX idx_user_email ON users(email);           -- Performance improvement
+UPDATE users SET status = 'active' WHERE id = 123;     -- Controlled single update
+```
+
+### Migration Strategy - Zero Downtime
+```python
+# Safe migration pattern for production
+def upgrade():
+    # Phase 1: Add new column (nullable first)
+    op.add_column('users', sa.Column('new_field', sa.String(50), nullable=True))
+
+    # Phase 2: Populate data (separate deployment after verification)
+    # UPDATE users SET new_field = 'default_value' WHERE new_field IS NULL;
+
+    # Phase 3: Make constraints (third deployment, after data verification)
+    # op.alter_column('users', 'new_field', nullable=False)
+
+def downgrade():
+    # Only remove additive changes, never existing data
+    op.drop_column('users', 'new_field')
+```
+
+### Backup and Recovery Strategy
+```bash
+# Automated backup schedule
+- Daily full backups with 30-day retention
+- Point-in-time recovery capability
+- Pre-change manual snapshots
+- Cross-region backup replication for disaster recovery
+
+# Recovery testing
+- Monthly restore tests to verify backup integrity
+- Documented recovery procedures with time estimates
+- Database restore time objectives defined
+```
 
 ## AWS Free Tier Deployment Strategy
 
@@ -537,6 +601,250 @@ EC2_PUBLIC_IP=your-ec2-ip
 - **Local (Dev)**: `docker-compose up -d` - Full stack locally
 - **Test (AWS)**: Public accessible instance for testing/demos
 - **Production**: Scalable AWS services (ECS, RDS Multi-AZ, etc.)
+
+## Production Environment Configuration Guidelines
+
+### Container Configuration Best Practices
+
+#### Docker Multi-Platform Builds
+```bash
+# CRITICAL: Always build for target platform (EC2 = AMD64)
+docker buildx build --platform linux/amd64 -f docker/Dockerfile.backend -t your-registry/app:latest . --push
+
+# Verify platform compatibility
+docker inspect your-registry/app:latest | grep Architecture
+```
+
+#### Poetry Virtual Environment in Containers
+```dockerfile
+# Correct Poetry configuration in Docker
+USER app  # Switch to non-root BEFORE installing dependencies
+
+# Install dependencies as the application user
+RUN poetry install --only=main --no-root
+# DON'T remove cache if using virtualenvs
+
+# Poetry finds virtualenv correctly when user matches installation
+WORKDIR /app
+USER app
+```
+
+#### Environment Variable Management
+```bash
+# Production environment variables checklist:
+DATABASE_URL=postgresql://user:pass@rds-endpoint/dbname  # Full connection string
+DATABASE_NAME=prod_db_name                               # Individual components
+DATABASE_USER=prod_user                                  # for application settings
+DATABASE_PASSWORD=secure_password                       # validation
+ENVIRONMENT=production                                   # Environment identification
+SKIP_DB_INIT=true                                       # Skip init on existing data
+```
+
+#### Database Initialization Intelligence
+```bash
+# Smart production initialization in entrypoint.sh
+if [[ "$SKIP_DB_INIT" == "true" ]]; then
+    echo "Skipping database initialization (SKIP_DB_INIT=true)"
+else
+    ./scripts/init-database.sh
+fi
+
+# Alternative: Auto-detect existing data
+if poetry run python -c "import psycopg2; conn=psycopg2.connect('$DATABASE_URL'); cur=conn.cursor(); cur.execute('SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=\\'public\\''); print(cur.fetchone()[0])" | grep -q "^[1-9]"; then
+    echo "Database has existing schema - skipping initialization"
+else
+    echo "Empty database detected - running initialization"
+    ./scripts/init-database.sh
+fi
+```
+
+### Security Configuration Standards
+
+#### Network Security
+```hcl
+# Security Group - Restrict SSH to specific IPs
+resource "aws_security_group" "app_sg" {
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["YOUR_SPECIFIC_IP/32"]  # Never use 0.0.0.0/0 in production
+  }
+
+  # Application ports - public access
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 8000
+    to_port     = 8000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# RDS Security - Only from application servers
+resource "aws_security_group" "rds_sg" {
+  ingress {
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    security_groups = [aws_security_group.app_sg.id]  # Reference, not CIDR
+  }
+}
+```
+
+#### Database Security
+```hcl
+# RDS Configuration with security features
+resource "aws_db_instance" "prod_db" {
+  storage_encrypted     = true              # Encrypt at rest
+  publicly_accessible   = false             # Private subnet only
+  deletion_protection   = true              # Prevent accidental deletion
+  backup_retention_period = 7              # Automated backups
+
+  # SSL enforcement via parameter group
+  parameter_group_name = aws_db_parameter_group.ssl_required.name
+}
+
+resource "aws_db_parameter_group" "ssl_required" {
+  family = "postgres15"
+
+  parameter {
+    name  = "log_statement"
+    value = "all"                          # Audit logging
+  }
+
+  parameter {
+    name  = "shared_preload_libraries"
+    value = "pg_stat_statements"           # Performance monitoring
+  }
+}
+```
+
+### Deployment Workflow Excellence
+
+#### Local → DockerHub → Production Flow
+```bash
+# 1. Local development and testing
+docker-compose up -d
+npm run test && poetry run pytest
+
+# 2. Build and push to registry
+docker buildx build --platform linux/amd64 -f docker/Dockerfile.backend -t registry/app:latest . --push
+
+# 3. Production deployment via pull
+ssh -i key.pem user@server "cd /app && docker-compose pull && docker-compose up -d"
+```
+
+#### Graceful Container Updates
+```bash
+# Zero-downtime deployment pattern
+docker-compose pull service-name          # Download new image
+docker-compose up -d service-name         # Graceful restart
+docker system prune -f                    # Cleanup old images
+```
+
+#### Health Check Implementation
+```dockerfile
+# Container health checks
+HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=5 \
+    CMD curl -f http://localhost:8000/health || exit 1
+```
+
+```bash
+# Application health monitoring
+# Verify both services are responding
+curl -f http://server:8000/health  # Backend health
+curl -f http://server:3000/api/health  # Frontend health
+```
+
+### Resource Management
+
+#### Right-Sizing for Production
+```hcl
+# Start conservative, scale up as needed
+resource "aws_instance" "app" {
+  instance_type = "t3.small"  # Start larger for initial deployment
+
+  # Scale down after successful deployment
+  # instance_type = "t2.micro"  # Cost optimization
+}
+```
+
+#### Memory and CPU Monitoring
+```bash
+# Monitor resource usage during deployment
+docker stats --no-stream
+free -h
+top -b -n1 | head -20
+```
+
+### Error Recovery Procedures
+
+#### Common Production Issues and Solutions
+```bash
+# Issue: SQLAlchemy ModuleNotFoundError
+# Cause: Poetry virtualenv ownership mismatch
+# Solution: Ensure user matches across Docker layers
+
+# Issue: Database initialization fails with duplicate keys
+# Cause: Existing production data
+# Solution: SKIP_DB_INIT=true environment variable
+
+# Issue: Container restart loops
+# Cause: Application startup failures
+# Solution: Check logs and health checks
+
+# Troubleshooting commands
+docker-compose logs service-name --tail=50
+docker-compose exec service-name bash
+docker-compose restart service-name
+```
+
+#### Backup and Recovery
+```bash
+# Pre-deployment backup
+pg_dump -h rds-endpoint -U username dbname > backup_$(date +%Y%m%d_%H%M%S).sql
+
+# Quick rollback procedure
+docker-compose pull previous-image-tag
+docker-compose up -d
+```
+
+### Production Monitoring Checklist
+
+```bash
+# Daily health checks
+✅ Frontend accessible and responsive
+✅ Backend API returning valid responses
+✅ Database connections stable
+✅ No error logs in application
+✅ SSL certificates valid
+✅ Resource usage within limits
+✅ Backup systems functioning
+
+# Weekly reviews
+✅ Security patches applied
+✅ Performance metrics reviewed
+✅ Capacity planning assessment
+✅ Disaster recovery testing
+```
+
+### Critical Production Rules
+
+1. **Data Persistence**: Production data is PERMANENT - never run destructive operations
+2. **Security First**: Restrict all access to minimum required (SSH, database, etc.)
+3. **Graceful Updates**: Always use pull-and-restart, never direct builds on production
+4. **Health Monitoring**: Implement and monitor health checks for all services
+5. **Backup Strategy**: Automated backups + manual pre-change snapshots
+6. **Documentation**: Document all configuration changes and deployment procedures
+7. **Testing**: Test all changes in staging environment before production
+8. **Rollback Plan**: Always have a verified rollback procedure ready
 
 ---
 

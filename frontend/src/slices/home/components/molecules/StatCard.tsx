@@ -10,7 +10,7 @@ export function StatCard({ number, label, icon }: StatCardProps) {
   return (
     <div className="text-center" data-testid="home-stat-card">
       <div className="flex justify-center mb-2">
-        <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
+        <div className="w-10 h-10 bg-vitalgo-green/10 rounded-lg flex items-center justify-center">
           {icon}
         </div>
       </div>

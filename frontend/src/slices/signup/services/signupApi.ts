@@ -3,7 +3,7 @@
  */
 import { DocumentType, PatientRegistrationForm, ValidationResult, RegistrationResponse } from '../types';
 
-const API_BASE_URL = 'http://localhost:8000/api/signup';
+const API_BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/signup`;
 
 export class SignupApiService {
   static async getDocumentTypes(): Promise<DocumentType[]> {

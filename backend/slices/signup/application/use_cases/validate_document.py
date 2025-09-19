@@ -42,8 +42,8 @@ class ValidateDocumentUseCase:
         """Validate document format based on type"""
 
         if document_type == "CC":  # Cédula de Ciudadanía
-            if not document_number.isdigit() or not (8 <= len(document_number) <= 10):
-                raise ValueError("Cédula debe tener entre 8 y 10 dígitos")
+            if not document_number.isdigit() or not (6 <= len(document_number) <= 10):
+                raise ValueError("Cédula debe tener entre 6 y 10 dígitos")
 
         elif document_type == "TI":  # Tarjeta de Identidad
             if not document_number.isdigit() or not (8 <= len(document_number) <= 11):
