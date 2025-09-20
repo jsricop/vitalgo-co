@@ -85,39 +85,145 @@ Proporcionar un mecanismo de autenticación seguro y eficiente que permita a los
 - Extiende duración del token JWT
 - Estado visual claro (marcado/desmarcado)
 
-## 8. Elementos de Interfaz
+## 8. Brand Manual Compliance & Interface Elements
 
-### 8.1 Layout Principal
-- **Fondo**: Gradiente gris claro con patrones sutiles
-- **Contenedor**: Card centrado con sombra y backdrop blur
-- **Responsive**: Adaptable a móviles y desktop
-- **Accesibilidad**: Labels apropiados y navegación por teclado
+### 8.1 BRAND MANUAL COMPLIANCE
+**MANDATORY**: Esta página DEBE seguir completamente las especificaciones del `MANUAL_DE_MARCA.md`
 
-### 8.2 Header de Página
-- **Logo VitalGo**: Horizontal azul, enlazado a homepage
-- **Título**: "Bienvenido de vuelta" (h1)
-- **Subtítulo**: "Accede a tu información médica de forma segura"
+#### 8.1.1 Color Scheme (Estricto)
+```css
+/* USAR ESTOS COLORES OFICIALES EXCLUSIVAMENTE */
+--vitalgo-green: #01EF7F        /* Verde principal oficial - Botones principales */
+--vitalgo-green-light: #5AF4AC   /* Verde claro oficial - Hover states */
+--vitalgo-green-lighter: #99F9CC /* Verde más claro oficial - Backgrounds sutiles */
+--vitalgo-dark: #002C41          /* Azul oscuro principal oficial - Textos y headers */
+--vitalgo-dark-light: #406171    /* Azul medio oficial - Textos secundarios */
+```
 
-### 8.3 Formulario de Login
-- **Card**: Fondo blanco semi-transparente con borde
-- **Título**: "Iniciar Sesión" centrado
-- **Campos**: InputField con labels y estados de error
-- **Botón**: Full width, color VitalGo green, con spinner de loading
+#### 8.1.2 Typography Requirements
+```css
+/* TIPOGRAFÍA OFICIAL */
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+/* Tamaños según manual de marca */
+h1: 2.5rem (40px) - Títulos principales
+h2: 2rem (32px) - Subtítulos
+body: 1rem (16px) - Texto principal
+small: 0.875rem (14px) - Textos auxiliares
+```
 
-### 8.4 Enlaces y Acciones
-- **"¿Olvidaste tu contraseña?"**: Enlace a recuperación
-- **"Regístrate como paciente"**: Enlace a RF001
-- **"Acceso de Emergencia QR"**: Botón de emergencia (RF004)
+#### 8.1.3 Logo Requirements
+```tsx
+/* LOGOS OFICIALES OBLIGATORIOS */
+Logo Principal: "/assets/images/logos/vitalgo-logo-horizontal-official.svg"
+Logo Alternativo: "/assets/images/logos/vitalgo-logo-official.svg"
+Favicon: "/favicon.ico"
+/* NUNCA usar logos genéricos o modificados */
+```
 
-### 8.5 Estados Visuales
-- **Loading**: Spinner en botón con texto "Iniciando sesión..."
-- **Error**: AlertWithIcon rojo con mensaje específico
-- **Success**: Redirección inmediata (sin mensaje)
+#### 8.1.4 Spacing System (4px Base)
+```css
+/* SISTEMA DE ESPACIADO OFICIAL */
+padding: 1rem (16px), 1.5rem (24px), 2rem (32px), 3rem (48px)
+margin: 0.5rem (8px), 1rem (16px), 2rem (32px)
+border-radius: 0.5rem (8px), 0.75rem (12px) - según manual
+```
+
+### 8.2 Navbar Specification (MANDATORY)
+**COMPONENT**: `PublicNavbar` from `/src/shared/components/organisms/PublicNavbar.tsx`
+
+```tsx
+<PublicNavbar
+  showBackButton={false}
+  className="bg-white border-b border-gray-200"
+/>
+```
+
+**FEATURES**:
+- VitalGo logo horizontal oficial (color azul #002C41)
+- Navegación inteligente al homepage (/)
+- Responsive design con breakpoints del manual de marca
+- ARIA labels apropiados para accesibilidad
+- Altura fija: 64px (h-16) según especificación
+
+### 8.3 Footer Specification (MANDATORY)
+**COMPONENT**: `PublicFooter` from `/src/shared/components/organisms/PublicFooter.tsx`
+
+```tsx
+<PublicFooter
+  whatsappNumber="+573001234567"
+  className="bg-white border-t border-gray-200"
+/>
+```
+
+**FEATURES**:
+- Información completa de la empresa VitalGo
+- Enlaces legales: Términos y Condiciones, Política de Privacidad
+- Soporte: WhatsApp, LinkedIn, contacto
+- Selector de idioma (es/en)
+- Copyright con año dinámico
+- Logo footer oficial VitalGo
+
+### 8.4 Layout Principal
+- **Fondo**: Gradiente oficial con colores VitalGo según MANUAL_DE_MARCA.md
+- **Contenedor**: Card centrado con `shadow-lg` y `rounded-xl` (12px)
+- **Responsive**: Mobile-first según breakpoints oficiales (640px, 768px, 1024px)
+- **Accesibilidad**: WCAG 2.1 AA compliance según manual de marca
+
+### 8.5 Formulario de Login
+- **Card Background**: `bg-white` con `border border-gray-200`
+- **Border Radius**: `rounded-xl` (12px) según manual de marca
+- **Título**: `text-2xl font-bold text-vitalgo-dark` - "Iniciar Sesión"
+- **Input Fields**: `border-gray-300 focus:border-vitalgo-green focus:ring-vitalgo-green`
+- **Labels**: `text-sm font-medium text-vitalgo-dark-light`
+
+### 8.6 Botones y Estados (Brand Compliant)
+```tsx
+/* BOTÓN PRINCIPAL - Color oficial VitalGo */
+<Button className="w-full bg-vitalgo-green hover:bg-vitalgo-green-light text-white font-medium py-3 px-4 rounded-lg transition-colors">
+  Iniciar Sesión
+</Button>
+
+/* ENLACES - Colores oficiales */
+<Link className="text-vitalgo-green hover:text-vitalgo-green-light transition-colors">
+  ¿Olvidaste tu contraseña?
+</Link>
+```
+
+### 8.7 Estados Visuales
+- **Loading**: Spinner con `text-vitalgo-green` y texto "Iniciando sesión..."
+- **Error**: `AlertWithIcon` con `bg-red-50 border-red-200 text-red-800`
+- **Success**: Redirección inmediata con transición suave
+- **Focus States**: Ring azul `ring-2 ring-vitalgo-green ring-opacity-50`
+
+### 8.8 Responsive Design (Manual de Marca)
+```css
+/* BREAKPOINTS OFICIALES */
+Mobile: 320px - 767px (design principal)
+Tablet: 768px - 1023px
+Desktop: 1024px - 1279px
+Desktop XL: 1280px+
+
+/* ADAPTACIONES ESPECÍFICAS */
+Mobile: padding-4, text-lg, full-width buttons
+Tablet: padding-6, text-xl, centered layout
+Desktop: padding-8, text-2xl, max-width-md centered
+```
+
+### 8.9 Accessibility Compliance (Manual de Marca)
+- **Color Contrast**: 4.5:1 ratio minimum (texto normal)
+- **Focus Indicators**: Visible ring 2px con color contrastante
+- **Screen Readers**: ARIA labels en español e inglés
+- **Keyboard Navigation**: Tab order lógico
+- **Touch Targets**: Mínimo 44px altura en mobile
 
 ## 9. Seguridad
 
 ### 9.1 Validaciones de Seguridad
-- Rate limiting: máximo 5 intentos por IP por 15 minutos
+- **Rate Limiting Híbrido**:
+  - Por usuario: máximo 5 intentos fallidos (tabla users.failed_login_attempts)
+  - Por IP: máximo 10 intentos por IP por 15 minutos (tabla login_attempts)
+  - Bloqueo temporal: locked_until en tabla users para bloqueos inmediatos
+- **Auditoría Completa**: Registro de todos los intentos en login_attempts para compliance
 - Validación CSRF token
 - Sanitización de inputs
 - Headers de seguridad apropiados
@@ -168,18 +274,113 @@ interface LoginResponse {
 }
 ```
 
-### 10.3 Tabla Login Attempts (Seguridad)
+### 10.3 Sistema Híbrido de Tracking de Login Attempts
+
+**ENFOQUE HÍBRIDO**: El sistema utiliza dos mecanismos complementarios para el tracking de intentos de login:
+
+#### 10.3.1 Tabla Users (Tracking Activo - RF001)
+```sql
+-- Campos en tabla users para seguridad en tiempo real
+failed_login_attempts INTEGER DEFAULT 0,     -- Contador actual para rate limiting
+locked_until TIMESTAMP NULL                  -- Bloqueo temporal de cuenta
+```
+
+**Propósito**:
+- Rate limiting en tiempo real
+- Bloqueo inmediato de cuentas
+- Decisiones de seguridad rápidas
+
+#### 10.3.2 Tabla Login Attempts (Auditoría Completa)
 ```sql
 CREATE TABLE login_attempts (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id BIGSERIAL PRIMARY KEY,                -- Integer optimizado para alta performance
     email VARCHAR(255),
     ip_address INET NOT NULL,
     success BOOLEAN NOT NULL,
     attempted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_agent TEXT,
-    failure_reason VARCHAR(100)
+    failure_reason VARCHAR(100),
+    -- Campos adicionales para correlación
+    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    session_id VARCHAR(255),
+    geolocation JSON,
+    -- Índices optimizados para consultas frecuentes
+    INDEX idx_login_attempts_email_time (email, attempted_at DESC),
+    INDEX idx_login_attempts_ip_time (ip_address, attempted_at DESC),
+    INDEX idx_login_attempts_user_time (user_id, attempted_at DESC)
 );
 ```
+
+**Rationale para Integer ID:**
+- **Performance**: BIGSERIAL es 4x más rápido que UUID para alta volumetría
+- **Storage**: Reduce espacio de índices en ~75% para tablas de auditoría
+- **Seguridad**: No hay exposición pública, por lo que secuencialidad no es problema
+- **Volume**: Tabla de alta frecuencia requiere máxima optimización
+
+**Propósito**:
+- Auditoría completa para compliance médico
+- Análisis de patrones de seguridad
+- Investigación forense
+- Tracking de IP y dispositivos
+
+#### 10.3.3 Flujo de Trabajo Híbrido
+
+**En cada intento de login:**
+
+1. **Registro completo** → `login_attempts` table
+2. **Si falla**: Incrementar `failed_login_attempts` en users table
+3. **Si excede límite**: Establecer `locked_until` en users table
+4. **Si éxito**: Reset `failed_login_attempts = 0` en users table
+
+**Para rate limiting:**
+- Consulta rápida: `SELECT failed_login_attempts, locked_until FROM users WHERE email = ?`
+
+**Para auditoría:**
+- Consulta completa: `SELECT * FROM login_attempts WHERE email = ? ORDER BY attempted_at DESC`
+
+### 10.4 UUID vs Integer ID Strategy
+
+**STRATEGIC APPROACH**: VitalGo utiliza una estrategia híbrida para selección de tipos de ID basada en propósito y performance requirements.
+
+#### 10.4.1 UUID Usage Guidelines
+**USAR UUID PARA:**
+- **Tablas principales/entidades core**: `users`, `patients`, `medical_records`, `qr_codes`
+- **Datos con exposición pública**: APIs públicas, URLs, formularios web
+- **Identificadores distribuidos**: Datos que se replican entre sistemas
+- **Requisitos de seguridad**: Prevenir enumeración y predicción de IDs
+
+**JUSTIFICACIÓN:**
+- Seguridad por no-predicibilidad
+- Prevención de ataques de enumeración
+- Compatibilidad con sistemas distribuidos
+- Estándar para identificadores públicos
+
+#### 10.4.2 Integer (BIGSERIAL) Usage Guidelines
+**USAR INTEGER PARA:**
+- **Tablas de auditoría/logging**: `login_attempts`, `audit_logs`, `emergency_access_logs`
+- **Alta volumetría/frecuencia**: Tablas con miles de inserts diarios
+- **Uso interno únicamente**: Sin exposición en APIs públicas
+- **Performance crítica**: Consultas complejas con múltiples JOINs
+
+**JUSTIFICACIÓN:**
+- Performance superior (4x más rápido en consultas complejas)
+- Storage efficiency (75% menos espacio en índices)
+- Optimización de memoria para alta volumetría
+- Facilita debugging y troubleshooting
+
+#### 10.4.3 Implementation Matrix
+
+| Tabla Type | ID Type | Rationale | Performance Impact |
+|------------|---------|-----------|-------------------|
+| **Core Entities** | UUID | Security, Public APIs | Normal |
+| **Audit/Logs** | BIGSERIAL | High Volume, Internal | High Performance |
+| **Relations** | Mixed | FK matching parent table | Optimized |
+| **Session/Temp** | BIGSERIAL | Short-lived, Internal | High Performance |
+
+#### 10.4.4 Migration Strategy
+**EXISTING TABLES**: Implementar BIGSERIAL. Los esquemas aún no tienen datos de los usuarios
+**NEW AUDIT TABLES**: Implementar BIGSERIAL desde inicio
+**MIXED APPROACHES**: Permitidas con justificación clara
 
 ## 11. API Endpoints
 
@@ -439,16 +640,58 @@ Página Load → Check LocalStorage → Validate Token → API Call → Token Va
 
 ## 18. Notas de Implementación
 
-- **Navbar Compartido**: Usar `PublicNavbar` del sistema de componentes compartidos en `/src/shared/components/organisms/PublicNavbar.tsx`
-- **Footer Compartido**: Usar `PublicFooter` del sistema de componentes compartidos en `/src/shared/components/organisms/PublicFooter.tsx`
+### 18.1 Brand Manual Compliance (CRITICAL)
+- **OBLIGATORIO**: Seguir completamente el `MANUAL_DE_MARCA.md` sin excepciones
+- **Color Migration**: Migrar TODOS los colores genéricos (green-500, blue-600, etc.) a colores oficiales VitalGo
+- **Asset Usage**: Usar ÚNICAMENTE logos oficiales desde `/assets/images/logos/`
+- **Typography**: Aplicar sistema tipográfico oficial con pesos y tamaños especificados
+
+### 18.2 Component Architecture (Brand Compliant)
+- **Navbar**: `PublicNavbar` from `/src/shared/components/organisms/PublicNavbar.tsx`
+  - Props: `showBackButton={false}`, sin configuración de usuario
+  - Logo horizontal oficial azul (#002C41)
+  - Responsive con breakpoints del manual de marca
+- **Footer**: `PublicFooter` from `/src/shared/components/organisms/PublicFooter.tsx`
+  - Props: `whatsappNumber="+573001234567"`
+  - Incluye todas las secciones legales y de soporte
+  - Logo footer oficial VitalGo
+
+### 18.3 Styling Requirements (Strict)
+```tsx
+// ✅ CORRECTO - Colores oficiales VitalGo
+<Button className="bg-vitalgo-green hover:bg-vitalgo-green-light">
+<h1 className="text-vitalgo-dark font-bold">
+<div className="border-vitalgo-green/20">
+
+// ❌ INCORRECTO - Colores genéricos
+<Button className="bg-green-500 hover:bg-green-600">
+<h1 className="text-gray-900 font-bold">
+<div className="border-green-200">
+```
+
+### 18.4 Technical Implementation
 - **Enfoque Solo Pacientes**: Eliminar referencias a paramédicos/admin del código de referencia
 - **Integración JWT**: Usar misma estrategia de tokens que otros RFs
 - **LocalStorage**: Consistente con patrones existentes (access_token, user_data, user_role)
-- **Rate Limiting**: Implementar tanto en frontend como backend
-- **Responsive Design**: Mobile-first approach para accesibilidad
-- **Accesibilidad**: ARIA labels, navegación por teclado, contraste apropiado
-- **Performance**: Lazy loading de componentes no críticos
+- **Sistema Híbrido de Login Attempts**:
+  - Usar tabla `users` (failed_login_attempts, locked_until) para rate limiting rápido
+  - Usar tabla `login_attempts` para auditoría completa y análisis de seguridad
+  - Implementar ambos mecanismos en paralelo para performance + compliance
+- **Rate Limiting**: Consulta rápida de usuarios + logging completo de attempts
+
+### 18.5 Responsive & Accessibility (Manual de Marca)
+- **Mobile-First**: Design principal optimizado para 320px-767px
+- **Breakpoints**: Usar breakpoints oficiales (640px, 768px, 1024px, 1280px)
+- **Touch Targets**: Mínimo 44px altura en mobile según manual
+- **ARIA Labels**: Implementar en español e inglés
+- **Color Contrast**: Cumplir ratio 4.5:1 mínimo
+- **Keyboard Navigation**: Tab order lógico y focus states visibles
+
+### 18.6 Performance & Quality
+- **Asset Optimization**: SVG logos oficiales para mejor rendimiento
+- **Lazy Loading**: Componentes no críticos para carga rápida
 - **Error Handling**: Manejo graceful de errores de red y API
+- **Testing**: Verificar compliance con manual de marca en todas las resoluciones
 
 ## 19. Consideraciones de Seguridad Avanzada
 
@@ -464,19 +707,8 @@ Página Load → Check LocalStorage → Validate Token → API Call → Token Va
 - **GDPR**: Consentimiento para "Recordarme"
 - **Retención**: Políticas de retención de logs
 
-## 20. Consideraciones Futuras
-
-- **Autenticación de Dos Factores (2FA)**: SMS o aplicación authenticator
-- **Login Social**: Google, Facebook, Apple ID
-- **Biometría**: Huella digital, Face ID para móviles
-- **SSO**: Single Sign-On con sistemas hospitalarios
-- **Recuperación de Cuenta**: Proceso completo de reset de contraseña
-- **Notificaciones**: Alertas de login desde dispositivos nuevos
-- **Sesiones Múltiples**: Gestión de sesiones concurrentes
-- **Geolocalización**: Detección de logins sospechosos por ubicación
-
 ---
 
-**Documento preparado por:** AI Assistant
-**Revisado por:** [Pendiente]
-**Aprobado por:** [Pendiente]
+**Documento preparado por:** AI Assistant & Jhonatan Rico
+**Revisado por:** [Jhonatan Rico]
+**Aprobado por:** [Daniela Quintero]

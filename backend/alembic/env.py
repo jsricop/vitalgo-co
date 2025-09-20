@@ -40,6 +40,9 @@ from shared.database.models_test import TestModel
 # Import signup models for autogenerate
 from slices.signup.domain.models import User, Patient, DocumentType
 
+# Import auth models for autogenerate
+from slices.auth.domain.models import LoginAttempt, UserSession
+
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,

@@ -93,3 +93,14 @@ terraform/user_data.sh
 # Migration scripts with production credentials
 *migration*.sql
 *migration*.py
+
+# Production deployment files with sensitive data - NEVER COMMIT
+deployment.env
+deployment.env.*
+MIGRATION_DEPLOYMENT_GUIDE.md
+scripts/secure-deploy.sh
+docker-compose.local.yml
+
+# Production deployment logs and backups
+/tmp/vitalgo_deployment_*
+vitalgo_deployment_backups/

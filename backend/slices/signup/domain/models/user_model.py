@@ -4,6 +4,7 @@ User SQLAlchemy model
 from sqlalchemy import Column, String, Boolean, Integer, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 import uuid
 
 from shared.database import Base
@@ -24,6 +25,10 @@ class User(Base):
     last_login = Column(DateTime(timezone=True), nullable=True)
     failed_login_attempts = Column(Integer, default=0, nullable=False)
     locked_until = Column(DateTime(timezone=True), nullable=True)
+
+    # Relationships for auth system
+    login_attempts = relationship("LoginAttempt", back_populates="user", lazy="dynamic")
+    sessions = relationship("UserSession", back_populates="user", lazy="dynamic")
 
     def __repr__(self):
         return f"<User(email='{self.email}', user_type='{self.user_type}')>"

@@ -56,12 +56,15 @@ Proporcionar una interfaz centralizada que permita a los pacientes gestionar su 
 
 ### 6.1 Navegación Superior
 
-| Elemento | Funcionalidad | Ubicación |
-|----------|---------------|-----------|
-| **Logo VitalGo** | Redirección a dashboard | Lado izquierdo |
-| **Menú Usuario** | Dropdown con opciones de perfil | Lado derecho |
-| **Cerrar Sesión** | Logout y redirección a login | Menú dropdown |
-| **Configuración** | Acceso a configuración de usuario | Menú dropdown |
+**COMPONENT**: Utiliza `AuthenticatedNavbar` según especificación completa en **sección 8.2 Navbar Specification**.
+
+**Funcionalidades principales**:
+- Logo VitalGo con navegación inteligente al dashboard
+- Menú dropdown de usuario: Mi Perfil, Configuración, Cerrar sesión
+- Avatar circular con iniciales del usuario
+- Responsive con hamburger menu en mobile
+
+**NOTA**: Si se requieren campos adicionales (avatar image, notificaciones badge, etc.), estos deben agregarse al componente padre `AuthenticatedNavbar` en `/src/shared/components/organisms/AuthenticatedNavbar.tsx`, no a implementaciones específicas.
 
 ### 6.2 Vista Principal - Secciones del Paciente
 
@@ -73,7 +76,6 @@ Proporcionar una interfaz centralizada que permita a los pacientes gestionar su 
 | **Fecha de Nacimiento** | Datos de registro | ❌ |
 | **Sexo Biológico** | Perfil médico (RF002) | ✅ |
 | **Género** | Perfil médico (RF002) | ✅ |
-| **Teléfono Celular** | Perfil médico (RF002) | ✅ |
 | **Email** | Datos de registro | ✅ |
 | **Dirección Completa** | Perfil médico (RF002) | ✅ |
 | **Ciudad de Residencia** | Perfil médico (RF002) | ✅ |
@@ -85,8 +87,7 @@ Proporcionar una interfaz centralizada que permita a los pacientes gestionar su 
 #### 6.2.2 NUEVA: Sección Información Médica Básica
 | Campo | Descripción | Editable |
 |-------|-------------|----------|
-| **Tipo de Sangre** | Grupo sanguíneo (O+, A-, etc.) | ✅ |
-| **Factor RH** | Positivo, Negativo, Desconocido | ✅ |
+| **Tipo de Sangre** | Grupo sanguíneo con RH (O+, A-, etc.) | ✅ |
 | **Contacto de Emergencia** | Nombre, parentesco, teléfonos | ✅ |
 | **Seguros Adicionales** | Seguros privados | ✅ |
 | **Plan Complementario** | Medicina prepagada | ✅ |
@@ -189,27 +190,365 @@ Proporcionar una interfaz centralizada que permita a los pacientes gestionar su 
 - **Longitud**: Límites por campo según tipo
 - **Sanitización**: Prevención XSS en todos los inputs
 
-## 8. Elementos de Interfaz
+## 8. Brand Manual Compliance & Interface Elements
 
-### 8.1 NavBar
-- **Componente**: `AuthenticatedNavbar` del sistema compartido (`/src/shared/components/organisms/AuthenticatedNavbar.tsx`)
-- **Configuración**: Muestra logo VitalGo y menú de usuario completo
-- Logo horizontal azul VitalGo con navegación inteligente al dashboard
-- Menú de usuario con avatar, nombre, rol y opciones (perfil, configuración, logout)
-- Responsive design con menú hamburguesa en móvil
-- Notificaciones (opcional para futuras versiones)
+### 8.1 BRAND MANUAL COMPLIANCE
+**MANDATORY**: Esta página DEBE seguir completamente las especificaciones del `MANUAL_DE_MARCA.md`
 
-### 8.2 Layout del Dashboard
-- Grid responsive con breakpoints apropiados
-- Máximo ancho: 7xl (1280px)
-- Padding consistente y espaciado vertical
-- Cards con sombras sutiles y bordes redondeados
+#### 8.1.1 Color Scheme (Dashboard Specific)
+```css
+/* USAR ESTOS COLORES OFICIALES EXCLUSIVAMENTE */
+--vitalgo-green: #01EF7F        /* Verde principal - Acciones principales */
+--vitalgo-green-light: #5AF4AC   /* Verde claro - Hover states en botones */
+--vitalgo-green-lighter: #99F9CC /* Verde más claro - Badges de éxito */
+--vitalgo-green-lightest: #CCFCE5 /* Verde muy claro - Backgrounds sutiles */
+--vitalgo-dark: #002C41          /* Azul oscuro - Headers y títulos principales */
+--vitalgo-dark-light: #406171    /* Azul medio - Textos secundarios */
+--vitalgo-dark-lighter: #99ABB3  /* Azul claro - Textos descriptivos */
+--vitalgo-dark-lightest: #CCD5D9 /* Azul muy claro - Divisores y bordes */
 
-### 8.3 Componentes Interactivos
-- **Tarjetas de Información**: Cards clickeables con datos resumidos
-- **Modales**: Overlay para formularios de edición
-- **Tablas**: Paginación y filtros para listas grandes
-- **Estados de Carga**: Spinners y skeletons durante carga
+/* COLORES ESPECÍFICOS PARA DASHBOARD MÉDICO */
+--medical-emergency: #EF4444     /* Rojo para alergias críticas */
+--medical-warning: #F59E0B       /* Amarillo para advertencias */
+--medical-info: #3B82F6          /* Azul para información general */
+--medical-success: var(--vitalgo-green) /* Verde VitalGo para estados positivos */
+```
+
+#### 8.1.2 Typography System (Dashboard)
+```css
+/* TIPOGRAFÍA OFICIAL PARA DASHBOARD */
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+/* Jerarquía específica para dashboard médico */
+h1: 2.25rem (36px) font-bold - Título principal dashboard
+h2: 1.875rem (30px) font-semibold - Títulos de secciones principales
+h3: 1.5rem (24px) font-medium - Títulos de cards
+h4: 1.25rem (20px) font-medium - Subtítulos de información
+h5: 1.125rem (18px) font-medium - Labels de datos médicos
+body: 1rem (16px) font-normal - Texto general
+small: 0.875rem (14px) font-normal - Metadatos y timestamps
+caption: 0.75rem (12px) font-normal - Notas y detalles
+```
+
+#### 8.1.3 Logo & Medical Icons
+```tsx
+/* ASSETS OFICIALES OBLIGATORIOS PARA DASHBOARD */
+Logo Navbar: "/assets/images/logos/vitalgo-logo-horizontal-official.svg"
+Logo Icon: "/assets/images/logos/vitalgo-icon-official.svg"
+Medical Heart: "/assets/images/icons/vitalgo-heart.svg"
+/* Iconografía médica con colores oficiales VitalGo */
+```
+
+#### 8.1.4 Spacing System (Dashboard Layout)
+```css
+/* SISTEMA DE ESPACIADO DASHBOARD */
+dashboard-container: max-w-7xl mx-auto px-4 sm:px-6 lg:px-8
+section-spacing: space-y-8 (32px entre secciones principales)
+card-spacing: space-y-6 (24px entre cards)
+content-spacing: space-y-4 (16px entre elementos de contenido)
+card-padding: p-6 lg:p-8 (24px mobile, 32px desktop)
+grid-gap: gap-6 (24px entre elementos del grid)
+stats-grid: grid-cols-1 md:grid-cols-2 lg:grid-cols-4
+```
+
+### 8.2 Navbar Specification (MANDATORY)
+**COMPONENT**: `AuthenticatedNavbar` from `/src/shared/components/organisms/AuthenticatedNavbar.tsx`
+
+```tsx
+<AuthenticatedNavbar
+  user={{
+    name: user.firstName + " " + user.lastName,
+    role: "paciente",
+    avatar: user.profilePicture || undefined
+  }}
+  onLogout={handleLogout}
+  className="bg-white border-b border-gray-200 sticky top-0 z-50"
+/>
+```
+
+**BRAND FEATURES**:
+- VitalGo logo horizontal oficial azul (#002C41)
+- Navegación inteligente (click logo = dashboard)
+- Menú de usuario con dropdown: Mi Perfil, Configuración, Cerrar sesión
+- Avatar circular con iniciales si no hay foto
+- Responsive con hamburger menu en mobile
+- Notificaciones badge con colores oficiales VitalGo
+- Sticky positioning para navegación persistente
+
+### 8.3 Footer Specification (MANDATORY)
+**COMPONENT**: `AuthenticatedFooter` from `/src/shared/components/organisms/AuthenticatedFooter.tsx`
+
+```tsx
+<AuthenticatedFooter
+  className="bg-white border-t border-gray-200 mt-16"
+/>
+```
+
+**BRAND FEATURES**:
+- Footer simplificado para usuarios autenticados
+- Logo footer oficial VitalGo (tamaño reducido)
+- Enlaces esenciales: Soporte, Privacidad, Términos
+- Copyright con año dinámico
+- Información de contacto mínima
+- Sin sobrecarga (focus en gestión médica)
+
+### 8.4 Dashboard Layout (Brand Compliant)
+```tsx
+/* LAYOUT PRINCIPAL DASHBOARD */
+<div className="min-h-screen bg-gradient-to-br from-vitalgo-green-lightest via-white to-gray-50">
+  <AuthenticatedNavbar {...navbarProps} />
+
+  <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    {/* HEADER DASHBOARD CON MARCA */}
+    <div className="mb-8">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-vitalgo-dark">
+            Hola, {user.firstName} 👋
+          </h1>
+          <p className="text-vitalgo-dark-light mt-2">
+            Gestiona tu información médica de forma segura
+          </p>
+        </div>
+        <div className="flex items-center space-x-4">
+          <img src="/assets/images/icons/vitalgo-heart.svg"
+               alt="VitalGo" className="h-12 w-12" />
+        </div>
+      </div>
+    </div>
+
+    {/* GRID DE ESTADÍSTICAS */}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      {/* Stats cards con colores oficiales */}
+    </div>
+
+    {/* SECCIONES MÉDICAS */}
+    <div className="space-y-8">
+      {/* Medical sections con brand styling */}
+    </div>
+  </main>
+
+  <AuthenticatedFooter {...footerProps} />
+</div>
+```
+
+### 8.5 Stats Cards (Brand Design)
+```tsx
+/* TARJETAS DE ESTADÍSTICAS CON MARCA */
+<div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow">
+  <div className="flex items-center justify-between">
+    <div>
+      <p className="text-sm font-medium text-vitalgo-dark-light">
+        Medicamentos Actuales
+      </p>
+      <p className="text-3xl font-bold text-vitalgo-dark mt-2">
+        {stats.activeMedications}
+      </p>
+    </div>
+    <div className="h-12 w-12 bg-vitalgo-green rounded-lg flex items-center justify-center">
+      <PillIcon className="h-6 w-6 text-white" />
+    </div>
+  </div>
+  <div className="mt-4 flex items-center text-sm">
+    <TrendingUpIcon className="h-4 w-4 text-vitalgo-green mr-1" />
+    <span className="text-vitalgo-green font-medium">Actualizado hoy</span>
+  </div>
+</div>
+```
+
+### 8.6 Medical Information Cards (Brand Styling)
+```tsx
+/* CARDS DE INFORMACIÓN MÉDICA */
+<div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+  {/* HEADER DE SECCIÓN */}
+  <div className="px-6 py-4 bg-gradient-to-r from-vitalgo-green-lightest to-white border-b border-gray-200">
+    <div className="flex items-center justify-between">
+      <div className="flex items-center">
+        <div className="h-8 w-8 bg-vitalgo-green rounded-lg flex items-center justify-center mr-3">
+          <HeartIcon className="h-5 w-5 text-white" />
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-vitalgo-dark">
+            Información Médica Básica
+          </h3>
+          <p className="text-sm text-vitalgo-dark-light">
+            Datos críticos para emergencias
+          </p>
+        </div>
+      </div>
+      <Button className="bg-vitalgo-green hover:bg-vitalgo-green-light text-white
+                        text-sm px-4 py-2 rounded-lg">
+        Editar
+      </Button>
+    </div>
+  </div>
+
+  {/* CONTENIDO DE LA CARD */}
+  <div className="p-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Data items con styling oficial */}
+    </div>
+  </div>
+</div>
+```
+
+### 8.7 Dynamic Medical Sections (Allergies, Medications, etc.)
+```tsx
+/* SECCIONES DINÁMICAS CON CRUD */
+<div className="bg-white rounded-xl shadow-lg border border-gray-200">
+  {/* HEADER CON CONTADOR Y ACCIONES */}
+  <div className="px-6 py-4 border-b border-gray-200">
+    <div className="flex items-center justify-between">
+      <div className="flex items-center">
+        <div className="h-8 w-8 bg-red-500 rounded-lg flex items-center justify-center mr-3">
+          <AlertTriangleIcon className="h-5 w-5 text-white" />
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-vitalgo-dark">
+            Alergias ({allergies.length})
+          </h3>
+          <p className="text-sm text-vitalgo-dark-light">
+            Información crítica para emergencias
+          </p>
+        </div>
+      </div>
+      <div className="flex space-x-3">
+        <Button variant="outline"
+                className="border-vitalgo-green text-vitalgo-green hover:bg-vitalgo-green hover:text-white">
+          Ver Historial
+        </Button>
+        <Button className="bg-vitalgo-green hover:bg-vitalgo-green-light text-white">
+          + Agregar Alergia
+        </Button>
+      </div>
+    </div>
+  </div>
+
+  {/* LISTA O ESTADO VACÍO */}
+  <div className="p-6">
+    {allergies.length === 0 ? (
+      <div className="text-center py-12">
+        <AlertTriangleIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+        <h4 className="text-lg font-medium text-vitalgo-dark mb-2">
+          No hay alergias registradas
+        </h4>
+        <p className="text-vitalgo-dark-light mb-6">
+          Agregar esta información es crucial para tu seguridad en emergencias
+        </p>
+        <Button className="bg-vitalgo-green hover:bg-vitalgo-green-light text-white">
+          Agregar primera alergia
+        </Button>
+      </div>
+    ) : (
+      <div className="space-y-4">
+        {/* Lista de items con brand styling */}
+      </div>
+    )}
+  </div>
+</div>
+```
+
+### 8.8 QR Code Emergency Section (Brand Design)
+```tsx
+/* SECCIÓN DE EMERGENCIA QR */
+<div className="bg-gradient-to-r from-vitalgo-green-lightest via-white to-vitalgo-green-lightest rounded-xl shadow-lg border border-vitalgo-green/20 p-6">
+  <div className="flex items-center justify-between mb-6">
+    <div className="flex items-center">
+      <div className="h-10 w-10 bg-vitalgo-green rounded-lg flex items-center justify-center mr-4">
+        <QrCodeIcon className="h-6 w-6 text-white" />
+      </div>
+      <div>
+        <h3 className="text-xl font-semibold text-vitalgo-dark">
+          Código QR de Emergencia
+        </h3>
+        <p className="text-vitalgo-dark-light">
+          Acceso rápido a tu información médica en emergencias
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    {/* QR Code display */}
+    <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
+      <div className="w-32 h-32 bg-gray-100 rounded-lg mx-auto mb-4 flex items-center justify-center">
+        {/* QR Code SVG */}
+      </div>
+      <p className="text-sm text-vitalgo-dark-light">
+        Generado: {qrCode.generatedAt}
+      </p>
+    </div>
+
+    {/* QR Actions */}
+    <div className="lg:col-span-2 space-y-4">
+      <Button className="w-full bg-vitalgo-green hover:bg-vitalgo-green-light text-white">
+        Descargar QR Code
+      </Button>
+      <Button variant="outline" className="w-full border-vitalgo-green text-vitalgo-green">
+        Ver Página de Emergencia
+      </Button>
+      <Button variant="ghost" className="w-full text-vitalgo-dark-light">
+        Regenerar Código
+      </Button>
+    </div>
+  </div>
+</div>
+```
+
+### 8.9 Responsive Design (Manual de Marca)
+```css
+/* BREAKPOINTS OFICIALES PARA DASHBOARD */
+Mobile: 320px - 767px
+- Stack vertical de todas las secciones
+- Stats cards en grid de 1 columna
+- Navegación hamburger
+- Padding reducido: px-4 py-6
+
+Tablet: 768px - 1023px
+- Stats grid 2 columnas
+- Medical cards con layout adaptado
+- Sidebar opcional para navegación
+- Padding intermedio: px-6 py-8
+
+Desktop: 1024px+
+- Full grid layout: stats 4 columnas
+- Sidebar de navegación rápida
+- Layout de 2-3 columnas para cards médicas
+- Padding completo: px-8 py-8
+- Max-width 7xl (1280px) centrado
+```
+
+### 8.10 Interactive Elements (Brand States)
+```tsx
+/* ESTADOS INTERACTIVOS CON MARCA */
+// Hover states para cards
+.medical-card:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  border-color: var(--vitalgo-green);
+}
+
+// Botones de acción
+<Button className="bg-vitalgo-green hover:bg-vitalgo-green-light active:bg-vitalgo-green/90
+                  text-white transition-colors duration-200">
+
+// Loading states
+<div className="animate-pulse bg-vitalgo-green-lightest rounded-lg">
+  <Spinner className="text-vitalgo-green" />
+</div>
+
+// Success notifications
+<div className="bg-vitalgo-green-lightest border-vitalgo-green text-vitalgo-dark
+               p-4 rounded-lg border-l-4">
+  Información actualizada correctamente
+</div>
+```
+
+### 8.11 Accessibility (Manual de Marca)
+- **Navigation**: ARIA labels para todas las secciones médicas
+- **Screen Readers**: Descripciones claras de stats y datos médicos
+- **Keyboard Navigation**: Tab order lógico entre cards y acciones
+- **Color Contrast**: Ratio 4.5:1 con colores oficiales VitalGo
+- **Medical Data**: Markup semántico para información crítica
+- **Form Controls**: Labels apropiados para modales de edición
 
 ### 8.4 Iconografía
 - **User**: Información personal
@@ -258,7 +597,7 @@ CREATE TABLE user_dashboard_preferences (
 ### 10.2 Logs de Auditoría
 ```sql
 CREATE TABLE audit_logs (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id BIGSERIAL PRIMARY KEY,                -- Integer optimizado para auditoría alta volumetría
     user_id UUID REFERENCES users(id),
     action VARCHAR(100) NOT NULL,
     resource_type VARCHAR(50) NOT NULL,
@@ -266,9 +605,19 @@ CREATE TABLE audit_logs (
     details JSON,
     ip_address INET,
     user_agent TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    -- Índices optimizados para consultas de auditoría frecuentes
+    INDEX idx_audit_logs_user_time (user_id, created_at DESC),
+    INDEX idx_audit_logs_resource (resource_type, resource_id, created_at DESC),
+    INDEX idx_audit_logs_action_time (action, created_at DESC)
 );
 ```
+
+**Optimización para Auditoría Médica:**
+- **BIGSERIAL ID**: Performance superior para logs de alta frecuencia
+- **Compliance**: Orden secuencial natural facilita auditorías
+- **Storage**: Reducción ~75% en tamaño de índices vs UUID
+- **Query Performance**: Búsquedas por usuario/tiempo 3-4x más rápidas
 
 ### 10.3 Escaneos QR
 ```sql
@@ -282,6 +631,88 @@ CREATE TABLE emergency_scans (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
+
+### 10.4 UUID vs Integer ID Strategy
+
+**STRATEGIC APPROACH**: VitalGo utiliza una estrategia híbrida para selección de tipos de ID basada en propósito y performance requirements.
+
+#### 10.4.1 UUID Usage Guidelines
+**USAR UUID PARA:**
+- **Tablas principales/entidades core**: `users`, `patients`, `medical_records`, `qr_codes`
+- **Datos con exposición pública**: APIs públicas, URLs, formularios web
+- **Identificadores distribuidos**: Datos que se replican entre sistemas
+- **Requisitos de seguridad**: Prevenir enumeración y predicción de IDs
+
+**IMPLEMENTACIÓN EN RF003:**
+- `users.id` → UUID (entidad principal, seguridad crítica)
+- `patients.id` → UUID (datos médicos, exposición en APIs públicas)
+- `emergency_scans.id` → UUID (información de emergencia, cross-system access)
+- `user_dashboard_preferences.id` → UUID (datos de usuario, personalización)
+
+**JUSTIFICACIÓN:**
+- Seguridad por no-predicibilidad en APIs dashboard
+- Prevención de ataques de enumeración de pacientes
+- Compatibilidad con sistemas de emergencia distribuidos
+- Estándar para identificadores de dashboard público
+
+#### 10.4.2 Integer (BIGSERIAL) Usage Guidelines
+**USAR INTEGER PARA:**
+- **Tablas de auditoría/logging**: `audit_logs`, `dashboard_activity_logs`
+- **Alta volumetría/frecuencia**: Tablas con miles de inserts diarios
+- **Uso interno únicamente**: Sin exposición en APIs públicas
+- **Performance crítica**: Consultas complejas con múltiples JOINs
+
+**IMPLEMENTACIÓN EN RF003:**
+- `audit_logs.id` → BIGSERIAL (alta volumetría, auditoría interna)
+
+**FUTURAS IMPLEMENTACIONES:**
+```sql
+-- Ejemplos de tablas futuras con Integer IDs
+CREATE TABLE dashboard_activity_logs (
+    id BIGSERIAL PRIMARY KEY,                -- Alto volumen, métricas internas
+    user_id UUID REFERENCES users(id),
+    action VARCHAR(100),
+    section VARCHAR(50),
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE medical_data_access_logs (
+    id BIGSERIAL PRIMARY KEY,                -- Compliance logging
+    user_id UUID REFERENCES users(id),
+    accessed_patient_id UUID REFERENCES patients(id),
+    data_type VARCHAR(100),
+    access_timestamp TIMESTAMP
+);
+```
+
+**JUSTIFICACIÓN:**
+- Performance superior (4x más rápido) para logs de dashboard
+- Storage efficiency para auditoría de alta frecuencia
+- Facilitarían reporting y analytics internos
+- Optimización para métricas de compliance médico
+
+#### 10.4.3 Implementation Matrix for RF003
+
+| Tabla Type | ID Type | Rationale | Performance Impact |
+|------------|---------|-----------|-------------------|
+| **User/Patient Entities** | UUID | Dashboard Security | Normal |
+| **Medical Data** | UUID | HIPAA/Privacy Compliance | Normal |
+| **Emergency Systems** | UUID | Cross-System Access | Normal |
+| **Audit/Activity Logs** | BIGSERIAL | High Volume Tracking | High Performance |
+| **Dashboard Analytics** | BIGSERIAL | Internal Metrics Only | High Performance |
+
+#### 10.4.4 Dashboard-Specific Considerations
+**DASHBOARD REQUIREMENTS**: El dashboard requiere UUIDs para:
+- **User Session Security**: Prevenir enumeración de sesiones de usuario
+- **Medical Data Privacy**: Cumplimiento con estándares médicos
+- **Emergency Access**: QR codes y sistemas de emergencia seguros
+- **Cross-Platform**: Integración con sistemas hospitalarios externos
+
+**PERFORMANCE OPTIMIZATION**: Logs y métricas usan BIGSERIAL por:
+- **High-Frequency Operations**: Dashboard genera muchos logs de actividad
+- **Analytics Queries**: Reportes de usage requieren performance optimizada
+- **Compliance Auditing**: Auditorías médicas necesitan consultas rápidas
+- **Internal Use Only**: Sin exposición pública, secuencialidad no es problema
 
 ## 11. API Endpoints
 
@@ -321,12 +752,10 @@ CREATE TABLE emergency_scans (
         "residence_address": "string",
         "residence_city": "string",
         "residence_department": "string",
-        "cell_phone": "string",
         "email": "string"
     },
     "medical_basic": {
         "blood_type": "string",
-        "rh_factor": "string",
         "eps": "string",
         "health_insurance": "string",
         "complementary_plan": "string",
@@ -455,6 +884,9 @@ src/components/dashboard/
 ├── AllergySection.tsx (CRUD completo)
 ├── IllnessSection.tsx (CRUD completo)
 ├── SurgerySection.tsx (CRUD completo)
+├── MedicationSection.tsx (CRUD completo)
+├── GynecologicalSection.tsx (CRUD completo - solo mujeres)
+├── PersonalInfoSection.tsx (información extendida)
 └── EmergencyInfo.tsx
 ```
 
@@ -582,7 +1014,7 @@ Critical Action → Log Creation → DB Insert → Admin Dashboard Display
 - `/dashboard` - Dashboard principal (requiere autenticación)
 - `/dashboard/profile` - Configuración de perfil
 - `/dashboard/settings` - Configuración de usuario
-- `/emergency/scan/:qr` - Escaneo de emergencia (paramédicos)
+- `/emergency/scan/:qr` - Escaneo de emergencia (paramédicos y el mismo usuario puede ver sus datos.)
 
 ### 17.2 Redirecciones Post-Login
 - **Paciente** → `/dashboard` (vista paciente)
@@ -596,15 +1028,145 @@ Critical Action → Log Creation → DB Insert → Admin Dashboard Display
 
 ## 18. Notas de Implementación
 
-- **Navbar Compartido**: Usar `AuthenticatedNavbar` del sistema de componentes compartidos en `/src/shared/components/organisms/AuthenticatedNavbar.tsx`
-- **Footer Compartido**: Usar `AuthenticatedFooter` del sistema de componentes compartidos en `/src/shared/components/organisms/AuthenticatedFooter.tsx`
-- **Dashboard Multi-Rol**: Un solo componente con lógica condicional por rol
-- **Componentes Reutilizables**: AllergySection, IllnessSection, SurgerySection
+### 18.1 Brand Manual Compliance (CRITICAL)
+- **OBLIGATORIO**: Seguir completamente el `MANUAL_DE_MARCA.md` sin excepciones
+- **Color Migration**: Migrar TODOS los colores genéricos a colores oficiales VitalGo
+  ```tsx
+  // ✅ CORRECTO - Colores oficiales VitalGo para dashboard
+  className="bg-vitalgo-green hover:bg-vitalgo-green-light text-white"
+  className="text-vitalgo-dark border-vitalgo-green/20"
+  className="bg-vitalgo-green-lightest border-vitalgo-green" // Stats success
+  className="bg-gradient-to-r from-vitalgo-green-lightest via-white to-vitalgo-green-lightest"
+
+  // ❌ INCORRECTO - Colores genéricos
+  className="bg-green-500 hover:bg-green-600 text-white"
+  className="text-gray-900 border-green-200"
+  className="bg-green-100 border-green-300" // Stats genérico
+  className="bg-gradient-to-r from-green-100 to-blue-100" // Gradientes genéricos
+  ```
+- **Medical Colors**: Usar colores específicos para información médica crítica
+- **Asset Usage**: Logos oficiales e iconografía médica VitalGo únicamente
+- **Typography**: Sistema oficial con jerarquía específica para dashboard médico
+
+### 18.2 Component Architecture (Brand Compliant)
+- **Navbar**: `AuthenticatedNavbar` from `/src/shared/components/organisms/AuthenticatedNavbar.tsx`
+  - Props completos: user data (name, role, avatar), onLogout function
+  - Logo horizontal oficial azul (#002C41)
+  - Menú desplegable con opciones: Mi Perfil, Configuración, Cerrar sesión
+  - Sticky positioning con z-index apropiado
+  - Badge notificaciones con colores oficiales VitalGo
+- **Footer**: `AuthenticatedFooter` from `/src/shared/components/organisms/AuthenticatedFooter.tsx`
+  - Footer simplificado para usuarios autenticados
+  - Logo footer oficial VitalGo (tamaño reducido)
+  - Enlaces esenciales sin sobrecarga informativa
+
+### 18.3 Dashboard Layout & Styling (Strict Brand Compliance)
+```tsx
+// ESTRUCTURA OBLIGATORIA DEL DASHBOARD
+<div className="min-h-screen bg-gradient-to-br from-vitalgo-green-lightest via-white to-gray-50">
+  <AuthenticatedNavbar user={user} onLogout={handleLogout} className="sticky top-0 z-50" />
+
+  <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    {/* Header con iconografía oficial */}
+    <div className="flex items-center justify-between mb-8">
+      <div>
+        <h1 className="text-3xl font-bold text-vitalgo-dark">Hola, {user.firstName} 👋</h1>
+        <p className="text-vitalgo-dark-light">Gestiona tu información médica de forma segura</p>
+      </div>
+      <img src="/assets/images/icons/vitalgo-heart.svg" className="h-12 w-12" />
+    </div>
+
+    {/* Stats grid con colores oficiales */}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      {/* Stats cards con bg-white y iconos con bg-vitalgo-green */}
+    </div>
+
+    {/* Medical sections con brand styling */}
+    <div className="space-y-8">
+      {/* Cards con rounded-xl shadow-lg border border-gray-200 */}
+    </div>
+  </main>
+
+  <AuthenticatedFooter className="mt-16" />
+</div>
+```
+
+### 18.4 Stats Cards & Medical Cards (Brand Guidelines)
+- **Card Styling**: `bg-white rounded-xl shadow-lg border border-gray-200`
+- **Hover Effects**: `hover:shadow-xl transition-shadow`
+- **Icon Backgrounds**: `bg-vitalgo-green` para iconos principales
+- **Text Hierarchy**: `text-vitalgo-dark` para títulos, `text-vitalgo-dark-light` para subtítulos
+- **Action Buttons**: `bg-vitalgo-green hover:bg-vitalgo-green-light` consistente
+- **Success States**: `text-vitalgo-green` para estados positivos
+
+### 18.5 Medical Data Sections (Brand Compliant)
+- **Section Headers**: Gradientes sutiles con `from-vitalgo-green-lightest to-white`
+- **Icon Containers**: `bg-vitalgo-green rounded-lg` para iconos de sección
+- **Add Buttons**: `bg-vitalgo-green hover:bg-vitalgo-green-light` consistente
+- **Empty States**: Iconografía gris con call-to-action en verde oficial
+- **Data Cards**: Border y background con variaciones oficiales VitalGo
+- **Critical Information**: Destacar alergias críticas con colores de emergencia
+
+### 18.6 QR Code Emergency Section (Special Brand Treatment)
+```tsx
+// SECCIÓN ESPECIAL QR CON BRANDING DESTACADO
+<div className="bg-gradient-to-r from-vitalgo-green-lightest via-white to-vitalgo-green-lightest rounded-xl shadow-lg border border-vitalgo-green/20">
+  <div className="p-6">
+    {/* Header con icono VitalGo oficial */}
+    <div className="flex items-center mb-6">
+      <div className="h-10 w-10 bg-vitalgo-green rounded-lg flex items-center justify-center mr-4">
+        <QrCodeIcon className="h-6 w-6 text-white" />
+      </div>
+      <div>
+        <h3 className="text-xl font-semibold text-vitalgo-dark">Código QR de Emergencia</h3>
+        <p className="text-vitalgo-dark-light">Acceso rápido a tu información médica</p>
+      </div>
+    </div>
+    {/* Grid con QR display y acciones */}
+  </div>
+</div>
+```
+
+### 18.7 Responsive Design (Manual de Marca)
+- **Mobile First**: Diseño principal para 320px-767px
+- **Breakpoints**: Oficiales (640px, 768px, 1024px, 1280px)
+- **Dashboard Adaptations**:
+  - Mobile: Stack vertical, stats 1 columna, padding px-4
+  - Tablet: Stats 2 columnas, medical cards adaptadas, padding px-6
+  - Desktop: Stats 4 columnas, full layout, max-width 7xl, padding px-8
+- **Touch Targets**: Mínimo 44px en elementos interactivos
+- **Sticky Navigation**: Navbar persistente con z-index apropiado
+
+### 18.8 Accessibility & UX (Manual de Marca)
+- **Medical Data**: ARIA labels para información crítica de salud
+- **Stats Announcement**: Screen readers anuncian cambios en estadísticas
+- **Keyboard Navigation**: Tab order lógico entre cards y acciones CRUD
+- **Color Contrast**: Ratio 4.5:1 con colores oficiales VitalGo
+- **Form Controls**: Labels apropiados para modales de edición médica
+- **Emergency Information**: Markup semántico para datos de emergencia
+
+### 18.9 Technical Implementation
+- **Dashboard Multi-Rol**: Un solo componente con lógica condicional (solo pacientes por ahora)
+- **Componentes Reutilizables**: AllergySection, IllnessSection, SurgerySection, MedicationSection
 - **Estado Global**: Context API para datos de usuario y autenticación
-- **Optimización**: Lazy loading de datos médicos y caching en memoria
-- **Responsive Design**: Mobile-first approach con breakpoints definidos
-- **Accesibilidad**: ARIA labels, navegación por teclado, contraste apropiado
-- **Performance**: Virtual scrolling para listas grandes de datos
+- **Data Fetching**: Lazy loading de datos médicos por sección
+- **Auto-refresh**: Actualización automática de stats cada 5 minutos
+- **Error Handling**: Graceful degradation con mensajes útiles
+
+### 18.10 Performance & Quality (Brand Standards)
+- **Asset Optimization**: SVG logos oficiales para mejor rendimiento
+- **Lazy Loading**: Componentes de secciones médicas no visibles
+- **Virtual Scrolling**: Para listas grandes de medicamentos/alergias
+- **Caching**: Datos médicos en memoria con invalidación inteligente
+- **Progressive Enhancement**: Funcionalidad core sin JavaScript
+- **Testing**: Verificar compliance visual con manual de marca en todas las resoluciones
+
+### 18.11 Data Security & Medical Compliance
+- **Encryption**: Datos médicos encriptados en tránsito y reposo
+- **Access Logs**: Auditoría completa de accesos a información médica
+- **HIPAA/GDPR**: Cumplimiento con regulaciones de privacidad médica
+- **Session Management**: Timeout automático para sesiones inactivas
+- **Backup**: Respaldo automático de información médica crítica
 
 ## 19. Consideraciones Futuras
 
@@ -619,6 +1181,6 @@ Critical Action → Log Creation → DB Insert → Admin Dashboard Display
 
 ---
 
-**Documento preparado por:** AI Assistant
-**Revisado por:** [Pendiente]
-**Aprobado por:** [Pendiente]
+**Documento preparado por:** AI Assistant & Jhonatan Rico & Daniela Quintero
+**Revisado por:** [Jhonatan Rico]
+**Aprobado por:** [Daniela Quintero]

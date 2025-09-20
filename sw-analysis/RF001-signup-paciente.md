@@ -134,27 +134,200 @@ Permitir a los usuarios registrarse como pacientes en la plataforma VitalGo, gar
 - No debe contener el email del usuario
 - No debe contener palabras comunes (diccionario)
 
-## 8. Elementos de Interfaz
+## 8. Brand Manual Compliance & Interface Elements
 
-### 8.1 NavBar
-- **Componente**: `PublicNavbar` del sistema compartido (`/src/shared/components/organisms/PublicNavbar.tsx`)
-- **Configuración**: `showBackButton={true}`, `backUrl="/"`, `backText="Volver al inicio"`
-- Logo horizontal azul VitalGo con navegación inteligente
-- Fondo blanco con borde inferior
-- Responsive design
+### 8.1 BRAND MANUAL COMPLIANCE
+**MANDATORY**: Esta página DEBE seguir completamente las especificaciones del `MANUAL_DE_MARCA.md`
 
-### 8.2 Formulario
-- Diseño centrado y responsive
-- Campos organizados en secciones lógicas
-- Indicadores visuales de campos obligatorios (*)
-- **Mensajes de error onBlur**: Validación al salir de cada campo
-- **Estados visuales**: neutral → validando → válido/error
-- Loading spinner durante validaciones asíncronas (documento, email)
-- Confirmación visual de validación exitosa
+#### 8.1.1 Color Scheme (Estricto)
+```css
+/* USAR ESTOS COLORES OFICIALES EXCLUSIVAMENTE */
+--vitalgo-green: #01EF7F        /* Verde principal oficial - Botones principales */
+--vitalgo-green-light: #5AF4AC   /* Verde claro oficial - Hover states */
+--vitalgo-green-lighter: #99F9CC /* Verde más claro oficial - Estados de validación exitosa */
+--vitalgo-green-lightest: #CCFCE5 /* Verde muy claro oficial - Backgrounds sutiles */
+--vitalgo-dark: #002C41          /* Azul oscuro principal oficial - Textos y headers */
+--vitalgo-dark-light: #406171    /* Azul medio oficial - Textos secundarios */
+--vitalgo-dark-lighter: #99ABB3  /* Azul claro oficial - Placeholders */
+```
 
-### 8.3 Botones y Enlaces
-- **"Crear cuenta"**: Habilitado solo con todos los checkboxes marcados
-- **"¿Ya tienes cuenta? Inicia sesión"**: Enlace a `/login`
+#### 8.1.2 Typography System
+```css
+/* TIPOGRAFÍA OFICIAL OBLIGATORIA */
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+/* Jerarquía según manual de marca */
+h1: 2.5rem (40px) font-bold - Título principal página
+h2: 2rem (32px) font-semibold - Títulos de sección
+h3: 1.5rem (24px) font-medium - Subtítulos
+body: 1rem (16px) font-normal - Texto general
+small: 0.875rem (14px) font-normal - Textos auxiliares
+label: 0.875rem (14px) font-medium - Labels de formulario
+```
+
+#### 8.1.3 Logo & Asset Requirements
+```tsx
+/* ASSETS OFICIALES OBLIGATORIOS */
+Logo Principal: "/assets/images/logos/vitalgo-logo-horizontal-official.svg"
+Logo Alternativo: "/assets/images/logos/vitalgo-logo-official.svg"
+Favicon: "/favicon.ico"
+Iconos: "/assets/images/icons/" (usar solo iconos oficiales VitalGo)
+```
+
+#### 8.1.4 Spacing System (4px Base)
+```css
+/* SISTEMA DE ESPACIADO OFICIAL */
+form-sections: space-y-6 (24px entre secciones)
+form-fields: space-y-4 (16px entre campos)
+padding-form: p-6 md:p-8 (24px mobile, 32px desktop)
+margin-container: mx-auto max-w-md (contenedor centrado)
+border-radius: rounded-xl (12px) para cards principales
+border-radius: rounded-lg (8px) para inputs y botones
+```
+
+### 8.2 Navbar Specification (MANDATORY)
+**COMPONENT**: `PublicNavbar` from `/src/shared/components/organisms/PublicNavbar.tsx`
+
+```tsx
+<PublicNavbar
+  showBackButton={true}
+  backUrl="/"
+  backText="Volver al inicio"
+  className="bg-white border-b border-gray-200"
+/>
+```
+
+**BRAND FEATURES**:
+- VitalGo logo horizontal oficial azul (#002C41)
+- Botón back con color hover `text-vitalgo-green`
+- Navegación inteligente al homepage (/)
+- Responsive con breakpoints oficiales del manual de marca
+- Altura estándar: h-16 (64px)
+- ARIA labels en español para accesibilidad
+
+### 8.3 Footer Specification (MANDATORY)
+**COMPONENT**: `PublicFooter` from `/src/shared/components/organisms/PublicFooter.tsx`
+
+```tsx
+<PublicFooter
+  whatsappNumber="+573001234567"
+  className="bg-white border-t border-gray-200"
+/>
+```
+
+**BRAND FEATURES**:
+- Logo footer oficial VitalGo
+- Enlaces legales: Términos y Condiciones, Política de Privacidad
+- Sección de soporte: WhatsApp, LinkedIn, contacto
+- Selector de idioma (español/inglés)
+- Copyright con año dinámico
+- Información completa de la empresa según manual de marca
+
+### 8.4 Form Layout (Brand Compliant)
+```tsx
+/* CONTENEDOR PRINCIPAL */
+<div className="min-h-screen bg-gradient-to-br from-vitalgo-green-lightest to-white">
+  <div className="max-w-md mx-auto px-4 py-8">
+    {/* CARD DEL FORMULARIO */}
+    <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 md:p-8">
+      {/* HEADER CON MARCA */}
+      <div className="text-center mb-6">
+        <h1 className="text-2xl font-bold text-vitalgo-dark mb-2">
+          Crear cuenta como paciente
+        </h1>
+        <p className="text-vitalgo-dark-light">
+          Únete a VitalGo y gestiona tu salud digitalmente
+        </p>
+      </div>
+      {/* FORMULARIO */}
+    </div>
+  </div>
+</div>
+```
+
+### 8.5 Form Fields (Brand Styling)
+```tsx
+/* INPUTS OFICIALES */
+<input className="w-full px-3 py-3 border border-gray-300 rounded-lg
+                 focus:border-vitalgo-green focus:ring-2 focus:ring-vitalgo-green/20
+                 transition-colors placeholder-vitalgo-dark-lighter" />
+
+/* LABELS OFICIALES */
+<label className="block text-sm font-medium text-vitalgo-dark mb-2">
+  Nombre completo <span className="text-red-500">*</span>
+</label>
+
+/* SELECT DROPDOWNS */
+<select className="w-full px-3 py-3 border border-gray-300 rounded-lg
+                  focus:border-vitalgo-green focus:ring-2 focus:ring-vitalgo-green/20
+                  bg-white text-vitalgo-dark">
+```
+
+### 8.6 Validation States (Brand Colors)
+```tsx
+/* ESTADO VÁLIDO */
+<div className="border-vitalgo-green bg-vitalgo-green-lightest">
+  <CheckCircle className="h-4 w-4 text-vitalgo-green" />
+</div>
+
+/* ESTADO ERROR */
+<div className="border-red-300 bg-red-50">
+  <XCircle className="h-4 w-4 text-red-500" />
+  <span className="text-red-700">Mensaje de error específico</span>
+</div>
+
+/* ESTADO CARGANDO */
+<div className="border-vitalgo-green-light">
+  <Spinner className="h-4 w-4 text-vitalgo-green animate-spin" />
+</div>
+```
+
+### 8.7 Buttons & Actions (Brand Compliant)
+```tsx
+/* BOTÓN PRINCIPAL */
+<Button className="w-full bg-vitalgo-green hover:bg-vitalgo-green-light
+                  disabled:bg-gray-300 disabled:cursor-not-allowed
+                  text-white font-medium py-3 px-4 rounded-lg
+                  transition-colors duration-200">
+  Crear cuenta
+</Button>
+
+/* ENLACES */
+<Link className="text-vitalgo-green hover:text-vitalgo-green-light
+                transition-colors font-medium">
+  ¿Ya tienes cuenta? Inicia sesión
+</Link>
+
+/* CHECKBOXES LEGALES */
+<div className="flex items-start space-x-3">
+  <input type="checkbox"
+         className="mt-1 h-4 w-4 text-vitalgo-green
+                   border-gray-300 rounded focus:ring-vitalgo-green" />
+  <label className="text-sm text-vitalgo-dark">
+    Acepto los <a href="/terminos" className="text-vitalgo-green hover:underline">
+    Términos y Condiciones</a>
+  </label>
+</div>
+```
+
+### 8.8 Responsive Design (Manual de Marca)
+```css
+/* BREAKPOINTS OFICIALES */
+Mobile: 320px - 767px (form full-width con padding 16px)
+Tablet: 768px - 1023px (form max-width-lg centrado)
+Desktop: 1024px+ (form max-width-md centrado con sombras)
+
+/* ADAPTACIONES MÓVILES */
+- Touch targets mínimo 44px altura
+- Font-size 16px en inputs (previene zoom iOS)
+- Padding reducido en mobile: p-4 vs p-8 desktop
+- Botones full-width en mobile
+```
+
+### 8.9 Loading & Error States
+- **Loading Spinner**: `text-vitalgo-green` con animación oficial
+- **Success Messages**: `bg-vitalgo-green-lightest border-vitalgo-green text-vitalgo-dark`
+- **Error Messages**: `bg-red-50 border-red-200 text-red-800`
+- **Validation Icons**: Colores oficiales VitalGo para estados
 - **Enlaces legales**: Abren en nueva pestaña
 
 ## 9. Seguridad
@@ -195,7 +368,61 @@ CREATE TABLE users (
 );
 ```
 
-### 10.2 Tabla Patients
+### 10.2 Estrategia de IDs: UUID vs Integer (MANDATORY)
+
+**DIRECTRICES OFICIALES** para selección de tipos de ID en VitalGo:
+
+#### 10.2.1 Usar UUID Para:
+✅ **Entidades Principales (Datos Sensibles)**
+- `users` table - Expuesto en APIs, sensible por seguridad
+- `patients` table - Datos médicos, HIPAA/GDPR compliance
+- `qr_codes` table - Acceso público, seguridad por obscuridad
+- Cualquier tabla con datos médicos principales
+
+**Beneficios UUID:**
+- Imposible enumerar usuarios/pacientes
+- Seguridad en APIs públicas
+- Cumplimiento regulaciones médicas
+- Distribución entre múltiples sistemas
+
+#### 10.2.2 Usar Integer (BIGSERIAL) Para:
+✅ **Tablas de Auditoría y Logs (Performance Crítico)**
+- `login_attempts` - Alta frecuencia, auditoría interna
+- `audit_logs` - Logging general, volumen alto
+- `emergency_access_logs` - Emergencias, performance crítico
+- Cualquier tabla de logging/auditoría interna
+
+**Beneficios Integer:**
+- 4x mejor performance en inserts/queries
+- 75% menos espacio en índices
+- Orden secuencial natural para auditorías
+- Optimización para alta volumetría
+
+#### 10.2.3 Criterios de Decisión:
+```
+¿Es tabla principal con datos médicos? → UUID
+¿Se expone en APIs públicas? → UUID
+¿Es tabla de auditoría/logging? → INTEGER
+¿Requiere máximo performance? → INTEGER
+¿En duda? → UUID (más seguro para plataforma médica)
+```
+
+#### 10.2.4 Ejemplos de Implementación:
+```sql
+-- ✅ CORRECTO: UUID para datos principales
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    ...
+);
+
+-- ✅ CORRECTO: Integer para auditoría
+CREATE TABLE login_attempts (
+    id BIGSERIAL PRIMARY KEY,
+    ...
+);
+```
+
+### 10.3 Tabla Patients
 ```sql
 CREATE TABLE patients (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -432,7 +659,6 @@ backend/slices/signup/
 - React Hook Form (manejo de formularios)
 - react-phone-number-input (input de teléfono)
 - date-fns (manejo de fechas)
-- ~~Google reCAPTCHA v3~~ (eliminado temporalmente)
 - Radix UI (componentes base)
 - **Componentes Compartidos**:
   - `PublicNavbar` (navbar para usuarios no autenticados)
@@ -466,21 +692,94 @@ Estado neutral → [Usuario sale del campo] → Validando (spinner) → Válido/
 
 ## 18. Notas de Implementación
 
-- **Navbar Compartido**: Usar `PublicNavbar` del sistema de componentes compartidos en `/src/shared/components/organisms/PublicNavbar.tsx`
-- **Footer Compartido**: Usar `PublicFooter` del sistema de componentes compartidos en `/src/shared/components/organisms/PublicFooter.tsx`
-- Implementar validaciones tanto en frontend como backend
-- Usar UUID separado `qr_code` para QR codes (seguridad: no exponer PK)
-- Campo `qr_code` renovable sin afectar relaciones de BD
-- Configurar rate limiting a nivel de nginx/servidor web
-- Implementar logging detallado para auditoría
-- Considerar internacionalización futura (i18n)
-- Optimizar rendimiento para carga rápida en móviles
-- **CRÍTICO**: Los campos `acceptTerms` y `acceptPrivacy` deben capturarse del frontend y almacenarse con timestamp para cumplimiento legal
-- **NOTA**: Implementación básica sin CAPTCHA ni envío de emails por ahora
-- **RENDIMIENTO**: Validaciones pesadas (API calls) solo en onBlur, no onChange
+### 18.1 Brand Manual Compliance (CRITICAL)
+- **OBLIGATORIO**: Seguir completamente el `MANUAL_DE_MARCA.md` sin excepciones
+- **Color Migration**: Migrar TODOS los colores genéricos a colores oficiales VitalGo
+  ```tsx
+  // ✅ CORRECTO - Colores oficiales VitalGo
+  className="bg-vitalgo-green hover:bg-vitalgo-green-light text-white"
+  className="text-vitalgo-dark border-vitalgo-green focus:ring-vitalgo-green"
+
+  // ❌ INCORRECTO - Colores genéricos
+  className="bg-green-500 hover:bg-green-600 text-white"
+  className="text-gray-900 border-green-500 focus:ring-green-500"
+  ```
+- **Asset Usage**: Usar ÚNICAMENTE logos oficiales desde `/assets/images/logos/`
+- **Typography**: Aplicar sistema tipográfico oficial con stack de fuentes específico
+
+### 18.2 Component Architecture (Brand Compliant)
+- **Navbar**: `PublicNavbar` from `/src/shared/components/organisms/PublicNavbar.tsx`
+  - Props obligatorios: `showBackButton={true}`, `backUrl="/"`, `backText="Volver al inicio"`
+  - Logo horizontal oficial azul (#002C41)
+  - Responsive con breakpoints del manual de marca
+- **Footer**: `PublicFooter` from `/src/shared/components/organisms/PublicFooter.tsx`
+  - Props: `whatsappNumber="+573001234567"`
+  - Incluye todas las secciones: legal, soporte, idioma
+  - Logo footer oficial VitalGo
+
+### 18.3 Form Styling (Strict Brand Compliance)
+```tsx
+// ESTRUCTURA OBLIGATORIA DEL FORMULARIO
+<div className="min-h-screen bg-gradient-to-br from-vitalgo-green-lightest to-white">
+  <div className="max-w-md mx-auto px-4 py-8">
+    <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 md:p-8">
+      {/* Header con brand colors */}
+      <h1 className="text-2xl font-bold text-vitalgo-dark text-center mb-6">
+        Crear cuenta como paciente
+      </h1>
+      {/* Form sections con spacing oficial */}
+      <div className="space-y-6">
+        {/* Campos con colores oficiales */}
+        <input className="focus:border-vitalgo-green focus:ring-vitalgo-green/20" />
+        <Button className="bg-vitalgo-green hover:bg-vitalgo-green-light" />
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### 18.4 Validation & UX (Brand Guidelines)
+- **Estados de validación**: Usar colores oficiales VitalGo para éxito (`vitalgo-green-lightest`)
+- **Estados de error**: Mantener rojo estándar para errores (`red-50`, `red-500`)
+- **Loading states**: Spinner con `text-vitalgo-green`
+- **Focus states**: Ring con `ring-vitalgo-green/20`
+- **Hover states**: Transiciones con colores oficiales VitalGo
+
+### 18.5 Responsive Design (Manual de Marca)
+- **Mobile First**: Diseño principal para 320px-767px según manual
+- **Breakpoints**: Usar breakpoints oficiales (640px, 768px, 1024px, 1280px)
+- **Touch Targets**: Mínimo 44px altura en mobile
+- **Font Size**: 16px en inputs (previene zoom iOS)
+- **Spacing**: Usar sistema de 4px base del manual de marca
+
+### 18.6 Accessibility (Manual de Marca Standards)
+- **Color Contrast**: Ratio 4.5:1 mínimo (textos normales)
+- **ARIA Labels**: Implementar en español para screen readers
+- **Keyboard Navigation**: Tab order lógico y focus states visibles
+- **Form Labels**: Asociación correcta label-input
+- **Error Messages**: Claros y específicos en español
+
+### 18.7 Technical Implementation
+- **Validaciones**: Implementar tanto en frontend como backend
+- **QR Code Security**: Usar UUID separado `qr_code` (no exponer PK)
+- **Rate Limiting**: Configurar a nivel nginx/servidor web
+- **Logging**: Implementar auditoría detallada
+- **Performance**: Optimizar para carga rápida en móviles
+
+### 18.8 Legal Compliance
+- **CRÍTICO**: Campos `acceptTerms` y `acceptPrivacy` con timestamp para cumplimiento legal
+- **Términos y Condiciones**: Links a páginas oficiales con styling VitalGo
+- **Política de Privacidad**: Accesible desde footer con brand compliance
+- **Consentimiento**: Capturar y almacenar con fecha/hora exacta
+
+### 18.9 Future Considerations
+- **Internacionalización**: Preparar para i18n manteniendo brand consistency
+- **CAPTCHA**: Integrar sin comprometer brand experience
+- **Email Verification**: Diseñar con templates VitalGo branded
+- **Analytics**: Implementar tracking de conversión de registro
 
 ---
 
-**Documento preparado por:** AI Assistant
+**Documento preparado por:** AI Assistant, Jhonatan Rico & Daniela Quintero
 **Revisado por:** [Jhonatan Rico]
-**Aprobado por:** [Jhonatan Rico]
+**Aprobado por:** [Daniela Quintero]

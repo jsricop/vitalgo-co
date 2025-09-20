@@ -1,0 +1,227 @@
+"""
+Profile completion API endpoints for RF002
+"""
+from fastapi import APIRouter, HTTPException, Depends, status
+from sqlalchemy.orm import Session
+from typing import List
+
+from shared.database import get_db
+from slices.auth.infrastructure.api.auth_endpoints import get_current_user
+from slices.profile.application.use_cases.complete_profile_use_case import CompleteProfileUseCase
+from slices.profile.application.dto.profile_completion_dto import (
+    ProfileCompletenessResponse,
+    ExtendedPatientProfileDTO,
+    PatientProfileUpdateDTO,
+    MedicationDTO,
+    AllergyDTO,
+    DiseaseDTO,
+    SurgeryDTO,
+    GynecologicalHistoryDTO
+)
+
+router = APIRouter(prefix="/profile", tags=["profile"])
+
+
+@router.get("/completeness", response_model=ProfileCompletenessResponse)
+async def get_profile_completeness(
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Get profile completeness status for RF002 validation
+    """
+    use_case = CompleteProfileUseCase(db)
+    return use_case.get_profile_completeness(current_user["id"])
+
+
+@router.get("/extended", response_model=ExtendedPatientProfileDTO)
+async def get_extended_profile(
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Get extended patient profile data (RF002 fields)
+    """
+    use_case = CompleteProfileUseCase(db)
+    profile = use_case.get_extended_profile(current_user["id"])
+
+    if not profile:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Patient profile not found"
+        )
+
+    return profile
+
+
+@router.put("/complete")
+async def update_extended_profile(
+    profile_data: PatientProfileUpdateDTO,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Update extended patient profile with RF002 data
+    """
+    use_case = CompleteProfileUseCase(db)
+    result = use_case.update_extended_profile(current_user["id"], profile_data)
+
+    if not result["success"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=result["message"]
+        )
+
+    return result
+
+
+@router.get("/medications", response_model=List[MedicationDTO])
+async def get_medications(
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Get patient medications
+    """
+    use_case = CompleteProfileUseCase(db)
+    return use_case.get_medications(current_user["id"])
+
+
+@router.post("/medications")
+async def add_medication(
+    medication_data: MedicationDTO,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Add new medication
+    """
+    use_case = CompleteProfileUseCase(db)
+    result = use_case.add_medication(current_user["id"], medication_data)
+
+    if not result["success"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=result["message"]
+        )
+
+    return result
+
+
+@router.put("/medications/{medication_id}")
+async def update_medication(
+    medication_id: str,
+    medication_data: MedicationDTO,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Update existing medication
+    """
+    use_case = CompleteProfileUseCase(db)
+    result = use_case.update_medication(current_user["id"], medication_id, medication_data)
+
+    if not result["success"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=result["message"]
+        )
+
+    return result
+
+
+@router.delete("/medications/{medication_id}")
+async def delete_medication(
+    medication_id: str,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Delete medication
+    """
+    use_case = CompleteProfileUseCase(db)
+    result = use_case.delete_medication(current_user["id"], medication_id)
+
+    if not result["success"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=result["message"]
+        )
+
+    return result
+
+
+@router.get("/allergies", response_model=List[AllergyDTO])
+async def get_allergies(
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Get patient allergies
+    """
+    use_case = CompleteProfileUseCase(db)
+    return use_case.get_allergies(current_user["id"])
+
+
+@router.post("/allergies")
+async def add_allergy(
+    allergy_data: AllergyDTO,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Add new allergy
+    """
+    use_case = CompleteProfileUseCase(db)
+    result = use_case.add_allergy(current_user["id"], allergy_data)
+
+    if not result["success"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=result["message"]
+        )
+
+    return result
+
+
+@router.put("/allergies/{allergy_id}")
+async def update_allergy(
+    allergy_id: str,
+    allergy_data: AllergyDTO,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Update existing allergy
+    """
+    use_case = CompleteProfileUseCase(db)
+    result = use_case.update_allergy(current_user["id"], allergy_id, allergy_data)
+
+    if not result["success"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=result["message"]
+        )
+
+    return result
+
+
+@router.delete("/allergies/{allergy_id}")
+async def delete_allergy(
+    allergy_id: str,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Delete allergy
+    """
+    use_case = CompleteProfileUseCase(db)
+    result = use_case.delete_allergy(current_user["id"], allergy_id)
+
+    if not result["success"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=result["message"]
+        )
+
+    return result

@@ -42,7 +42,6 @@ Login Exitoso → Verificar Completitud del Perfil → Mostrar Wizard si Incompl
 - ✅ Dirección de residencia completa
 - ✅ Departamento de residencia
 - ✅ Ciudad de residencia
-- ✅ Teléfono celular
 
 #### Seguridad Social:
 - ✅ EPS
@@ -50,7 +49,6 @@ Login Exitoso → Verificar Completitud del Perfil → Mostrar Wizard si Incompl
 
 #### Información Médica Básica:
 - ✅ Tipo de sangre
-- ✅ Factor RH
 - ✅ Nombre contacto de emergencia
 - ✅ Parentesco contacto emergencia
 - ✅ Teléfono contacto emergencia
@@ -102,7 +100,6 @@ Login Exitoso → Verificar Completitud del Perfil → Mostrar Wizard si Incompl
 | **Dirección Completa** | Text | Mínimo 10 caracteres | ✅ |
 | **Departamento** | Select | 32 departamentos colombianos | ✅ |
 | **Ciudad** | HybridInput | Lista ciudades + input libre | ✅ |
-| **Teléfono Celular** | Phone | Formato +57 XXX XXX XXXX | ✅ |
 
 ### 6.2 Paso 2: Seguridad Social y Ocupación ⭐ **OBLIGATORIO**
 
@@ -123,7 +120,6 @@ Login Exitoso → Verificar Completitud del Perfil → Mostrar Wizard si Incompl
 | Campo | Tipo | Validación | Obligatorio |
 |-------|------|------------|-------------|
 | **Tipo de Sangre** | Radio | O+, O-, A+, A-, B+, B-, AB+, AB- | ✅ |
-| **Factor RH** | Radio | Positivo, Negativo, Desconocido | ✅ |
 
 #### 6.3.2 Contacto de Emergencia
 | Campo | Tipo | Validación | Obligatorio |
@@ -228,27 +224,305 @@ Login Exitoso → Verificar Completitud del Perfil → Mostrar Wizard si Incompl
 - **Longitud máxima**: Validada según especificación por campo
 - **Sanitización**: Prevenir XSS en inputs de texto
 
-## 8. Elementos de Interfaz
+## 8. Brand Manual Compliance & Interface Elements
 
-### 8.1 NavBar
-- **Componente**: `AuthenticatedNavbar` del sistema compartido (`/src/shared/components/organisms/AuthenticatedNavbar.tsx`)
-- **Configuración**: Muestra logo VitalGo y menú de usuario autenticado
-- Logo horizontal azul VitalGo con navegación inteligente al dashboard
-- Menú desplegable de usuario con perfil y logout
-- Fondo blanco con borde inferior
+### 8.1 BRAND MANUAL COMPLIANCE
+**MANDATORY**: Esta página DEBE seguir completamente las especificaciones del `MANUAL_DE_MARCA.md`
 
-### 8.2 Formulario
-- Diseño centrado y responsive (max-width: 4xl)
-- **Secciones expandibles**: Cards separadas por tipo de información
-- **Interfaz dinámica**: Botones "Agregar" para nuevas entradas
-- **Estado vacío**: Mensajes informativos cuando no hay entradas
-- **Eliminación**: Botón X en cada entrada para eliminar
+#### 8.1.1 Color Scheme (Estricto)
+```css
+/* USAR ESTOS COLORES OFICIALES EXCLUSIVAMENTE */
+--vitalgo-green: #01EF7F        /* Verde principal - Botones principales y progreso */
+--vitalgo-green-light: #5AF4AC   /* Verde claro - Hover states y completado */
+--vitalgo-green-lighter: #99F9CC /* Verde más claro - Backgrounds sutiles */
+--vitalgo-green-lightest: #CCFCE5 /* Verde muy claro - Steps completados */
+--vitalgo-dark: #002C41          /* Azul oscuro - Textos principales y headers */
+--vitalgo-dark-light: #406171    /* Azul medio - Textos secundarios */
+--vitalgo-dark-lighter: #99ABB3  /* Azul claro - Placeholders y disabled */
+--vitalgo-dark-lightest: #CCD5D9 /* Azul muy claro - Backgrounds neutros */
+```
 
-### 8.3 Botones y Acciones
-- **"Agregar [Tipo]"**: Agrega nueva entrada de alergia/enfermedad/cirugía
-- **"Guardar Información"**: Procesa y guarda toda la información
-- **"Completar Después"**: Salta el formulario y va al dashboard
-- **Íconos**: Heart (VitalGo), Activity (alergias), Shield (enfermedades), Calendar (cirugías)
+#### 8.1.2 Typography System (Wizard Specific)
+```css
+/* TIPOGRAFÍA OFICIAL PARA WIZARD */
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+/* Jerarquía específica para wizard */
+h1: 2rem (32px) font-bold - Título principal wizard
+h2: 1.5rem (24px) font-semibold - Títulos de pasos
+h3: 1.25rem (20px) font-medium - Títulos de secciones
+body: 1rem (16px) font-normal - Texto general
+small: 0.875rem (14px) font-normal - Instrucciones
+label: 0.875rem (14px) font-medium - Labels de formulario
+button: 0.875rem (14px) font-semibold - Botones de acción
+```
+
+#### 8.1.3 Logo & Asset Requirements
+```tsx
+/* ASSETS OFICIALES OBLIGATORIOS */
+Logo Navbar: "/assets/images/logos/vitalgo-logo-horizontal-official.svg"
+Logo Icon: "/assets/images/logos/vitalgo-icon-official.svg"
+Heart Icon: "/assets/images/icons/vitalgo-heart.svg"
+Favicon: "/favicon.ico"
+/* Iconografía médica oficial VitalGo */
+```
+
+#### 8.1.4 Spacing System (Wizard Layout)
+```css
+/* SISTEMA DE ESPACIADO WIZARD */
+wizard-container: max-w-4xl mx-auto px-4 py-8
+step-spacing: space-y-8 (32px entre pasos)
+section-spacing: space-y-6 (24px entre secciones)
+field-spacing: space-y-4 (16px entre campos)
+card-padding: p-6 md:p-8 (24px mobile, 32px desktop)
+progress-height: h-2 (8px) para barra de progreso
+step-indicator: h-10 w-10 (40x40px) para indicators
+```
+
+### 8.2 Navbar Specification (MANDATORY)
+**COMPONENT**: `AuthenticatedNavbar` from `/src/shared/components/organisms/AuthenticatedNavbar.tsx`
+
+```tsx
+<AuthenticatedNavbar
+  user={{
+    name: userData.fullName,
+    role: "paciente",
+    avatar: userData.avatar
+  }}
+  onLogout={handleLogout}
+  className="bg-white border-b border-gray-200"
+/>
+```
+
+**BRAND FEATURES**:
+- VitalGo logo horizontal oficial azul (#002C41)
+- Navegación inteligente al dashboard (/dashboard)
+- Menú de usuario con dropdown: Perfil, Configuración, Cerrar sesión
+- Avatar circular con iniciales del usuario
+- Responsive con hamburger menu en mobile
+- Altura estándar: h-16 (64px)
+
+### 8.3 Footer Specification (MANDATORY)
+**COMPONENT**: `AuthenticatedFooter` from `/src/shared/components/organisms/AuthenticatedFooter.tsx`
+
+```tsx
+<AuthenticatedFooter
+  className="bg-white border-t border-gray-200"
+/>
+```
+
+**BRAND FEATURES**:
+- Footer simplificado para usuarios autenticados
+- Logo footer oficial VitalGo más pequeño
+- Enlaces esenciales: Soporte, Privacidad, Términos
+- Copyright con año dinámico
+- Sin sobrecarga informativa (focus en completar perfil)
+
+### 8.4 Wizard Layout (Brand Compliant)
+```tsx
+/* CONTENEDOR PRINCIPAL WIZARD */
+<div className="min-h-screen bg-gradient-to-br from-vitalgo-green-lightest via-white to-vitalgo-dark-lightest">
+  <div className="max-w-4xl mx-auto px-4 py-8">
+    {/* HEADER WIZARD CON MARCA */}
+    <div className="text-center mb-8">
+      <div className="flex justify-center mb-4">
+        <img src="/assets/images/icons/vitalgo-heart.svg"
+             alt="VitalGo" className="h-12 w-12" />
+      </div>
+      <h1 className="text-2xl font-bold text-vitalgo-dark mb-2">
+        Completa tu perfil médico
+      </h1>
+      <p className="text-vitalgo-dark-light">
+        Esta información nos ayuda a brindarte la mejor atención en emergencias
+      </p>
+    </div>
+
+    {/* PROGRESS INDICATOR */}
+    <div className="mb-8">
+      <div className="flex justify-between items-center mb-4">
+        <span className="text-sm font-medium text-vitalgo-dark">
+          Paso {currentStep} de 5
+        </span>
+        <span className="text-sm text-vitalgo-dark-light">
+          {completionPercentage}% completado
+        </span>
+      </div>
+      <div className="w-full bg-gray-200 rounded-full h-2">
+        <div className="bg-vitalgo-green h-2 rounded-full transition-all duration-300"
+             style={{width: `${completionPercentage}%`}}></div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### 8.5 Step Indicators (Brand Design)
+```tsx
+/* INDICADORES DE PASOS */
+<div className="flex justify-center items-center space-x-4 mb-8">
+  {[1, 2, 3, 4, 5].map((step) => (
+    <div key={step} className="flex items-center">
+      <div className={`h-10 w-10 rounded-full flex items-center justify-center
+                      ${step < currentStep ? 'bg-vitalgo-green text-white' :
+                        step === currentStep ? 'bg-vitalgo-green border-2 border-vitalgo-green-light text-white' :
+                        'bg-gray-200 text-gray-500'}`}>
+        {step < currentStep ? (
+          <CheckIcon className="h-5 w-5" />
+        ) : (
+          <span className="text-sm font-semibold">{step}</span>
+        )}
+      </div>
+      {step < 5 && (
+        <div className={`w-12 h-0.5 ${step < currentStep ? 'bg-vitalgo-green' : 'bg-gray-200'}`} />
+      )}
+    </div>
+  ))}
+</div>
+```
+
+### 8.6 Form Cards (Brand Styling)
+```tsx
+/* CARDS DE FORMULARIO */
+<div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 md:p-8 mb-6">
+  {/* HEADER DE SECCIÓN */}
+  <div className="flex items-center mb-6">
+    <div className="h-8 w-8 bg-vitalgo-green rounded-lg flex items-center justify-center mr-3">
+      <HeartIcon className="h-5 w-5 text-white" />
+    </div>
+    <div>
+      <h2 className="text-xl font-semibold text-vitalgo-dark">
+        Información Personal
+      </h2>
+      <p className="text-sm text-vitalgo-dark-light">
+        Campos marcados con * son obligatorios
+      </p>
+    </div>
+  </div>
+
+  {/* CAMPOS DEL FORMULARIO */}
+  <div className="space-y-4">
+    <input className="w-full px-3 py-3 border border-gray-300 rounded-lg
+                     focus:border-vitalgo-green focus:ring-2 focus:ring-vitalgo-green/20
+                     transition-colors placeholder-vitalgo-dark-lighter" />
+  </div>
+</div>
+```
+
+### 8.7 Dynamic Sections (Medical History)
+```tsx
+/* SECCIONES DINÁMICAS - ALERGIAS, ENFERMEDADES, CIRUGÍAS */
+<div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 md:p-8">
+  {/* HEADER CON CONTADOR */}
+  <div className="flex justify-between items-center mb-6">
+    <div className="flex items-center">
+      <div className="h-8 w-8 bg-red-500 rounded-lg flex items-center justify-center mr-3">
+        <AlertTriangleIcon className="h-5 w-5 text-white" />
+      </div>
+      <h3 className="text-lg font-semibold text-vitalgo-dark">
+        Alergias ({allergies.length})
+      </h3>
+    </div>
+    <Button className="bg-vitalgo-green hover:bg-vitalgo-green-light text-white
+                      px-4 py-2 rounded-lg text-sm font-medium">
+      + Agregar Alergia
+    </Button>
+  </div>
+
+  {/* LISTA DE ITEMS O ESTADO VACÍO */}
+  {allergies.length === 0 ? (
+    <div className="text-center py-8 text-vitalgo-dark-light">
+      <AlertTriangleIcon className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+      <p>No has agregado alergias aún</p>
+      <p className="text-sm">Agregar esta información ayuda en emergencias</p>
+    </div>
+  ) : (
+    <div className="space-y-4">
+      {/* Items con brand styling */}
+    </div>
+  )}
+</div>
+```
+
+### 8.8 Navigation Buttons (Brand Design)
+```tsx
+/* NAVEGACIÓN DEL WIZARD */
+<div className="flex justify-between items-center pt-8 border-t border-gray-200">
+  {/* BOTÓN ANTERIOR */}
+  {currentStep > 1 && (
+    <Button variant="outline"
+            className="border-vitalgo-green text-vitalgo-green hover:bg-vitalgo-green hover:text-white">
+      ← Paso anterior
+    </Button>
+  )}
+
+  <div className="flex space-x-4 ml-auto">
+    {/* SALTAR PASO (SOLO SECCIONES OPCIONALES) */}
+    {isOptionalStep && (
+      <Button variant="ghost"
+              className="text-vitalgo-dark-light hover:text-vitalgo-dark">
+        Saltar por ahora
+      </Button>
+    )}
+
+    {/* BOTÓN SIGUIENTE/COMPLETAR */}
+    <Button className="bg-vitalgo-green hover:bg-vitalgo-green-light text-white
+                      px-8 py-3 rounded-lg font-semibold">
+      {isLastStep ? 'Completar perfil' : 'Siguiente paso →'}
+    </Button>
+  </div>
+</div>
+```
+
+### 8.9 Form Validation (Brand States)
+```tsx
+/* ESTADOS DE VALIDACIÓN CON COLORES OFICIALES */
+// Estado válido
+<div className="border-vitalgo-green bg-vitalgo-green-lightest">
+  <CheckCircleIcon className="h-4 w-4 text-vitalgo-green" />
+  <span className="text-vitalgo-dark text-sm">Campo completado correctamente</span>
+</div>
+
+// Estado error
+<div className="border-red-300 bg-red-50">
+  <XCircleIcon className="h-4 w-4 text-red-500" />
+  <span className="text-red-700 text-sm">Este campo es obligatorio</span>
+</div>
+
+// Estado loading
+<div className="border-vitalgo-green-light bg-vitalgo-green-lightest">
+  <Spinner className="h-4 w-4 text-vitalgo-green animate-spin" />
+  <span className="text-vitalgo-dark text-sm">Guardando...</span>
+</div>
+```
+
+### 8.10 Responsive Design (Manual de Marca)
+```css
+/* BREAKPOINTS OFICIALES PARA WIZARD */
+Mobile: 320px - 767px
+- Wizard stack vertical
+- Progress indicator simplificado
+- Cards full-width con padding reducido
+- Botones full-width
+
+Tablet: 768px - 1023px
+- Wizard centrado max-width-3xl
+- Progress indicator completo
+- Cards con sombras moderadas
+- Botones con width automático
+
+Desktop: 1024px+
+- Wizard centrado max-width-4xl
+- Full progress indicator con labels
+- Cards con sombras profundas
+- Layout horizontal para navegación
+```
+
+### 8.11 Accessibility (Manual de Marca)
+- **Wizard Navigation**: ARIA labels para navegación de pasos
+- **Progress Indicator**: Screen reader announcements
+- **Form Labels**: Asociación correcta con elementos
+- **Error Messages**: Claros y específicos en español
+- **Keyboard Navigation**: Tab order lógico entre pasos
+- **Color Contrast**: Ratio 4.5:1 con colores oficiales VitalGo
 
 ## 9. Seguridad
 
@@ -283,7 +557,6 @@ ALTER TABLE patients ADD COLUMN birth_city VARCHAR(100);
 ALTER TABLE patients ADD COLUMN residence_address TEXT NOT NULL DEFAULT '';
 ALTER TABLE patients ADD COLUMN residence_department VARCHAR(100) NOT NULL DEFAULT '';
 ALTER TABLE patients ADD COLUMN residence_city VARCHAR(100) NOT NULL DEFAULT '';
-ALTER TABLE patients ADD COLUMN cell_phone VARCHAR(20) NOT NULL DEFAULT '';
 ALTER TABLE patients ADD COLUMN eps VARCHAR(100) NOT NULL DEFAULT '';
 ALTER TABLE patients ADD COLUMN eps_other VARCHAR(100);
 ALTER TABLE patients ADD COLUMN health_insurance VARCHAR(200);
@@ -291,7 +564,6 @@ ALTER TABLE patients ADD COLUMN complementary_plan VARCHAR(100);
 ALTER TABLE patients ADD COLUMN complementary_plan_other VARCHAR(100);
 ALTER TABLE patients ADD COLUMN occupation VARCHAR(200) NOT NULL DEFAULT '';
 ALTER TABLE patients ADD COLUMN blood_type VARCHAR(5) NOT NULL DEFAULT '';
-ALTER TABLE patients ADD COLUMN rh_factor VARCHAR(10) NOT NULL DEFAULT '';
 
 -- Campos de completitud del perfil
 ALTER TABLE patients ADD COLUMN profile_completed BOOLEAN DEFAULT FALSE;
@@ -400,15 +672,144 @@ CREATE TABLE patient_surgeries (
 );
 ```
 
-### 10.6 Índices para Performance
+### 10.6 Tablas de Auditoría y Logging (BIGSERIAL IDs)
 ```sql
--- Índices para búsquedas frecuentes
+-- Logs de completitud del perfil (alta volumetría)
+CREATE TABLE profile_completion_logs (
+    id BIGSERIAL PRIMARY KEY,                -- Integer optimizado para alto volumen
+    patient_id UUID REFERENCES patients(id),
+    step_completed INTEGER NOT NULL,
+    step_name VARCHAR(100),
+    completion_percentage INTEGER,
+    fields_completed JSON,
+    completion_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    session_id VARCHAR(255),
+    ip_address INET,
+    user_agent TEXT,
+    -- Índices optimizados para consultas frecuentes
+    INDEX idx_profile_logs_patient_time (patient_id, completion_timestamp DESC),
+    INDEX idx_profile_logs_step_time (step_completed, completion_timestamp DESC),
+    INDEX idx_profile_logs_session (session_id, completion_timestamp DESC)
+);
+
+-- Logs de validación de formularios (debugging interno)
+CREATE TABLE form_validation_logs (
+    id BIGSERIAL PRIMARY KEY,                -- Debugging y análisis interno
+    patient_id UUID REFERENCES patients(id),
+    field_name VARCHAR(100) NOT NULL,
+    field_value_hash VARCHAR(64),           -- Hash del valor para debugging sin exponer datos
+    validation_result BOOLEAN NOT NULL,
+    error_message VARCHAR(500),
+    validation_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    step_number INTEGER,
+    form_section VARCHAR(50),
+    -- Índices para análisis de validación
+    INDEX idx_validation_logs_patient (patient_id, validation_timestamp DESC),
+    INDEX idx_validation_logs_field_result (field_name, validation_result, validation_timestamp DESC),
+    INDEX idx_validation_logs_step (step_number, validation_timestamp DESC)
+);
+
+-- Logs de envío de formularios (métricas de uso)
+CREATE TABLE form_submission_logs (
+    id BIGSERIAL PRIMARY KEY,                -- Métricas internas de alta frecuencia
+    patient_id UUID REFERENCES patients(id),
+    step_submitted INTEGER NOT NULL,
+    submission_success BOOLEAN NOT NULL,
+    processing_time_ms INTEGER,
+    error_code VARCHAR(50),
+    submission_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    client_info JSON,
+    -- Índices para análisis de performance
+    INDEX idx_submission_logs_patient_time (patient_id, submission_timestamp DESC),
+    INDEX idx_submission_logs_success_time (submission_success, submission_timestamp DESC),
+    INDEX idx_submission_logs_performance (processing_time_ms, submission_timestamp DESC)
+);
+```
+
+**Rationale para BIGSERIAL en Logging:**
+- **Alto Volumen**: Profile completion genera muchos logs por cada usuario
+- **Performance Crítica**: Consultas de análisis requieren máxima velocidad
+- **Uso Interno**: Sin exposición en APIs públicas, secuencialidad no es problema
+- **Analytics**: Optimización para reportes de completitud y métricas UX
+
+### 10.7 Índices para Performance
+```sql
+-- Índices para búsquedas frecuentes en entidades principales
 CREATE INDEX idx_patients_profile_completion ON patients(profile_completed, mandatory_fields_completed);
 CREATE INDEX idx_patients_eps ON patients(eps);
 CREATE INDEX idx_patients_blood_type ON patients(blood_type);
 CREATE INDEX idx_emergency_contacts_patient ON patient_emergency_contacts(patient_id);
 CREATE INDEX idx_medications_patient_active ON patient_medications(patient_id, is_active);
+
+-- Índices adicionales para análisis de completitud
+CREATE INDEX idx_patients_completion_date ON patients(profile_completion_date DESC);
+CREATE INDEX idx_patients_gender_stats ON patients(biological_sex, gender);
+CREATE INDEX idx_allergies_severity ON patient_allergies(severity, patient_id);
+CREATE INDEX idx_illnesses_chronic ON patient_illnesses(is_chronic, patient_id);
 ```
+
+### 10.7 UUID vs Integer ID Strategy
+
+**STRATEGIC APPROACH**: VitalGo utiliza una estrategia híbrida para selección de tipos de ID basada en propósito y performance requirements.
+
+#### 10.7.1 UUID Usage Guidelines
+**USAR UUID PARA:**
+- **Tablas principales/entidades core**: `users`, `patients`, `medical_records`, `qr_codes`
+- **Datos con exposición pública**: APIs públicas, URLs, formularios web
+- **Identificadores distribuidos**: Datos que se replican entre sistemas
+- **Requisitos de seguridad**: Prevenir enumeración y predicción de IDs
+
+**IMPLEMENTACIÓN EN RF002:**
+- `patients.id` → UUID (entidad principal, exposición pública)
+- `patient_emergency_contacts.id` → UUID (datos críticos de emergencia)
+- `patient_medications.id` → UUID (información médica sensible)
+- `patient_gynecological_history.id` → UUID (datos médicos confidenciales)
+- `patient_allergies.id` → UUID (información crítica de emergencia)
+- `patient_illnesses.id` → UUID (historial médico permanente)
+- `patient_surgeries.id` → UUID (registros médicos importantes)
+
+**JUSTIFICACIÓN:**
+- Seguridad por no-predicibilidad en APIs públicas
+- Prevención de ataques de enumeración médica
+- Compatibilidad con sistemas de salud distribuidos
+- Estándar para identificadores de pacientes
+
+#### 10.7.2 Integer (BIGSERIAL) Usage Guidelines
+**USAR INTEGER PARA:**
+- **Tablas de auditoría/logging**: `profile_completion_logs`, `form_submission_logs`, `form_validation_logs`
+- **Alta volumetría/frecuencia**: Tablas con miles de inserts diarios
+- **Uso interno únicamente**: Sin exposición en APIs públicas
+- **Performance crítica**: Consultas complejas con múltiples JOINs
+
+**IMPLEMENTACIÓN EN RF002:**
+- `profile_completion_logs.id` → BIGSERIAL (alto volumen, tracking de completitud)
+- `form_validation_logs.id` → BIGSERIAL (debugging interno, análisis de errores)
+- `form_submission_logs.id` → BIGSERIAL (métricas de uso, performance analytics)
+
+**JUSTIFICACIÓN:**
+- Performance superior (4x más rápido) para logs de wizard de alta frecuencia
+- Storage efficiency para auditoría de completitud de perfil
+- Facilita debugging y análisis de patrones de validación
+- Optimización para reportes UX y métricas de conversión
+- Orden secuencial natural facilita análisis temporal de completitud
+
+#### 10.7.3 Implementation Matrix for RF002
+
+| Tabla Type | ID Type | Rationale | Performance Impact |
+|------------|---------|-----------|-------------------|
+| **Patient Entities** | UUID | Medical Data Security | Normal |
+| **Medical Records** | UUID | HIPAA/Privacy Compliance | Normal |
+| **Emergency Info** | UUID | Critical Access Needs | Normal |
+| **Profile Completion Logs** | BIGSERIAL | High Volume Wizard Tracking | High Performance |
+| **Form Validation Logs** | BIGSERIAL | Debugging & Error Analysis | High Performance |
+| **Form Submission Logs** | BIGSERIAL | UX Metrics & Performance | High Performance |
+
+#### 10.7.4 Medical Data Privacy Considerations
+**MEDICAL STANDARD**: Información médica requiere UUIDs por:
+- **HIPAA Compliance**: Estándares internacionales de privacidad médica
+- **Non-Enumerable**: Prevenir acceso secuencial a registros médicos
+- **Cross-System**: Compatibilidad con sistemas hospitalarios
+- **Emergency Access**: QR codes y acceso de emergencia seguros
 
 ## 11. NUEVOS API Endpoints
 
@@ -448,8 +849,7 @@ CREATE INDEX idx_medications_patient_active ON patient_medications(patient_id, i
   "birth_city": "Medellín",
   "residence_address": "Carrera 45 # 12-34, Apto 501",
   "residence_department": "Antioquia",
-  "residence_city": "Medellín",
-  "cell_phone": "+573123456789"
+  "residence_city": "Medellín"
 }
 ```
 
@@ -469,7 +869,6 @@ CREATE INDEX idx_medications_patient_active ON patient_medications(patient_id, i
 ```json
 {
   "blood_type": "O+",
-  "rh_factor": "positivo",
   "emergency_contact": {
     "name": "María González",
     "relationship": "madre",
@@ -754,16 +1153,124 @@ Registro exitoso → /completar-perfil-medico → Completar → /dashboard
 
 ## 17. Notas de Implementación
 
-- **Navbar Compartido**: Usar `AuthenticatedNavbar` del sistema de componentes compartidos en `/src/shared/components/organisms/AuthenticatedNavbar.tsx`
-- **Footer Compartido**: Usar `AuthenticatedFooter` del sistema de componentes compartidos en `/src/shared/components/organisms/AuthenticatedFooter.tsx`
-- **Formulario opcional**: Usuario puede completar parcialmente o saltarse
-- **Múltiples entradas**: Interfaz dinámica para agregar/eliminar información
-- **Validación progresiva**: Solo campos obligatorios bloquean el envío
-- **Guardado por secciones**: 3 endpoints separados para flexibilidad
-- **Autenticación obligatoria**: Verificar JWT en cada request
-- **Responsive design**: Optimizar para móviles (uso común en emergencias)
-- **Accesibilidad**: Importante para usuarios con discapacidades
-- **Performance**: Lazy loading de componentes para carga rápida
+### 17.1 Brand Manual Compliance (CRITICAL)
+- **OBLIGATORIO**: Seguir completamente el `MANUAL_DE_MARCA.md` sin excepciones
+- **Color Migration**: Migrar TODOS los colores genéricos a colores oficiales VitalGo
+  ```tsx
+  // ✅ CORRECTO - Colores oficiales VitalGo para wizard
+  className="bg-vitalgo-green hover:bg-vitalgo-green-light text-white"
+  className="text-vitalgo-dark border-vitalgo-green focus:ring-vitalgo-green/20"
+  className="bg-vitalgo-green-lightest border-vitalgo-green" // Estado completado
+
+  // ❌ INCORRECTO - Colores genéricos
+  className="bg-green-500 hover:bg-green-600 text-white"
+  className="text-gray-900 border-green-500 focus:ring-green-500"
+  className="bg-green-100 border-green-300" // Estado genérico
+  ```
+- **Progress Indicators**: Usar colores oficiales VitalGo para barras y steps
+- **Asset Usage**: Logos oficiales y iconografía VitalGo únicamente
+- **Typography**: Sistema oficial con jerarquía específica para wizard
+
+### 17.2 Component Architecture (Brand Compliant)
+- **Navbar**: `AuthenticatedNavbar` from `/src/shared/components/organisms/AuthenticatedNavbar.tsx`
+  - Props completos con user data: name, role="paciente", avatar
+  - Función onLogout configurada
+  - Logo horizontal oficial azul (#002C41)
+  - Menú desplegable con opciones oficiales
+- **Footer**: `AuthenticatedFooter` from `/src/shared/components/organisms/AuthenticatedFooter.tsx`
+  - Footer simplificado para usuarios autenticados
+  - Logo footer oficial VitalGo
+  - Enlaces esenciales sin sobrecarga informativa
+
+### 17.3 Wizard Layout & Styling (Strict Brand Compliance)
+```tsx
+// ESTRUCTURA OBLIGATORIA DEL WIZARD
+<div className="min-h-screen bg-gradient-to-br from-vitalgo-green-lightest via-white to-vitalgo-dark-lightest">
+  <div className="max-w-4xl mx-auto px-4 py-8">
+    {/* Header con iconografía oficial */}
+    <div className="text-center mb-8">
+      <img src="/assets/images/icons/vitalgo-heart.svg" className="h-12 w-12 mx-auto mb-4" />
+      <h1 className="text-2xl font-bold text-vitalgo-dark">Completa tu perfil médico</h1>
+    </div>
+
+    {/* Progress bar con colores oficiales */}
+    <div className="w-full bg-gray-200 rounded-full h-2 mb-8">
+      <div className="bg-vitalgo-green h-2 rounded-full transition-all duration-300"></div>
+    </div>
+
+    {/* Steps indicator con brand colors */}
+    <div className="flex justify-center space-x-4 mb-8">
+      {/* Indicators con vitalgo-green para activos/completados */}
+    </div>
+  </div>
+</div>
+```
+
+### 17.4 Form Sections & Cards (Brand Guidelines)
+- **Card Styling**: `bg-white rounded-xl shadow-lg border border-gray-200`
+- **Section Headers**: Icons con backgrounds oficiales VitalGo
+- **Form Fields**: Focus states con `focus:border-vitalgo-green focus:ring-vitalgo-green/20`
+- **Validation States**: Success con `vitalgo-green-lightest`, errors con red estándar
+- **Buttons**: Primary con `bg-vitalgo-green hover:bg-vitalgo-green-light`
+
+### 17.5 Dynamic Medical Sections (Brand Compliant)
+- **Add Buttons**: `bg-vitalgo-green hover:bg-vitalgo-green-light` consistente
+- **Item Cards**: Border y background con variaciones oficiales VitalGo
+- **Delete Actions**: Red estándar para destructive actions
+- **Empty States**: Iconografía gris con mensajes motivacionales
+- **Counters**: Badges con colores oficiales según tipo de información
+
+### 17.6 Wizard Navigation (Brand Design)
+```tsx
+// NAVEGACIÓN CON BRAND COMPLIANCE
+<div className="flex justify-between items-center pt-8 border-t border-gray-200">
+  <Button variant="outline" className="border-vitalgo-green text-vitalgo-green hover:bg-vitalgo-green hover:text-white">
+    ← Paso anterior
+  </Button>
+
+  <div className="flex space-x-4">
+    <Button variant="ghost" className="text-vitalgo-dark-light hover:text-vitalgo-dark">
+      Saltar por ahora
+    </Button>
+    <Button className="bg-vitalgo-green hover:bg-vitalgo-green-light text-white px-8 py-3">
+      {isLastStep ? 'Completar perfil' : 'Siguiente paso →'}
+    </Button>
+  </div>
+</div>
+```
+
+### 17.7 Responsive Design (Manual de Marca)
+- **Mobile First**: Diseño principal para 320px-767px
+- **Breakpoints**: Oficiales (640px, 768px, 1024px, 1280px)
+- **Wizard Adaptations**:
+  - Mobile: Stack vertical, progress simplificado, botones full-width
+  - Tablet: Centrado max-width-3xl, progress completo
+  - Desktop: max-width-4xl, layout horizontal para navegación
+- **Touch Targets**: Mínimo 44px en elementos interactivos
+
+### 17.8 Accessibility & UX (Manual de Marca)
+- **Wizard Navigation**: ARIA labels para pasos y progreso
+- **Screen Readers**: Announcements de progreso y cambios de paso
+- **Keyboard Navigation**: Tab order lógico, navegación con flechas
+- **Color Contrast**: Ratio 4.5:1 con colores oficiales VitalGo
+- **Error Messages**: Claros, específicos, en español
+- **Form Labels**: Asociación correcta con campos
+
+### 17.9 Technical Implementation
+- **Mandatory Validation**: Campos obligatorios bloquean progreso
+- **Optional Sections**: Pasos 4 y 5 pueden saltarse
+- **Auto-save**: Guardar progreso por paso completado
+- **Authentication**: JWT verificado en cada request
+- **Data Persistence**: Formulario mantiene estado entre navegación
+- **API Calls**: Endpoints separados por step para flexibilidad
+
+### 17.10 Performance & Quality (Brand Standards)
+- **Asset Optimization**: SVG logos oficiales para mejor rendimiento
+- **Lazy Loading**: Componentes de pasos no actuales
+- **Animations**: Transiciones suaves con duración estándar (200ms)
+- **Progressive Enhancement**: Funcionalidad core sin JavaScript
+- **Error Handling**: Graceful degradation con mensajes útiles
+- **Testing**: Verificar compliance visual con manual de marca
 
 ## 18. Consideraciones Futuras
 
@@ -777,6 +1284,6 @@ Registro exitoso → /completar-perfil-medico → Completar → /dashboard
 
 ---
 
-**Documento preparado por:** AI Assistant
-**Revisado por:** [Pendiente]
-**Aprobado por:** [Pendiente]
+**Documento preparado por:** AI Assistant & Jhonatan Rico & Daniela Quintero
+**Revisado por:** [Jhonatan Rico]
+**Aprobado por:** [Daniela Quintero]
