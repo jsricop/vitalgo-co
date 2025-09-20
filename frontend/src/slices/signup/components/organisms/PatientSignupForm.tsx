@@ -100,6 +100,27 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
+
+    // Real-time password confirmation validation
+    if (field === 'password' || field === 'confirmPassword') {
+      setTimeout(() => {
+        const currentPassword = field === 'password' ? (value as string) : formData.password;
+        const currentConfirmPassword = field === 'confirmPassword' ? (value as string) : formData.confirmPassword;
+
+        if (currentConfirmPassword) {
+          const isValid = currentConfirmPassword === currentPassword;
+          setValidationStates(prev => ({
+            ...prev,
+            confirmPassword: {
+              isValidating: false,
+              isValid,
+              error: null,
+              feedback: isValid ? 'Coinciden' : 'No coinciden'
+            }
+          }));
+        }
+      }, 0);
+    }
   };
 
   // Handle country change
@@ -270,7 +291,8 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
       confirmPassword: {
         isValidating: false,
         isValid,
-        error: isValid ? null : 'Las contraseñas no coinciden'
+        error: isValid ? null : 'Las contraseñas no coinciden',
+        feedback: isValid ? 'Coinciden' : 'No coinciden'
       }
     }));
   };
@@ -441,6 +463,7 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
             linkUrl="/terminos-y-condiciones"
             required
             data-testid="acceptTerms-checkbox"
+            enableAcceptButton={true}
           />
 
           <CheckboxWithLink
@@ -453,6 +476,7 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
             linkUrl="/politica-de-privacidad"
             required
             data-testid="acceptPrivacy-checkbox"
+            enableAcceptButton={true}
           />
         </div>
 

@@ -15,6 +15,7 @@ interface CheckboxWithLinkProps {
   linkUrl: string;
   required?: boolean;
   'data-testid'?: string;
+  enableAcceptButton?: boolean;
 }
 
 export const CheckboxWithLink: React.FC<CheckboxWithLinkProps> = ({
@@ -26,7 +27,8 @@ export const CheckboxWithLink: React.FC<CheckboxWithLinkProps> = ({
   linkText,
   linkUrl,
   required = false,
-  'data-testid': testId
+  'data-testid': testId,
+  enableAcceptButton = false
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -44,6 +46,21 @@ export const CheckboxWithLink: React.FC<CheckboxWithLinkProps> = ({
   const handleLinkClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsModalOpen(true);
+  };
+
+  const handleAccept = () => {
+    // Create a synthetic event to trigger the onChange handler
+    const syntheticEvent = {
+      target: {
+        checked: true,
+        name,
+        type: 'checkbox',
+        value: 'on'
+      }
+    } as React.ChangeEvent<HTMLInputElement>;
+
+    onChange(syntheticEvent);
+    setIsModalOpen(false);
   };
 
   return (
@@ -79,6 +96,7 @@ export const CheckboxWithLink: React.FC<CheckboxWithLinkProps> = ({
         onClose={() => setIsModalOpen(false)}
         documentType={getDocumentType()}
         data-testid={`${testId}-modal`}
+        onAccept={enableAcceptButton ? handleAccept : undefined}
       />
     </>
   );

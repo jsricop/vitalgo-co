@@ -14,13 +14,15 @@ interface LegalModalProps {
   onClose: () => void;
   documentType: LegalDocumentType;
   'data-testid'?: string;
+  onAccept?: () => void;
 }
 
 export const LegalModal: React.FC<LegalModalProps> = ({
   isOpen,
   onClose,
   documentType,
-  'data-testid': testId = 'legal-modal'
+  'data-testid': testId = 'legal-modal',
+  onAccept
 }) => {
   const getTitle = () => {
     switch (documentType) {
@@ -50,6 +52,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({
       onClose={onClose}
       title={getTitle()}
       data-testid={testId}
+      onAccept={onAccept}
     >
       {getContent()}
     </Modal>

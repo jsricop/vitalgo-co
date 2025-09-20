@@ -76,7 +76,18 @@ export const AccountSection: React.FC<AccountSectionProps> = ({
           data-testid="confirmPassword-input"
         />
 
-        {validationStates.confirmPassword?.error && (
+        {validationStates.confirmPassword?.feedback && confirmPassword && (
+          <p
+            className={`text-sm ${
+              validationStates.confirmPassword.isValid ? 'text-green-600' : 'text-red-600'
+            }`}
+            data-testid="confirmPassword-feedback"
+          >
+            {validationStates.confirmPassword.feedback}
+          </p>
+        )}
+
+        {validationStates.confirmPassword?.error && !validationStates.confirmPassword?.feedback && (
           <p className="text-sm text-red-600" data-testid="confirmPassword-error">
             {validationStates.confirmPassword.error}
           </p>

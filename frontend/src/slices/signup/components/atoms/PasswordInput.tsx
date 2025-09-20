@@ -45,7 +45,7 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
 
     if (score < 3) return { level: 'weak', color: 'bg-red-500', text: 'Débil' };
     if (score < 4) return { level: 'medium', color: 'bg-yellow-500', text: 'Media' };
-    return { level: 'strong', color: 'bg-green-500', text: 'Fuerte' };
+    return { level: 'strong', color: 'bg-vitalgo-green', text: 'Fuerte' };
   };
 
   const strength = getPasswordStrength(value);
@@ -112,19 +112,19 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
           <div className="text-xs text-gray-600 space-y-1">
             <p>La contraseña debe tener:</p>
             <ul className="space-y-0.5 ml-2">
-              <li className={value.length >= 8 ? 'text-green-600' : 'text-gray-400'}>
+              <li className={value.length >= 8 ? 'text-vitalgo-green' : 'text-gray-400'}>
                 • Mínimo 8 caracteres
               </li>
-              <li className={/[A-Z]/.test(value) ? 'text-green-600' : 'text-gray-400'}>
+              <li className={/[A-Z]/.test(value) ? 'text-vitalgo-green' : 'text-gray-400'}>
                 • Una letra mayúscula
               </li>
-              <li className={/[a-z]/.test(value) ? 'text-green-600' : 'text-gray-400'}>
+              <li className={/[a-z]/.test(value) ? 'text-vitalgo-green' : 'text-gray-400'}>
                 • Una letra minúscula
               </li>
-              <li className={/\d/.test(value) ? 'text-green-600' : 'text-gray-400'}>
+              <li className={/\d/.test(value) ? 'text-vitalgo-green' : 'text-gray-400'}>
                 • Un número
               </li>
-              <li className={/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(value) ? 'text-green-600' : 'text-gray-400'}>
+              <li className={/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(value) ? 'text-vitalgo-green' : 'text-gray-400'}>
                 • Un carácter especial
               </li>
             </ul>

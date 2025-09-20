@@ -91,7 +91,7 @@ export const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
     if (validation?.isValid === true) {
       return (
         <div className="absolute right-3 top-3">
-          <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+          <svg className="w-4 h-4 text-vitalgo-green" fill="currentColor" viewBox="0 0 20 20">
             <path
               fillRule="evenodd"
               d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -146,7 +146,7 @@ export const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
             ${finalError
               ? 'border-red-300 focus:ring-red-500'
               : validation?.isValid === true
-                ? 'border-green-300 focus:ring-green-500'
+                ? 'border-vitalgo-green focus:ring-vitalgo-green/20'
                 : 'border-gray-300 focus:ring-blue-500'
             }
             ${disabled ? 'bg-gray-100 cursor-not-allowed text-gray-500' : 'bg-white'}
@@ -194,7 +194,7 @@ export const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
 
       {/* Validation success message */}
       {validation?.isValid === true && !finalError && (
-        <p className="text-sm text-green-600" data-testid={`${testId}-success`}>
+        <p className="text-sm text-vitalgo-green" data-testid={`${testId}-success`}>
           ✓ Número válido
         </p>
       )}

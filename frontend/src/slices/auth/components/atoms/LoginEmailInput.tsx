@@ -1,47 +1,44 @@
 /**
- * Text Input atom component with validation states
+ * Login Email Input atom component
+ * Specialized email input for authentication with validation
  */
 import React from 'react';
-import { FieldValidationState } from '../../types';
+import { FieldValidationState } from '../../../signup/types';
 
-interface TextInputProps {
+interface LoginEmailInputProps {
   id: string;
   name: string;
-  label: string;
-  placeholder: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   validation?: FieldValidationState;
-  required?: boolean;
-  maxLength?: number;
+  disabled?: boolean;
   'data-testid'?: string;
 }
 
-export const TextInput: React.FC<TextInputProps> = ({
+export const LoginEmailInput: React.FC<LoginEmailInputProps> = ({
   id,
   name,
-  label,
-  placeholder,
   value,
   onChange,
   onBlur,
   validation,
-  required = false,
-  maxLength,
+  disabled = false,
   'data-testid': testId
 }) => {
   const getInputClasses = () => {
-    let classes = "w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors";
+    let classes = "w-full pl-12 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors bg-white";
 
-    if (validation?.isValidating) {
+    if (disabled) {
+      classes += " bg-gray-50 cursor-not-allowed";
+    } else if (validation?.isValidating) {
       classes += " border-blue-300 focus:ring-blue-500";
     } else if (validation?.isValid === true) {
       classes += " border-vitalgo-green focus:ring-vitalgo-green/20";
     } else if (validation?.isValid === false) {
       classes += " border-red-300 focus:ring-red-500";
     } else {
-      classes += " border-gray-300 focus:ring-blue-500";
+      classes += " border-gray-300 focus:ring-vitalgo-green/20 focus:border-vitalgo-green";
     }
 
     return classes;
@@ -50,33 +47,40 @@ export const TextInput: React.FC<TextInputProps> = ({
   return (
     <div className="space-y-2">
       <label htmlFor={id} className="block text-sm font-medium text-gray-700">
-        {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
+        Correo electrónico
+        <span className="text-red-500 ml-1">*</span>
       </label>
 
       <div className="relative">
         <input
           id={id}
           name={name}
-          type="text"
-          placeholder={placeholder}
+          type="email"
+          placeholder="tu@email.com"
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          maxLength={maxLength}
+          disabled={disabled}
           className={getInputClasses()}
           data-testid={testId}
-          required={required}
+          required
+          autoComplete="email"
         />
 
-        {/* Validation spinner */}
+        {/* Email icon */}
+        <div className="absolute left-4 top-3.5 pointer-events-none">
+          <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+          </svg>
+        </div>
+
+        {/* Validation icons */}
         {validation?.isValidating && (
           <div className="absolute right-3 top-3.5">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
           </div>
         )}
 
-        {/* Success checkmark */}
         {validation?.isValid === true && (
           <div className="absolute right-3 top-3.5">
             <svg className="h-4 w-4 text-vitalgo-green" fill="currentColor" viewBox="0 0 20 20">
@@ -85,7 +89,6 @@ export const TextInput: React.FC<TextInputProps> = ({
           </div>
         )}
 
-        {/* Error X */}
         {validation?.isValid === false && (
           <div className="absolute right-3 top-3.5">
             <svg className="h-4 w-4 text-red-500" fill="currentColor" viewBox="0 0 20 20">
@@ -105,7 +108,7 @@ export const TextInput: React.FC<TextInputProps> = ({
       {/* Success message */}
       {validation?.isValid === true && !validation.error && (
         <p className="text-sm text-vitalgo-green">
-          ✓ Válido
+          ✓ Email válido
         </p>
       )}
     </div>

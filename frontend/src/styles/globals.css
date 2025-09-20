@@ -1,14 +1,3 @@
-@import "tailwindcss";
-
-@theme {
-  /* VitalGo Brand Colors - Official Manual de Marca */
-  --color-vitalgo-green: #01EF7F;
-  --color-vitalgo-green-light: #5AF4AC;
-  --color-vitalgo-green-lighter: #99F9CC;
-  --color-vitalgo-green-lightest: #CCFCE5;
-
-  --color-vitalgo-dark: #002C41;
-  --color-vitalgo-dark-light: #406171;
-  --color-vitalgo-dark-lighter: #99ABB3;
-  --color-vitalgo-dark-lightest: #CCD5D9;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

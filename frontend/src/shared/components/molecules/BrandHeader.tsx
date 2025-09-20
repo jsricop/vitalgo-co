@@ -10,25 +10,42 @@ interface BrandHeaderProps {
   backUrl?: string
   backText?: string
   className?: string
+  onBackClick?: () => void
+  useHistoryBack?: boolean
 }
 
 export function BrandHeader({
   isAuthenticated = false,
   showBackButton = false,
   backUrl = "/",
-  backText = "Volver",
-  className = ""
+  backText = "Regresar",
+  className = "",
+  onBackClick,
+  useHistoryBack = false
 }: BrandHeaderProps) {
+  const shouldUseHistoryBack = useHistoryBack && !onBackClick
+  const handleBackClick = onBackClick || (shouldUseHistoryBack ? () => window.history.back() : undefined)
+
   return (
-    <div className={`flex items-center space-x-4 ${className}`}>
+    <div className={`flex items-center justify-between w-full ${className}`}>
       {showBackButton && (
-        <Link
-          href={backUrl}
-          className="flex items-center space-x-2 text-sm font-medium text-gray-600 hover:text-vitalgo-green transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          <span>{backText}</span>
-        </Link>
+        shouldUseHistoryBack || onBackClick ? (
+          <button
+            onClick={handleBackClick}
+            className="flex items-center space-x-2 text-sm font-medium text-gray-600 hover:text-vitalgo-green transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>{backText}</span>
+          </button>
+        ) : (
+          <Link
+            href={backUrl}
+            className="flex items-center space-x-2 text-sm font-medium text-gray-600 hover:text-vitalgo-green transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>{backText}</span>
+          </Link>
+        )
       )}
       <Logo isAuthenticated={isAuthenticated} />
     </div>

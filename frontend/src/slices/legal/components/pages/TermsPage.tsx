@@ -4,11 +4,19 @@
  * URL: /terminos-y-condiciones
  */
 import React from 'react';
+import { PublicNavbar } from '@/shared/components/organisms/PublicNavbar';
+import { PublicFooter } from '@/shared/components/organisms/PublicFooter';
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <PublicNavbar
+        showBackButton={true}
+        useHistoryBack={true}
+      />
+
+      <div className="flex-1 py-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-sm p-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">
@@ -117,22 +125,11 @@ export default function TermsPage() {
             </section>
           </div>
 
-          <div className="mt-8 pt-8 border-t border-gray-200">
-            <div className="flex justify-between items-center">
-              <button
-                onClick={() => window.history.back()}
-                className="text-blue-600 hover:text-blue-800 font-medium"
-              >
-                ← Volver
-              </button>
-
-              <p className="text-sm text-gray-500">
-                VitalGo - Expedientes Médicos Digitales
-              </p>
-            </div>
-          </div>
+        </div>
         </div>
       </div>
+
+      <PublicFooter />
     </div>
   );
 }

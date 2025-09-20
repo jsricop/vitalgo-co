@@ -43,4 +43,5 @@ export interface FieldValidationState {
   isValidating: boolean;
   isValid: boolean | null;
   error: string | null;
+  feedback?: string;
 }

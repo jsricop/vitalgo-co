@@ -7,13 +7,17 @@ interface PublicNavbarProps {
   backUrl?: string
   backText?: string
   className?: string
+  onBackClick?: () => void
+  useHistoryBack?: boolean
 }
 
 export function PublicNavbar({
   showBackButton = false,
   backUrl = "/",
-  backText = "Volver al inicio",
-  className = ""
+  backText = "Regresar",
+  className = "",
+  onBackClick,
+  useHistoryBack = false
 }: PublicNavbarProps) {
   return (
     <nav className={`bg-white border-b border-gray-200 ${className}`}>
@@ -24,6 +28,8 @@ export function PublicNavbar({
             showBackButton={showBackButton}
             backUrl={backUrl}
             backText={backText}
+            onBackClick={onBackClick}
+            useHistoryBack={useHistoryBack}
           />
         </div>
       </div>

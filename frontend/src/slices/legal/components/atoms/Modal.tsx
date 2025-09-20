@@ -10,6 +10,8 @@ interface ModalProps {
   title: string;
   children: React.ReactNode;
   'data-testid'?: string;
+  onAccept?: () => void;
+  acceptButtonText?: string;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -17,7 +19,9 @@ export const Modal: React.FC<ModalProps> = ({
   onClose,
   title,
   children,
-  'data-testid': testId = 'modal'
+  'data-testid': testId = 'modal',
+  onAccept,
+  acceptButtonText = 'Aceptar'
 }) => {
   // Close modal on ESC key
   useEffect(() => {
@@ -105,14 +109,35 @@ export const Modal: React.FC<ModalProps> = ({
 
           {/* Footer */}
           <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-            <button
-              type="button"
-              className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-              onClick={onClose}
-              data-testid="modal-close-footer-button"
-            >
-              Cerrar
-            </button>
+            {onAccept ? (
+              <>
+                <button
+                  type="button"
+                  className="inline-flex w-full justify-center rounded-md bg-vitalgo-green px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-vitalgo-green/90 sm:ml-3 sm:w-auto"
+                  onClick={onAccept}
+                  data-testid="modal-accept-button"
+                >
+                  {acceptButtonText}
+                </button>
+                <button
+                  type="button"
+                  className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                  onClick={onClose}
+                  data-testid="modal-close-footer-button"
+                >
+                  Cerrar
+                </button>
+              </>
+            ) : (
+              <button
+                type="button"
+                className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                onClick={onClose}
+                data-testid="modal-close-footer-button"
+              >
+                Cerrar
+              </button>
+            )}
           </div>
         </div>
       </div>
