@@ -49,7 +49,8 @@ export class SignupApiService {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        full_name: formData.fullName,
+        first_name: formData.firstName,
+        last_name: formData.lastName,
         document_type: formData.documentType,
         document_number: formData.documentNumber,
         phone_international: formData.phoneInternational,

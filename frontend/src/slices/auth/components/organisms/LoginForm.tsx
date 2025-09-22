@@ -107,13 +107,41 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     try {
       const response = await authApiClient.login(formData);
 
-      // Successful login
+      // Successful login - Add comprehensive debugging checkpoints
+      console.log('🔍 LOGIN SUCCESS CHECKPOINT 1: API Response received', {
+        hasOnSuccess: !!onSuccess,
+        redirectUrl: response.redirectUrl,
+        fullResponse: response
+      });
+
       if (onSuccess) {
+        console.log('🔍 LOGIN SUCCESS CHECKPOINT 2: Using onSuccess callback');
         onSuccess(response.redirectUrl);
       } else {
         // Default redirect behavior
         const redirectUrl = response.redirectUrl || '/dashboard';
-        router.push(redirectUrl);
+        console.log('🔍 LOGIN SUCCESS CHECKPOINT 3: Using router.push', {
+          redirectUrl,
+          routerType: typeof router,
+          routerMethods: Object.getOwnPropertyNames(router)
+        });
+
+        try {
+          // Add a delay to ensure localStorage is available and stable
+          console.log('🔍 LOGIN SUCCESS CHECKPOINT 3.5: Adding delay to ensure localStorage stability');
+          await new Promise(resolve => setTimeout(resolve, 250));
+
+          await router.push(redirectUrl);
+          console.log('🔍 LOGIN SUCCESS CHECKPOINT 4: router.push completed successfully');
+        } catch (routerError) {
+          console.error('🔍 LOGIN SUCCESS CHECKPOINT 4 ERROR: router.push failed', {
+            error: routerError,
+            redirectUrl
+          });
+          // Fallback: Try window.location
+          console.log('🔍 LOGIN SUCCESS CHECKPOINT 5: Attempting window.location fallback');
+          window.location.href = redirectUrl;
+        }
       }
 
     } catch (error) {
@@ -197,7 +225,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           onEmailChange={handleEmailChange}
           onPasswordChange={handlePasswordChange}
           emailValidation={emailValidation}
-          passwordError={passwordError}
+          passwordError={passwordError || undefined}
           disabled={isLoading}
           data-testid="login-credentials-form"
         />

@@ -4,12 +4,18 @@ Patient registration DTOs
 from datetime import date, datetime
 from pydantic import BaseModel, EmailStr, Field
 from uuid import UUID
+from typing import Optional
+
+from slices.auth.application.dto import UserResponseDto
 
 
 class PatientRegistrationDTO(BaseModel):
     """Data Transfer Object for patient registration"""
 
-    full_name: str = Field(..., min_length=2, max_length=100, description="Patient full name")
+    # Name fields - industry standard separated structure
+    first_name: str = Field(..., min_length=1, max_length=50, description="Patient first name")
+    last_name: str = Field(..., min_length=1, max_length=50, description="Patient last name")
+
     document_type: str = Field(..., min_length=2, max_length=5, description="Document type code")
     document_number: str = Field(..., min_length=6, max_length=20, description="Document number")
     phone_international: str = Field(..., min_length=10, max_length=20, description="Phone in international format")
@@ -26,15 +32,24 @@ class PatientRegistrationDTO(BaseModel):
 
 
 class PatientRegistrationResponse(BaseModel):
-    """Response DTO for successful patient registration"""
+    """Response DTO for successful patient registration with auto-login support"""
 
     success: bool = Field(default=True, description="Registration success status")
     message: str = Field(..., description="Success message")
     user_id: UUID = Field(..., description="Created user ID")
     patient_id: UUID = Field(..., description="Created patient ID")
     qr_code: UUID = Field(..., description="Patient QR code")
-    token: str = Field(..., description="JWT authentication token")
-    redirect_url: str = Field(default="/completar-perfil-medico", description="Next step URL")
+
+    # Authentication tokens for auto-login
+    access_token: str = Field(..., description="JWT access token")
+    refresh_token: str = Field(..., description="JWT refresh token")
+    expires_in: int = Field(..., description="Token expiration time in seconds")
+
+    # User information for frontend
+    user: UserResponseDto = Field(..., description="User information")
+
+    # Navigation
+    redirect_url: str = Field(default="/dashboard", description="Auto-redirect URL")
 
     class Config:
         validate_assignment = True

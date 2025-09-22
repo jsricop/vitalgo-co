@@ -1,13 +1,14 @@
 """
 SQLAlchemy implementation of AuthRepository
 """
-from typing import Optional
+from typing import Optional, Tuple
 from uuid import UUID
 from datetime import datetime, timezone
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from slices.auth.application.ports.auth_repository import AuthRepository
 from slices.signup.domain.models.user_model import User
+from slices.signup.domain.models.patient_model import Patient
 
 
 class SQLAlchemyAuthRepository(AuthRepository):
@@ -25,6 +26,19 @@ class SQLAlchemyAuthRepository(AuthRepository):
     async def get_user_by_id(self, user_id: UUID) -> Optional[User]:
         """Get user by ID for token validation"""
         return self.db_session.query(User).filter(User.id == user_id).first()
+
+    async def get_user_with_patient_by_email(self, email: str) -> Optional[Tuple[User, Patient]]:
+        """Get user with patient data by email for authentication with profile data"""
+        result = self.db_session.query(User, Patient).join(
+            Patient, User.id == Patient.user_id
+        ).filter(
+            User.email == email.lower()
+        ).first()
+
+        if result:
+            user, patient = result
+            return (user, patient)
+        return None
 
     async def update_last_login(self, user_id: UUID) -> None:
         """Update user's last login timestamp"""

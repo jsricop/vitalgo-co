@@ -48,15 +48,17 @@ class AuthenticateUserUseCase:
         # Step 1: Rate limiting checks
         await self._check_rate_limits(login_request.email, ip_address)
 
-        # Step 2: Get user by email
-        user = await self.auth_repository.get_user_by_email(login_request.email)
+        # Step 2: Get user with patient data by email
+        user_patient_data = await self.auth_repository.get_user_with_patient_by_email(login_request.email)
 
         # Step 3: Verify user exists and account status
-        if not user:
+        if not user_patient_data:
             await self._record_failed_attempt(
                 login_request.email, ip_address, user_agent, "user_not_found"
             )
             return self._create_error_response("Email o contraseña incorrectos")
+
+        user, patient = user_patient_data
 
         # Check if user is locked
         if await self.auth_repository.is_user_locked(user.id):
@@ -124,12 +126,12 @@ class AuthenticateUserUseCase:
         # Step 10: Determine redirect URL based on profile completeness
         redirect_url = self._get_redirect_url(user)
 
-        # Step 11: Create response
+        # Step 11: Create response with patient data
         user_response = UserResponseDto(
             id=str(user.id),
             email=user.email,
-            first_name=getattr(user, 'first_name', None),
-            last_name=getattr(user, 'last_name', None),
+            first_name=patient.first_name,
+            last_name=patient.last_name,
             user_type=user.user_type,
             is_verified=user.is_verified,
             profile_completed=True,  # TODO: Implement actual profile completion logic

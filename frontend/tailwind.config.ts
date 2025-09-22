@@ -2,8 +2,10 @@ import type { Config } from 'tailwindcss'
 
 const config: Config = {
   content: [
-    './src/slices/**/*.{js,ts,jsx,tsx,mdx}',  // All slice components and pages
-    './src/shared/**/*.{js,ts,jsx,tsx,mdx}',  // Shared components across slices
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',      // Next.js App Router pages and layouts
+    './src/slices/**/*.{js,ts,jsx,tsx,mdx}',   // All slice components and pages
+    './src/shared/**/*.{js,ts,jsx,tsx,mdx}',   // Shared components across slices
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}', // Additional components directory
   ],
   theme: {
     extend: {

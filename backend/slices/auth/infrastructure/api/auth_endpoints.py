@@ -200,7 +200,7 @@ async def refresh_token(
 
 
 @router.get("/me")
-async def get_current_user(
+async def get_current_user_info(
     credentials: HTTPAuthorizationCredentials = Depends(security),
     use_case: ValidateTokenUseCase = Depends(get_validate_token_use_case)
 ) -> Dict[str, Any]:
@@ -246,3 +246,66 @@ async def validate_token(
 
     except Exception:
         return {"valid": False}
+
+
+# Dependency function for authentication
+async def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
+) -> 'User':
+    """
+    Dependency to get current authenticated user from JWT token
+    Returns User object for use in protected endpoints
+    """
+    try:
+        print(f"🔍 GET_CURRENT_USER DEBUG - Starting authentication:")
+        token = credentials.credentials
+        print(f"   Token length: {len(token)}")
+        print(f"   Token preview: {token[:50]}...")
+
+        # Create use case with proper dependency injection
+        auth_repository = SQLAlchemyAuthRepository(db)
+        user_session_repository = SQLAlchemyUserSessionRepository(db)
+        jwt_service = JWTService()
+
+        use_case = ValidateTokenUseCase(
+            auth_repository=auth_repository,
+            user_session_repository=user_session_repository,
+            jwt_service=jwt_service
+        )
+
+        print(f"🔍 GET_CURRENT_USER DEBUG - About to execute ValidateTokenUseCase...")
+        user_data = await use_case.execute(token)
+        print(f"🔍 GET_CURRENT_USER DEBUG - ValidateTokenUseCase completed successfully")
+        print(f"   User data: {user_data}")
+
+        # Import here to avoid circular imports
+        from slices.signup.domain.models.user_model import User
+
+        # Get the actual User object from the database using the validated user_id
+        user_id = user_data["user_id"]
+        print(f"🔍 GET_CURRENT_USER DEBUG - Getting user by ID: {user_id}")
+        user = await auth_repository.get_user_by_id(user_id)
+
+        if not user:
+            print(f"🔍 GET_CURRENT_USER DEBUG - ❌ User not found in database")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User not found"
+            )
+
+        print(f"🔍 GET_CURRENT_USER DEBUG - ✅ Authentication successful for user: {user.email}")
+        return user
+
+    except HTTPException as e:
+        print(f"🔍 GET_CURRENT_USER DEBUG - ❌ HTTPException: {e.detail}")
+        raise
+
+    except Exception as e:
+        print(f"🔍 GET_CURRENT_USER DEBUG - ❌ Unexpected exception: {type(e).__name__}: {str(e)}")
+        import traceback
+        print(f"🔍 GET_CURRENT_USER DEBUG - ❌ Traceback: {traceback.format_exc()}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token"
+        )

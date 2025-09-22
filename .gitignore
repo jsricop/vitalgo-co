@@ -84,6 +84,17 @@ debug-test.js
 temp/
 tmp/
 
+# Test files and debugging artifacts
+login_test.json
+test_login.py
+token.txt
+debug-*.js
+test-jwt-timing.js
+debug-login.spec.ts
+**/debug-*.png
+test_connection.py
+test_signup_migration.py
+
 # Production deployment files with sensitive data - NEVER COMMIT
 AWS_DEPLOYMENT_PLAN.md
 migrate.py
@@ -104,3 +115,11 @@ docker-compose.local.yml
 # Production deployment logs and backups
 /tmp/vitalgo_deployment_*
 vitalgo_deployment_backups/
+
+# Test database data registry - Contains sensitive test credentials
+TEST_DB_DATA_REGISTER.md
+
+# Development reference files - Local development use only
+DB_FIELDS_REFERENCE.md
+API_REFERENCE.md
+TYPES_REFERENCE.md

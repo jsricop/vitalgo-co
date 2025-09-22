@@ -9,6 +9,9 @@ from slices.signup.application.dto.patient_registration import PatientRegistrati
 from slices.signup.application.use_cases.register_patient import RegisterPatientUseCase
 from slices.signup.infrastructure.persistence.user_repository import SQLAlchemyUserRepository
 from slices.signup.infrastructure.persistence.patient_repository import SQLAlchemyPatientRepository
+from slices.auth.infrastructure.security.jwt_service import JWTService
+from slices.auth.infrastructure.persistence.sqlalchemy_user_session_repository import SQLAlchemyUserSessionRepository
+from slices.auth.infrastructure.persistence.sqlalchemy_auth_repository import SQLAlchemyAuthRepository
 
 router = APIRouter(prefix="/api/signup", tags=["Patient Signup"])
 
@@ -17,7 +20,16 @@ def get_register_patient_use_case(db: Session = Depends(get_db)) -> RegisterPati
     """Dependency injection for RegisterPatientUseCase"""
     user_repository = SQLAlchemyUserRepository(db)
     patient_repository = SQLAlchemyPatientRepository(db)
-    return RegisterPatientUseCase(user_repository, patient_repository)
+    jwt_service = JWTService()
+    user_session_repository = SQLAlchemyUserSessionRepository(db)
+    auth_repository = SQLAlchemyAuthRepository(db)
+    return RegisterPatientUseCase(
+        user_repository,
+        patient_repository,
+        jwt_service,
+        user_session_repository,
+        auth_repository
+    )
 
 
 @router.post("/patient", response_model=PatientRegistrationResponse, status_code=status.HTTP_201_CREATED)

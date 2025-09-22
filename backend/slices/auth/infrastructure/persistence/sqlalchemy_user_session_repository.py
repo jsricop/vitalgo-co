@@ -45,10 +45,29 @@ class SQLAlchemyUserSessionRepository(UserSessionRepository):
 
     async def get_session_by_token(self, session_token: str) -> Optional[UserSession]:
         """Get session by access token"""
-        return self.db_session.query(UserSession).filter(
+        print(f"🔍 SESSION DEBUG - Searching for token:")
+        print(f"   Token length: {len(session_token)}")
+        print(f"   Token preview: {session_token[:50]}...")
+
+        # Get all active sessions to debug
+        all_sessions = self.db_session.query(UserSession).filter(
+            UserSession.is_active == True
+        ).all()
+
+        print(f"   Total active sessions: {len(all_sessions)}")
+        for i, sess in enumerate(all_sessions):
+            print(f"   Session {i+1}: token length={len(sess.session_token or '')}, preview={(sess.session_token or '')[:50]}...")
+            print(f"   Session {i+1}: user_id={sess.user_id}, created={sess.created_at}")
+            if sess.session_token == session_token:
+                print(f"   ✅ FOUND EXACT MATCH at Session {i+1}")
+
+        result = self.db_session.query(UserSession).filter(
             UserSession.session_token == session_token,
             UserSession.is_active == True
         ).first()
+
+        print(f"   Query result: {'Found' if result else 'Not found'}")
+        return result
 
     async def get_session_by_refresh_token(self, refresh_token: str) -> Optional[UserSession]:
         """Get session by refresh token"""

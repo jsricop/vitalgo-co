@@ -75,6 +75,35 @@ class AuthApiClientImpl implements AuthApiClient {
 
       const data = await response.json();
 
+      // Add debugging checkpoints for API response
+      console.log('🔍 API CLIENT CHECKPOINT 1: Raw API response', {
+        hasRedirectUrl: 'redirect_url' in data,
+        redirectUrl: data.redirect_url,
+        responseKeys: Object.keys(data)
+      });
+
+      // JWT TOKEN DEBUG: Analyze received token immediately
+      try {
+        const payload = JSON.parse(atob(data.access_token.split('.')[1]));
+        const currentTime = Math.floor(Date.now() / 1000);
+        const timeUntilExp = payload.exp - currentTime;
+
+        console.log('🔍 FRONTEND JWT DEBUG - Token Received Analysis:');
+        console.log(`   Received at timestamp: ${currentTime}`);
+        console.log(`   Token exp timestamp: ${payload.exp}`);
+        console.log(`   Time until expiration: ${timeUntilExp} seconds`);
+        console.log(`   Token valid immediately: ${timeUntilExp > 0}`);
+        console.log(`   Full token payload:`, payload);
+
+        if (timeUntilExp <= 0) {
+          console.log('❌ FRONTEND JWT DEBUG - TOKEN EXPIRED UPON RECEIPT!');
+        } else if (timeUntilExp < 60) {
+          console.log('⚠️ FRONTEND JWT DEBUG - TOKEN EXPIRES VERY SOON!');
+        }
+      } catch (e) {
+        console.error('❌ FRONTEND JWT DEBUG - Token analysis failed:', e);
+      }
+
       // Store tokens and user data
       localStorage.setItem('accessToken', data.access_token);
       if (data.refresh_token) {
@@ -82,7 +111,12 @@ class AuthApiClientImpl implements AuthApiClient {
       }
       localStorage.setItem('user', JSON.stringify(data.user));
 
-      return {
+      console.log('🔍 API CLIENT CHECKPOINT 2: localStorage updated', {
+        accessTokenStored: !!localStorage.getItem('accessToken'),
+        userStored: !!localStorage.getItem('user')
+      });
+
+      const loginResponse = {
         success: true,
         accessToken: data.access_token,
         refreshToken: data.refresh_token,
@@ -100,6 +134,13 @@ class AuthApiClientImpl implements AuthApiClient {
         },
         redirectUrl: data.redirect_url
       };
+
+      console.log('🔍 API CLIENT CHECKPOINT 3: Returning login response', {
+        redirectUrl: loginResponse.redirectUrl,
+        hasRedirectUrl: !!loginResponse.redirectUrl
+      });
+
+      return loginResponse;
     } catch (error) {
       // Re-throw LoginErrorResponse objects
       if (error && typeof error === 'object' && 'success' in error) {

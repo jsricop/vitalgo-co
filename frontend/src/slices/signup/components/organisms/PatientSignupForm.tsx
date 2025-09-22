@@ -24,7 +24,8 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
 }) => {
   // Form state
   const [formData, setFormData] = useState<PatientRegistrationForm>({
-    fullName: '',
+    firstName: '',
+    lastName: '',
     documentType: '',
     documentNumber: '',
     phoneInternational: '', // Computed from country + phone
@@ -157,8 +158,11 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
 
     try {
       switch (field) {
-        case 'fullName':
-          validateFullName(value as string);
+        case 'firstName':
+          validateFirstName(value as string);
+          break;
+        case 'lastName':
+          validateLastName(value as string);
           break;
         case 'documentNumber':
           if (formData.documentType && value) {
@@ -193,23 +197,35 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
 
   const isRequiredField = (field: string): boolean => {
     const requiredFields = [
-      'fullName', 'documentType', 'documentNumber',
+      'firstName', 'lastName', 'documentType', 'documentNumber',
       'phoneInternational', 'birthDate', 'email',
       'password', 'confirmPassword'
     ];
     return requiredFields.includes(field);
   };
 
-  const validateFullName = (name: string) => {
-    const words = name.trim().split(/\s+/);
-    const isValid = words.length >= 2 && name.length <= 100 && /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/.test(name);
+  const validateFirstName = (name: string) => {
+    const isValid = name.trim().length >= 1 && name.length <= 50 && /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/.test(name);
 
     setValidationStates(prev => ({
       ...prev,
-      fullName: {
+      firstName: {
         isValidating: false,
         isValid,
-        error: isValid ? null : 'Debe contener al menos nombre y apellido (solo letras)'
+        error: isValid ? null : 'Debe contener al menos un nombre (solo letras)'
+      }
+    }));
+  };
+
+  const validateLastName = (name: string) => {
+    const isValid = name.trim().length >= 1 && name.length <= 50 && /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/.test(name);
+
+    setValidationStates(prev => ({
+      ...prev,
+      lastName: {
+        isValidating: false,
+        isValid,
+        error: isValid ? null : 'Debe contener al menos un apellido (solo letras)'
       }
     }));
   };
@@ -358,7 +374,8 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
   // Check if form is valid for submission
   const isFormValid = () => {
     const requiredFieldsValid = [
-      formData.fullName,
+      formData.firstName,
+      formData.lastName,
       formData.documentType,
       formData.documentNumber,
       phoneState.phoneNumber,
@@ -408,7 +425,8 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-8" data-testid="patient-signup-form">
       <PersonalInfoSection
-        fullName={formData.fullName}
+        firstName={formData.firstName}
+        lastName={formData.lastName}
         documentType={formData.documentType}
         documentNumber={formData.documentNumber}
         birthDate={formData.birthDate}
@@ -419,7 +437,8 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
         onCountryChange={handleCountryChange}
         documentTypes={documentTypes}
         validationStates={{
-          fullName: validationStates.fullName,
+          firstName: validationStates.firstName,
+          lastName: validationStates.lastName,
           documentNumber: validationStates.documentNumber,
           phone: validationStates.phone
         }}

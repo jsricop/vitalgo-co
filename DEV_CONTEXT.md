@@ -1,5 +1,63 @@
 # Development Context
 
+## Reference Documentation System
+
+**Goal**: These documents serve as the single source of truth for API contracts, database schema, type definitions, and test data registry across the full-stack application, ensuring architectural consistency, reducing development errors, and maintaining testing quality.
+
+### Purpose of Each Document:
+
+#### API_REFERENCE.md
+- **Complete API endpoint documentation** including request/response schemas, status codes, authentication requirements, and error handling
+- **Contract definition** between frontend and backend services
+- **Security specifications** for authentication, rate limiting, and data validation
+- **Status code mapping** and error response formats for consistent error handling
+
+#### DB_FIELDS_REFERENCE.md
+- **Comprehensive database schema reference** with field types, constraints, indexes, relationships, and cascade rules
+- **Data integrity specifications** including nullable fields, default values, and validation constraints
+- **Security considerations** for sensitive data handling, encryption, and audit trails
+- **Performance optimization** through proper indexing and relationship definitions
+
+#### TYPES_REFERENCE.md
+- **TypeScript/Python type definitions** that ensure type safety across frontend-backend communication
+- **DTO specifications** for consistent data transfer between application layers
+- **Form validation types** and API response interfaces
+- **Database model types** that mirror the actual schema structure
+
+#### TEST_DB_DATA_REGISTER.md
+- **Persistent test data registry** with user accounts, credentials, and validation scenarios for consistent testing quality
+- **Test user management** including complete profiles, IDs, and authentication credentials
+- **API testing scenarios** with JSON payloads for different testing workflows
+- **Database connection information** for local development environment
+- **Quality assurance checkpoints** ensuring test consistency across development processes
+
+### Usage Guidelines:
+
+#### Mandatory Reference Process
+1. **Before Development**: Always consult relevant reference documents before implementing features
+2. **During Implementation**: Use the documents to ensure proper type usage, API contracts, and test data consistency
+3. **Testing Phase**: Reference TEST_DB_DATA_REGISTER.md for consistent test scenarios and user credentials
+4. **After Changes**: Update the corresponding reference document immediately after any modifications
+
+#### Update Requirements
+- **API Changes**: Any endpoint modifications MUST update API_REFERENCE.md with new schemas, status codes, and examples
+- **Database Schema**: All table/field changes MUST be reflected in DB_FIELDS_REFERENCE.md including constraints and relationships
+- **Type Definitions**: New DTOs or interface changes MUST be documented in TYPES_REFERENCE.md with both frontend and backend versions
+- **Test Data**: New test users, scenarios, or credential changes MUST be documented in TEST_DB_DATA_REGISTER.md with complete user profiles and validation checkpoints
+
+#### Consistency Enforcement
+- **Frontend-Backend Alignment**: TypeScript interfaces must match Python DTOs exactly
+- **Database-Application Sync**: Model types must reflect actual database schema constraints
+- **API-Type Matching**: Request/response types must align with documented API schemas
+- **Test Data Persistence**: Test data in local development MUST be persistent and never deleted, ensuring consistent testing environment across all development processes
+
+#### Development Flow
+```
+Reference Documents → Plan Implementation → Code Changes → Update Reference Documents → Test Data Validation → Validate Consistency
+```
+
+**Critical Rule**: Each development process that involves API endpoints, database modifications, type changes, or test data management MUST consider and, if applicable, update these reference documents to maintain system integrity, developer experience, and testing quality consistency.
+
 ## Development Standards & Architecture
 
 ### Modular Monolith Architecture

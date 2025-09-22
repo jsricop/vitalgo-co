@@ -3,13 +3,17 @@ Register patient use case - Main business logic for patient registration
 """
 import bcrypt
 from datetime import datetime, date
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 from slices.signup.application.ports.user_repository import UserRepository
 from slices.signup.application.ports.patient_repository import PatientRepository
 from slices.signup.application.dto.patient_registration import PatientRegistrationDTO, PatientRegistrationResponse
 from slices.signup.domain.models.user_model import User
 from slices.signup.domain.models.patient_model import Patient
+from slices.auth.infrastructure.security.jwt_service import JWTService
+from slices.auth.application.ports.user_session_repository import UserSessionRepository
+from slices.auth.application.ports.auth_repository import AuthRepository
+from slices.auth.application.dto import UserResponseDto
 
 
 class RegisterPatientUseCase:
@@ -18,12 +22,23 @@ class RegisterPatientUseCase:
     def __init__(
         self,
         user_repository: UserRepository,
-        patient_repository: PatientRepository
+        patient_repository: PatientRepository,
+        jwt_service: JWTService,
+        user_session_repository: UserSessionRepository,
+        auth_repository: AuthRepository
     ):
         self.user_repository = user_repository
         self.patient_repository = patient_repository
+        self.jwt_service = jwt_service
+        self.user_session_repository = user_session_repository
+        self.auth_repository = auth_repository
 
-    async def execute(self, registration_data: PatientRegistrationDTO) -> PatientRegistrationResponse:
+    async def execute(
+        self,
+        registration_data: PatientRegistrationDTO,
+        ip_address: str = "127.0.0.1",
+        user_agent: str = "Unknown"
+    ) -> PatientRegistrationResponse:
         """Execute patient registration process"""
 
         # 1. Validate business rules
@@ -35,16 +50,57 @@ class RegisterPatientUseCase:
         # 3. Create patient
         patient = await self._create_patient(user, registration_data)
 
-        # 4. Generate JWT token (placeholder for now)
-        token = self._generate_jwt_token(user)
+        # 4. Generate JWT tokens for auto-login
+        token_data = self.jwt_service.create_access_token(
+            user_id=str(user.id),
+            email=user.email,
+            user_type=user.user_type,
+            remember_me=False  # Default to false for signup
+        )
 
-        # 5. Return response
+        refresh_token_data = self.jwt_service.create_refresh_token(
+            user_id=str(user.id),
+            session_id=token_data["session_id"]
+        )
+
+        # 5. Create session record for auto-login
+        session = await self.user_session_repository.create_session(
+            user_id=user.id,
+            session_token=token_data["access_token"],
+            refresh_token=refresh_token_data["refresh_token"],
+            ip_address=ip_address,
+            user_agent=user_agent,
+            expires_at=token_data["expires_at"],
+            refresh_expires_at=refresh_token_data["expires_at"]
+        )
+
+        # 6. Update user login info (first login)
+        await self.auth_repository.update_last_login(user.id)
+
+        # 7. Create user response for consistent format with auth
+        user_response = UserResponseDto(
+            id=str(user.id),
+            email=user.email,
+            first_name=patient.first_name,  # Now captured in signup
+            last_name=patient.last_name,    # Now captured in signup
+            user_type=user.user_type,
+            is_verified=user.is_verified,
+            profile_completed=False,  # New users need to complete profile
+            mandatory_fields_completed=False  # New users need to add medical data
+        )
+
+        # 8. Return enhanced response with auth tokens
         return PatientRegistrationResponse(
+            success=True,
             message="Cuenta creada exitosamente",
             user_id=user.id,
             patient_id=patient.id,
             qr_code=patient.qr_code,
-            token=token
+            access_token=token_data["access_token"],
+            refresh_token=refresh_token_data["refresh_token"],
+            expires_in=token_data["expires_in"],
+            user=user_response,
+            redirect_url="/dashboard"  # Auto-redirect to dashboard
         )
 
     async def _validate_registration(self, data: PatientRegistrationDTO) -> None:
@@ -108,7 +164,8 @@ class RegisterPatientUseCase:
 
         patient = Patient(
             user_id=user.id,
-            full_name=data.full_name,
+            first_name=data.first_name,
+            last_name=data.last_name,
             document_type_id=document_type.id,
             document_number=data.document_number,
             phone_international=data.phone_international,
@@ -121,7 +178,3 @@ class RegisterPatientUseCase:
 
         return await self.patient_repository.create(patient)
 
-    def _generate_jwt_token(self, user: User) -> str:
-        """Generate JWT token (placeholder implementation)"""
-        # TODO: Implement proper JWT token generation
-        return f"jwt_token_placeholder_{user.id}"

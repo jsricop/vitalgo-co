@@ -7,7 +7,7 @@ export function StructuredData() {
     "name": "VitalGo",
     "alternateName": "VitalGo Colombia",
     "url": "https://vitalgo.co",
-    "logo": "https://vitalgo.co/assets/images/logos/vitalgo-logo-official.svg",
+    "logo": "https://vitalgo.co/assets/images/logos/vitalgo-logo-official.png",
     "description": "Plataforma líder en salud digital de Colombia. Unifica tu historial médico, reduce tiempos de urgencias 70% con IA, y optimiza la gestión clínica.",
     "foundingDate": "2024",
     "areaServed": {
@@ -77,7 +77,7 @@ export function StructuredData() {
       "Offline PWA Functionality",
       "HIPAA Compliant Security"
     ],
-    "screenshot": "https://vitalgo.co/assets/images/logos/vitalgo-logo-official.svg"
+    "screenshot": "https://vitalgo.co/assets/images/logos/vitalgo-logo-official.png"
   }
 
   return (

@@ -17,10 +17,27 @@ export default function PatientSignupPage() {
     setErrorMessage('');
     setSuccessMessage(response.message);
 
-    // Auto-redirect after successful registration
-    setTimeout(() => {
-      window.location.href = response.redirect_url || '/completar-perfil-medico';
-    }, 2000);
+    // Handle auto-login with tokens
+    if (response.access_token && response.refresh_token) {
+      // Store authentication tokens
+      localStorage.setItem('access_token', response.access_token);
+      localStorage.setItem('refresh_token', response.refresh_token);
+
+      // Store user information
+      if (response.user) {
+        localStorage.setItem('user_info', JSON.stringify(response.user));
+      }
+
+      // Auto-redirect to dashboard with tokens
+      setTimeout(() => {
+        window.location.href = response.redirect_url || '/dashboard';
+      }, 2000);
+    } else {
+      // Fallback for old API responses without auto-login
+      setTimeout(() => {
+        window.location.href = response.redirect_url || '/completar-perfil-medico';
+      }, 2000);
+    }
   };
 
   const handleError = (error: string) => {
@@ -64,7 +81,7 @@ export default function PatientSignupPage() {
                   <span className="text-vitalgo-green font-medium">{successMessage}</span>
                 </div>
                 <p className="text-vitalgo-green text-sm mt-1">
-                  Redirigiendo en unos segundos...
+                  Iniciando sesión automáticamente...
                 </p>
               </div>
             )}

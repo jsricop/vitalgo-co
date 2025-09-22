@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import '../styles/globals.css'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('http://localhost:3000'),
   title: 'VitalGo - Tu Salud Unificada, La Medicina Simplificada',
   description: 'Plataforma líder en salud digital de Colombia. Unifica tu historial médico, reduce tiempos de urgencias 70% con IA, y optimiza la gestión clínica.',
   keywords: [
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
     siteName: 'VitalGo',
     images: [
       {
-        url: '/assets/images/logos/vitalgo-logo-official.svg',
+        url: '/assets/images/logos/vitalgo-logo-official.png',
         width: 1200,
         height: 630,
         alt: 'VitalGo - Plataforma de Salud Digital',
@@ -51,7 +52,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'VitalGo - Tu Salud Unificada',
     description: 'Historial médico digital que reduce 70% los tiempos de emergencia con IA avanzada.',
-    images: ['/assets/images/logos/vitalgo-logo-official.svg'],
+    images: ['/assets/images/logos/vitalgo-logo-official.png'],
     creator: '@VitalGoColombia',
   },
   verification: {
@@ -70,7 +71,12 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/site.webmanifest',
-  themeColor: '#01EF7F',
+}
+
+export function generateViewport() {
+  return {
+    themeColor: '#01EF7F',
+  }
 }
 
 export default function RootLayout({

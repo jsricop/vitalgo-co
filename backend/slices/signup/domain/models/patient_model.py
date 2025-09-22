@@ -18,7 +18,10 @@ class Patient(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True)
     qr_code = Column(UUID(as_uuid=True), unique=True, nullable=False, default=uuid.uuid4, index=True)
-    full_name = Column(String(100), nullable=False)
+
+    # Name fields - industry standard separated structure
+    first_name = Column(String(100), nullable=False, index=True)
+    last_name = Column(String(100), nullable=False, index=True)
     document_type_id = Column(Integer, ForeignKey("document_types.id"), nullable=False)
     document_number = Column(String(20), unique=True, nullable=False, index=True)
     # Phone fields - new separated structure
@@ -48,6 +51,12 @@ class Patient(Base):
         # Update legacy field for backward compatibility
         self.phone_international = f"{dial_code} {phone_number}"
 
+
+    @property
+    def full_name(self) -> str:
+        """Get full name from first_name and last_name fields"""
+        return f"{self.first_name} {self.last_name}"
+
     @property
     def formatted_phone_international(self) -> str:
         """Get international phone number from new fields if available, fallback to legacy"""
@@ -70,4 +79,4 @@ class Patient(Base):
         return ""
 
     def __repr__(self):
-        return f"<Patient(full_name='{self.full_name}', document_number='{self.document_number}')>"
+        return f"<Patient(name='{self.full_name}', document_number='{self.document_number}')>"

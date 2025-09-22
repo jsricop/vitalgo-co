@@ -32,7 +32,7 @@ if config.config_file_name is not None:
 # add your model's MetaData object here
 # for 'autogenerate' support
 # Import base and models
-from shared.database import Base
+from shared.database.database import Base
 
 # Import test model for initial migration testing
 from shared.database.models_test import TestModel
@@ -42,6 +42,15 @@ from slices.signup.domain.models import User, Patient, DocumentType
 
 # Import auth models for autogenerate
 from slices.auth.domain.models import LoginAttempt, UserSession
+
+# Import dashboard medical models for autogenerate
+from slices.dashboard.domain.models.medical_models import (
+    PatientMedication,
+    PatientAllergy,
+    PatientSurgery,
+    PatientIllness,
+    DashboardActivityLog
+)
 
 target_metadata = Base.metadata
 

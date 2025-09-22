@@ -10,7 +10,8 @@ import { DocumentType, FieldValidationState } from '../../types';
 import { Country } from '../../data/countries';
 
 interface PersonalInfoSectionProps {
-  fullName: string;
+  firstName: string;
+  lastName: string;
   documentType: string;
   documentNumber: string;
   birthDate: string;
@@ -22,7 +23,8 @@ interface PersonalInfoSectionProps {
   onCountryChange: (country: Country) => void;
   documentTypes: DocumentType[];
   validationStates: {
-    fullName?: FieldValidationState;
+    firstName?: FieldValidationState;
+    lastName?: FieldValidationState;
     documentNumber?: FieldValidationState;
     phone?: FieldValidationState;
   };
@@ -34,7 +36,8 @@ interface PersonalInfoSectionProps {
 }
 
 export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
-  fullName,
+  firstName,
+  lastName,
   documentType,
   documentNumber,
   birthDate,
@@ -57,21 +60,33 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="md:col-span-2">
-          <TextInput
-            id="fullName"
-            name="fullName"
-            label="Nombre completo"
-            placeholder="Ej: Juan Carlos Pérez García"
-            value={fullName}
-            onChange={(e) => onInputChange('fullName', e.target.value)}
-            onBlur={() => onFieldBlur('fullName')}
-            validation={validationStates.fullName}
-            required
-            maxLength={100}
-            data-testid="fullName-input"
-          />
-        </div>
+        <TextInput
+          id="firstName"
+          name="firstName"
+          label="Nombres"
+          placeholder="Ej: Juan Carlos"
+          value={firstName}
+          onChange={(e) => onInputChange('firstName', e.target.value)}
+          onBlur={() => onFieldBlur('firstName')}
+          validation={validationStates.firstName}
+          required
+          maxLength={50}
+          data-testid="firstName-input"
+        />
+
+        <TextInput
+          id="lastName"
+          name="lastName"
+          label="Apellidos"
+          placeholder="Ej: Pérez García"
+          value={lastName}
+          onChange={(e) => onInputChange('lastName', e.target.value)}
+          onBlur={() => onFieldBlur('lastName')}
+          validation={validationStates.lastName}
+          required
+          maxLength={50}
+          data-testid="lastName-input"
+        />
 
         <DocumentTypeSelect
           id="documentType"

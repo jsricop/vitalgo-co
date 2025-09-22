@@ -47,7 +47,16 @@ class JWTService:
         else:
             expire_minutes = self.access_token_expire_minutes
 
-        expire = datetime.now(timezone.utc) + timedelta(minutes=expire_minutes)
+        # JWT TOKEN DEBUG: Current time analysis
+        current_time = datetime.now(timezone.utc)
+        expire = current_time + timedelta(minutes=expire_minutes)
+
+        print(f"🔍 JWT DEBUG - Token Creation Analysis:")
+        print(f"   Current UTC time: {current_time}")
+        print(f"   Expiration time: {expire}")
+        print(f"   Duration (minutes): {expire_minutes}")
+        print(f"   Time difference (seconds): {(expire - current_time).total_seconds()}")
+        print(f"   Remember me: {remember_me}")
 
         # Generate unique session ID for this token
         session_id = str(uuid.uuid4())
@@ -70,6 +79,23 @@ class JWTService:
 
         # Create JWT token
         encoded_jwt = jwt.encode(to_encode, self.secret_key, algorithm=self.algorithm)
+
+        # JWT TOKEN DEBUG: Verify created token
+        try:
+            decoded_payload = jwt.decode(encoded_jwt, self.secret_key, algorithms=[self.algorithm], audience="VitalGo-Frontend")
+            exp_timestamp = decoded_payload.get('exp')
+            if exp_timestamp:
+                exp_datetime = datetime.fromtimestamp(exp_timestamp, tz=timezone.utc)
+                time_until_exp = (exp_datetime - current_time).total_seconds()
+                print(f"🔍 JWT DEBUG - Token Verification:")
+                print(f"   Encoded token length: {len(encoded_jwt)}")
+                print(f"   Decoded exp timestamp: {exp_timestamp}")
+                print(f"   Decoded exp datetime: {exp_datetime}")
+                print(f"   Time until expiration: {time_until_exp} seconds")
+                print(f"   Token valid immediately: {time_until_exp > 0}")
+                print(f"   Full payload: {decoded_payload}")
+        except Exception as e:
+            print(f"❌ JWT DEBUG - Token verification failed: {e}")
 
         return {
             "access_token": encoded_jwt,

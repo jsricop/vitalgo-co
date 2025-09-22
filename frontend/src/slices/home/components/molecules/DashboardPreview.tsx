@@ -12,7 +12,7 @@ export function DashboardPreview() {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <img
-              src="/assets/images/logos/vitalgo-icon-official.svg"
+              src="/assets/images/logos/vitalgo-icon-official.png"
               alt="VitalGo"
               width={32}
               height={32}
