@@ -6,6 +6,7 @@ import { BrandHeader } from "../molecules/BrandHeader"
 import { UserMenu } from "../molecules/UserMenu"
 import { MobileMenuToggle } from "../molecules/MobileMenuToggle"
 import { DashboardNavigation } from "../molecules/DashboardNavigation"
+import { LocalStorageService } from "../../services/local-storage-service"
 
 interface AuthenticatedNavbarProps {
   user: {
@@ -30,10 +31,8 @@ export function AuthenticatedNavbar({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const handleLogout = () => {
-    // Clear localStorage
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('user_data')
-    localStorage.removeItem('user_role')
+    // Clear authentication data using centralized service
+    LocalStorageService.clearAuthenticationData()
 
     // Call custom logout handler if provided
     if (onLogout) {

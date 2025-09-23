@@ -7,6 +7,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { authApiClient } from "../../slices/auth/services/authApiClient"
+import { LocalStorageService } from "../services/local-storage-service"
 
 interface AuthUser {
   name: string
@@ -44,9 +45,9 @@ export function useAuthUser(): UseAuthUserResult {
         setIsLoading(true)
         setError(null)
 
-        // Try to get user data from localStorage first
-        const storedUser = localStorage.getItem('user')
-        const accessToken = localStorage.getItem('accessToken')
+        // Try to get user data from centralized service
+        const userData = LocalStorageService.getUser()
+        const accessToken = LocalStorageService.getAccessToken()
 
         if (!accessToken) {
           // No token, redirect to login
@@ -54,13 +55,12 @@ export function useAuthUser(): UseAuthUserResult {
           return
         }
 
-        if (storedUser) {
-          const userData = JSON.parse(storedUser)
+        if (userData) {
           setUser({
-            name: userData.first_name && userData.last_name
-              ? `${userData.first_name} ${userData.last_name}`.trim()
+            name: userData.firstName && userData.lastName
+              ? `${userData.firstName} ${userData.lastName}`.trim()
               : 'Usuario',
-            role: translateRole(userData.user_type || 'patient'),
+            role: translateRole(userData.userType || 'patient'),
             avatar: userData.avatar,
             id: userData.id,
             email: userData.email
@@ -81,8 +81,13 @@ export function useAuthUser(): UseAuthUserResult {
                 email: userData.email
               })
 
-              // Store user data for future use
-              localStorage.setItem('user', JSON.stringify(userData))
+              // Store user data using centralized service (handles conversion)
+              LocalStorageService.setAuthDataFromRegistration({
+                access_token: accessToken,
+                refresh_token: LocalStorageService.getRefreshToken() || '',
+                expires_in: 1800,
+                user: userData
+              })
             }
           } catch (apiError) {
             console.error('Failed to fetch user data:', apiError)
@@ -110,10 +115,8 @@ export function useAuthUser(): UseAuthUserResult {
     } catch (error) {
       console.error('Logout API error (continuing anyway):', error)
     } finally {
-      // Always clear local storage and redirect
-      localStorage.removeItem('accessToken')
-      localStorage.removeItem('refreshToken')
-      localStorage.removeItem('user')
+      // Always clear local storage using centralized service and redirect
+      LocalStorageService.clearAuthenticationData()
 
       // Redirect to login
       router.push('/login')

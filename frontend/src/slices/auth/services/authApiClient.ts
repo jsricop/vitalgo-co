@@ -4,12 +4,13 @@
  */
 
 import { LoginForm, LoginResponse, LoginErrorResponse, User, AuthApiClient } from '../types';
+import { LocalStorageService } from '../../../shared/services/local-storage-service';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 class AuthApiClientImpl implements AuthApiClient {
   private getAuthHeaders(): Record<string, string> {
-    const token = localStorage.getItem('accessToken');
+    const token = LocalStorageService.getAccessToken();
     return {
       'Content-Type': 'application/json',
       ...(token && { 'Authorization': `Bearer ${token}` })
@@ -21,10 +22,8 @@ class AuthApiClientImpl implements AuthApiClient {
       const errorData = await response.json().catch(() => ({}));
 
       if (response.status === 401) {
-        // Clear invalid tokens
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('user');
+        // Clear invalid tokens using centralized service
+        LocalStorageService.clearAuthenticationData();
       }
 
       throw new Error(errorData.detail?.message || errorData.message || `HTTP ${response.status}`);
@@ -104,17 +103,17 @@ class AuthApiClientImpl implements AuthApiClient {
         console.error('❌ FRONTEND JWT DEBUG - Token analysis failed:', e);
       }
 
-      // Store tokens and user data
-      localStorage.setItem('accessToken', data.access_token);
-      if (data.refresh_token) {
-        localStorage.setItem('refreshToken', data.refresh_token);
-      }
-      localStorage.setItem('user', JSON.stringify(data.user));
-
-      console.log('🔍 API CLIENT CHECKPOINT 2: localStorage updated', {
-        accessTokenStored: !!localStorage.getItem('accessToken'),
-        userStored: !!localStorage.getItem('user')
+      // Store tokens and user data using centralized service
+      LocalStorageService.setAuthDataFromRegistration({
+        access_token: data.access_token,
+        refresh_token: data.refresh_token,
+        expires_in: data.expires_in,
+        user: data.user
       });
+
+      console.log('🔍 API CLIENT CHECKPOINT 2: localStorage updated',
+        LocalStorageService.getAuthDebugInfo()
+      );
 
       const loginResponse = {
         success: true,
@@ -164,17 +163,13 @@ class AuthApiClientImpl implements AuthApiClient {
 
       const data = await this.handleResponse<{ success: boolean; message: string }>(response);
 
-      // Clear local storage
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('user');
+      // Clear local storage using centralized service
+      LocalStorageService.clearAuthenticationData();
 
       return data;
     } catch (error) {
-      // Always clear local storage on logout attempt
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('user');
+      // Always clear local storage on logout attempt using centralized service
+      LocalStorageService.clearAuthenticationData();
 
       return { success: true, message: 'Logout exitoso' };
     }
@@ -191,12 +186,13 @@ class AuthApiClientImpl implements AuthApiClient {
 
     const data = await this.handleResponse<any>(response);
 
-    // Update stored tokens
-    localStorage.setItem('accessToken', data.access_token);
-    if (data.refresh_token) {
-      localStorage.setItem('refreshToken', data.refresh_token);
-    }
-    localStorage.setItem('user', JSON.stringify(data.user));
+    // Update stored tokens using centralized service
+    LocalStorageService.setAuthDataFromRegistration({
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+      expires_in: data.expires_in,
+      user: data.user
+    });
 
     return {
       success: true,

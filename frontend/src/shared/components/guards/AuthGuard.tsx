@@ -6,6 +6,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { LocalStorageService } from '../../services/local-storage-service';
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -27,16 +28,13 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
       try {
         console.log('🔍 AUTHGUARD CHECKPOINT 1: Starting authentication check');
 
-        // Check for access token
-        const accessToken = localStorage.getItem('accessToken');
-        const userInfo = localStorage.getItem('user');
+        // Check for access token using centralized service
+        const accessToken = LocalStorageService.getAccessToken();
+        const userInfo = LocalStorageService.getUser();
 
-        console.log('🔍 AUTHGUARD CHECKPOINT 2: localStorage values', {
-          hasAccessToken: !!accessToken,
-          hasUserInfo: !!userInfo,
-          accessTokenLength: accessToken?.length,
-          currentPath: window.location.pathname
-        });
+        console.log('🔍 AUTHGUARD CHECKPOINT 2: localStorage values',
+          LocalStorageService.getAuthDebugInfo()
+        );
 
         if (!accessToken) {
           console.log('🔍 AUTHGUARD CHECKPOINT 3: No access token found - setting unauthenticated');
@@ -44,15 +42,9 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
           return;
         }
 
-        // Parse user info if available
-        let parsedUserInfo = null;
+        // Get user info from centralized service (already parsed)
         if (userInfo) {
-          try {
-            parsedUserInfo = JSON.parse(userInfo);
-            setUserType(parsedUserInfo.user_type);
-          } catch (error) {
-            console.error('Error parsing user info:', error);
-          }
+          setUserType(userInfo.userType);
         }
 
         // Check token expiration (basic check)
@@ -61,19 +53,15 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
           const currentTime = Math.floor(Date.now() / 1000);
 
           if (tokenPayload.exp && tokenPayload.exp < currentTime) {
-            // Token expired
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
-            localStorage.removeItem('user');
+            // Token expired - clear using centralized service
+            LocalStorageService.clearAuthenticationData();
             setIsAuthenticated(false);
             return;
           }
         } catch (error) {
           // Invalid token format
           console.error('Invalid token format:', error);
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
-          localStorage.removeItem('user');
+          LocalStorageService.clearAuthenticationData();
           setIsAuthenticated(false);
           return;
         }
@@ -99,7 +87,7 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
 
     if (isAuthenticated === false) {
       // Don't redirect if we already have tokens in localStorage
-      const hasTokens = localStorage.getItem('accessToken') && localStorage.getItem('user');
+      const hasTokens = LocalStorageService.isAuthenticated();
       if (hasTokens) {
         console.log('🔍 AUTHGUARD CHECKPOINT 5.5: Tokens found, retrying authentication check');
         // Force re-check authentication with fresh localStorage data

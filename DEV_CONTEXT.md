@@ -236,11 +236,136 @@ frontend/
 
 
 ### 📝 Naming Conventions
+
+#### General Principles
 - **Slice names**: Identical and descriptive name across backend/frontend (`auth`, not `authentication`)
-- **Python**: snake_case
-- **TypeScript**: camelCase
-- **Files**: kebab-case
-- **Playwright**: [slice]-[component]-[element], e.g., auth-login-submit, profile-avatar-image, dashboard-stats-card
+- **Consistency**: Same naming pattern within each technology stack
+- **Clarity**: Names should be self-documenting and unambiguous
+
+#### Language-Specific Conventions
+
+**Python (Backend)**:
+- **Variables/Functions**: snake_case (`user_id`, `get_user_data`)
+- **Classes**: PascalCase (`UserRepository`, `PatientModel`)
+- **Constants**: UPPER_SNAKE_CASE (`JWT_SECRET_KEY`, `DEFAULT_TIMEOUT`)
+- **Files**: snake_case.py (`user_repository.py`, `auth_endpoints.py`)
+- **Database fields**: snake_case (`created_at`, `user_type`, `access_token`)
+
+**TypeScript/JavaScript (Frontend)**:
+- **Variables/Functions**: camelCase (`userId`, `getUserData`)
+- **Components**: PascalCase (`LoginForm`, `DashboardPage`)
+- **Constants**: UPPER_SNAKE_CASE (`API_BASE_URL`, `MAX_RETRIES`)
+- **Files**: kebab-case (`user-repository.ts`, `auth-endpoints.ts`)
+- **Interface/Types**: PascalCase (`UserData`, `ApiResponse`)
+
+**File Naming**:
+- **All files**: kebab-case
+- **React components**: PascalCase.tsx (`LoginForm.tsx`, `UserProfile.tsx`)
+- **Utilities/Services**: kebab-case.ts (`api-client.ts`, `auth-utils.ts`)
+
+#### Application-Specific Standards
+
+**localStorage Keys** (Frontend):
+- **Format**: camelCase
+- **Standard keys**: `accessToken`, `refreshToken`, `user`, `preferredLanguage`
+- **Never use**: snake_case in localStorage (`access_token`, `user_info`, `user_data`)
+
+**API Response Fields** (Backend):
+- **Format**: snake_case (REST API standard)
+- **Examples**: `access_token`, `refresh_token`, `user_type`, `created_at`
+- **Reason**: Follows JSON API conventions and Python standards
+
+**User Object Properties**:
+- **Backend API responses**: snake_case (`user_type`, `first_name`, `last_name`)
+- **Frontend TypeScript interfaces**: camelCase (`userType`, `firstName`, `lastName`)
+- **Database columns**: snake_case (`user_type`, `first_name`, `last_name`)
+
+**Component Data Attributes**:
+- **Test IDs**: [slice]-[component]-[element] format
+- **Examples**: `auth-login-submit`, `profile-avatar-image`, `dashboard-stats-card`
+- **Pattern**: kebab-case with logical hierarchy
+
+#### Cross-Stack Consistency Rules
+
+**Token Management**:
+```typescript
+// ✅ Frontend (camelCase)
+localStorage.setItem('accessToken', token);
+localStorage.setItem('refreshToken', refreshToken);
+localStorage.setItem('user', JSON.stringify(userData));
+
+// ✅ Backend API Response (snake_case)
+{
+  "access_token": "jwt_token_here",
+  "refresh_token": "refresh_token_here",
+  "user": { "user_type": "patient" }
+}
+```
+
+**User Data Handling**:
+```typescript
+// ✅ Frontend TypeScript Interface
+interface UserData {
+  userId: string;
+  email: string;
+  userType: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+// ✅ Backend Python Model
+class User(BaseModel):
+    user_id: str
+    email: str
+    user_type: str
+    first_name: Optional[str]
+    last_name: Optional[str]
+```
+
+#### Validation Checklist
+
+Before committing code, verify:
+- [ ] Frontend variables use camelCase
+- [ ] Backend variables use snake_case
+- [ ] localStorage keys use camelCase
+- [ ] API responses use snake_case
+- [ ] Component names use PascalCase
+- [ ] File names use kebab-case
+- [ ] Test IDs follow [slice]-[component]-[element] pattern
+- [ ] No mixing of naming conventions within same technology stack
+
+#### Common Anti-Patterns to Avoid
+
+❌ **Mixed conventions in frontend**:
+```typescript
+// Wrong
+localStorage.setItem('access_token', token);  // snake_case
+const userId = user.user_id;  // mixed case
+```
+
+✅ **Consistent frontend conventions**:
+```typescript
+// Correct
+localStorage.setItem('accessToken', token);  // camelCase
+const userId = user.userId;  // camelCase
+```
+
+❌ **Inconsistent user object access**:
+```typescript
+// Wrong - mixing user_type and userType
+if (userData.user_type === 'patient') { }  // snake_case
+const role = userData.userType;  // camelCase
+```
+
+✅ **Consistent property mapping**:
+```typescript
+// Correct - map API response to frontend format
+const frontendUser = {
+  userId: apiResponse.user_id,  // map snake to camel
+  userType: apiResponse.user_type,  // map snake to camel
+  firstName: apiResponse.first_name
+};
+```
 
 ## Development Commands
 

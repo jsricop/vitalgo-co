@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { ChevronDown, Globe } from "lucide-react"
+import { LocalStorageService } from "../../services/local-storage-service"
 
 interface Language {
   code: string
@@ -33,8 +34,8 @@ export function LanguageSelector({
     if (onLanguageChange) {
       onLanguageChange(languageCode)
     }
-    // Store preference in localStorage
-    localStorage.setItem('preferred-language', languageCode)
+    // Store preference using centralized service (camelCase)
+    LocalStorageService.setPreferredLanguage(languageCode)
   }
 
   return (

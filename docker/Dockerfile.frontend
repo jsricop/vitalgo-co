@@ -1,45 +1,45 @@
-# Frontend Dockerfile for VitalGo
-FROM node:18-alpine AS base
+# VitalGo Frontend Dockerfile
+# Multi-stage build for production optimization
 
-# Dependencies stage
-FROM base AS deps
-RUN apk add --no-cache libc6-compat
+FROM node:18-alpine as builder
+
+# Set working directory
 WORKDIR /app
 
 # Copy package files
 COPY frontend/package*.json ./
+
+# Install dependencies
 RUN npm ci --only=production
-
-# Builder stage
-FROM base AS builder
-WORKDIR /app
-
-# Copy package files and install all dependencies (including dev)
-COPY frontend/package*.json ./
-RUN npm ci
 
 # Copy source code
 COPY frontend/ ./
 
-# Build application
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV ESLint_NO_DEV_ERRORS=true
+# Build arguments for production
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_ENVIRONMENT=production
+ARG NODE_ENV=production
+
+# Set environment variables
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_ENVIRONMENT=$NEXT_PUBLIC_ENVIRONMENT
+ENV NODE_ENV=$NODE_ENV
+
+# Build the application
 RUN npm run build
 
 # Production stage
-FROM base AS runner
+FROM node:18-alpine
+
+# Set working directory
 WORKDIR /app
 
 # Install curl for health checks
 RUN apk add --no-cache curl
 
-# Set environment variables
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-
 # Create non-root user
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
 
 # Copy built application
 COPY --from=builder /app/public ./public
@@ -51,9 +51,12 @@ USER nextjs
 # Expose port
 EXPOSE 3000
 
+ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
+
 # Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD curl -f http://localhost:3000/api/health || exit 1
 
-# Start application
+# Start the application
 CMD ["node", "server.js"]

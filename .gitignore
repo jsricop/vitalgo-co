@@ -95,6 +95,13 @@ debug-login.spec.ts
 test_connection.py
 test_signup_migration.py
 
+# Deployment artifacts
+deployment.env
+/tmp/vitalgo_*
+*_backup_*
+*.backup
+deployment_*.log
+
 # Production deployment files with sensitive data - NEVER COMMIT
 AWS_DEPLOYMENT_PLAN.md
 migrate.py

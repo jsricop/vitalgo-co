@@ -11,12 +11,13 @@ import {
   PatientIllness,
   MedicalDataFormData
 } from '../types';
+import { LocalStorageService } from '../../../shared/services/local-storage-service';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 class DashboardAPIService {
   private async getAuthHeaders(): Promise<HeadersInit> {
-    const token = localStorage.getItem('accessToken');
+    const token = LocalStorageService.getAccessToken();
 
     // JWT TOKEN DEBUG: Frontend token analysis
     if (token) {
@@ -64,9 +65,7 @@ class DashboardAPIService {
 
         if (isAuthFailure) {
           console.log('🚨 Authentication failure detected, redirecting to login:', errorMessage);
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
-          localStorage.removeItem('user');
+          LocalStorageService.clearAuthenticationData();
           window.location.href = '/login';
         } else {
           console.warn(`⚠️ ${response.status} error but not an auth failure:`, errorMessage);

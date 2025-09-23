@@ -82,7 +82,8 @@ class JWTService:
 
         # JWT TOKEN DEBUG: Verify created token
         try:
-            decoded_payload = jwt.decode(encoded_jwt, self.secret_key, algorithms=[self.algorithm], audience="VitalGo-Frontend")
+            # Use get_unverified_claims to avoid audience validation during debug
+            decoded_payload = jwt.get_unverified_claims(encoded_jwt)
             exp_timestamp = decoded_payload.get('exp')
             if exp_timestamp:
                 exp_datetime = datetime.fromtimestamp(exp_timestamp, tz=timezone.utc)

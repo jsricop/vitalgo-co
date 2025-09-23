@@ -1,54 +1,89 @@
-# Backend Dockerfile for VitalGo
-FROM python:3.11-slim
+# VitalGo Backend Dockerfile
+# Multi-stage build for production optimization
+
+FROM python:3.11-slim as builder
 
 # Set working directory
 WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpq-dev \
+    gcc \
+    postgresql-client \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Poetry
 RUN pip install poetry
 
-# Configure Poetry
-ENV POETRY_NO_INTERACTION=1 \
-    POETRY_VENV_IN_PROJECT=1 \
-    POETRY_CACHE_DIR=/tmp/poetry_cache
+# Copy poetry files
+COPY backend/pyproject.toml backend/poetry.lock ./
 
-# Create non-root user first
-RUN useradd --create-home --shell /bin/bash app
+# Configure poetry
+RUN poetry config virtualenvs.create false
 
-# Copy poetry files and set ownership
-COPY --chown=app:app backend/pyproject.toml backend/poetry.lock ./
+# Install dependencies
+RUN poetry install --only main --no-root
 
-# Switch to app user and set proper directory ownership
-USER app
+# Production stage
+FROM python:3.11-slim
+
+# Set working directory
 WORKDIR /app
 
-# Install dependencies as app user
-RUN poetry install --only=main --no-root
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y \
+    postgresql-client \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy backend code
-COPY --chown=app:app backend/ ./
+# Copy installed packages from builder
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
-# Copy initialization script and set permissions
-COPY --chown=app:app scripts/init-database.sh ./scripts/
-RUN chmod +x ./scripts/init-database.sh
+# Copy application code
+COPY backend/ ./
 
-# Copy entrypoint script and set permissions
-COPY --chown=app:app docker/entrypoint.sh ./
-RUN chmod +x ./entrypoint.sh
+# Create non-root user
+RUN useradd -m -u 1000 vitalgo && chown -R vitalgo:vitalgo /app
+
+# Create entrypoint script
+RUN cat > /app/entrypoint.sh << 'ENTRYPOINT_EOF'
+#!/bin/bash
+set -e
+
+echo "🚀 Starting VitalGo Backend..."
+
+# Database initialization based on SKIP_DB_INIT flag
+if [[ "${SKIP_DB_INIT:-true}" == "false" ]]; then
+    echo "🔥 MIGRATION MODE: Database initialization and migrations will be applied!"
+    echo "📊 Pre-migration database state check..."
+
+    # Apply migrations
+    echo "🚀 Executing database migrations..."
+    poetry run alembic upgrade head
+
+    echo "📊 Post-migration database state check..."
+    echo "✅ Database migration process completed"
+else
+    echo "✅ SKIP_DB_INIT is true - Production data preserved, no migrations applied"
+fi
+
+# Start the application
+echo "🌟 Starting FastAPI server..."
+exec poetry run uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4
+ENTRYPOINT_EOF
+
+RUN chmod +x /app/entrypoint.sh && chown vitalgo:vitalgo /app/entrypoint.sh
+
+USER vitalgo
 
 # Expose port
 EXPOSE 8000
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
-# Run application with entrypoint
-CMD ["./entrypoint.sh"]
+# Set entrypoint
+ENTRYPOINT ["/app/entrypoint.sh"]

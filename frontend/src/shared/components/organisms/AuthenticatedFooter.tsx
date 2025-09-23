@@ -6,6 +6,7 @@ import { FooterLink } from "../atoms/FooterLink"
 import { WhatsAppButton } from "../atoms/WhatsAppButton"
 import { LanguageSelector } from "../atoms/LanguageSelector"
 import { CopyrightText } from "../atoms/CopyrightText"
+import { LocalStorageService } from "../../services/local-storage-service"
 
 interface AuthenticatedFooterProps {
   whatsappNumber?: string
@@ -20,7 +21,7 @@ export function AuthenticatedFooter({
 
   useEffect(() => {
     // Load saved language preference
-    const savedLanguage = localStorage.getItem('preferred-language')
+    const savedLanguage = LocalStorageService.getPreferredLanguage()
     if (savedLanguage) {
       setCurrentLanguage(savedLanguage)
     }

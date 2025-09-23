@@ -6,6 +6,7 @@ import { LegalSection } from "../molecules/LegalSection"
 import { SupportSection } from "../molecules/SupportSection"
 import { LanguageSupport } from "../molecules/LanguageSupport"
 import { BottomBar } from "../molecules/BottomBar"
+import { LocalStorageService } from "../../services/local-storage-service"
 
 interface PublicFooterProps {
   whatsappNumber?: string
@@ -20,7 +21,7 @@ export function PublicFooter({
 
   useEffect(() => {
     // Load saved language preference
-    const savedLanguage = localStorage.getItem('preferred-language')
+    const savedLanguage = LocalStorageService.getPreferredLanguage()
     if (savedLanguage) {
       setCurrentLanguage(savedLanguage)
     }

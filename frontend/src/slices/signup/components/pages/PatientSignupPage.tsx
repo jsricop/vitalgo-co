@@ -5,38 +5,42 @@
  */
 import React, { useState } from 'react';
 import { PatientSignupForm } from '../organisms/PatientSignupForm';
+import { AutoLoginLoader } from '../atoms/AutoLoginLoader';
 import { RegistrationResponse } from '../../types';
 import { MinimalNavbar } from '../../../../shared/components/organisms/MinimalNavbar';
 import { MinimalFooter } from '../../../../shared/components/organisms/MinimalFooter';
+import { LocalStorageService } from '../../../../shared/services/local-storage-service';
 
 export default function PatientSignupPage() {
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isAutoLogging, setIsAutoLogging] = useState<boolean>(false);
+  const [registrationResponse, setRegistrationResponse] = useState<RegistrationResponse | null>(null);
 
   const handleSuccess = (response: RegistrationResponse) => {
     setErrorMessage('');
-    setSuccessMessage(response.message);
+    setSuccessMessage('¡Cuenta creada exitosamente!');
+    setRegistrationResponse(response);
 
     // Handle auto-login with tokens
     if (response.access_token && response.refresh_token) {
-      // Store authentication tokens
-      localStorage.setItem('access_token', response.access_token);
-      localStorage.setItem('refresh_token', response.refresh_token);
-
-      // Store user information
-      if (response.user) {
-        localStorage.setItem('user_info', JSON.stringify(response.user));
-      }
-
-      // Auto-redirect to dashboard with tokens
-      setTimeout(() => {
-        window.location.href = response.redirect_url || '/dashboard';
-      }, 2000);
+      // Start auto-login process with user awareness
+      setIsAutoLogging(true);
     } else {
       // Fallback for old API responses without auto-login
       setTimeout(() => {
         window.location.href = response.redirect_url || '/completar-perfil-medico';
       }, 2000);
+    }
+  };
+
+  const handleAutoLoginComplete = () => {
+    if (registrationResponse?.access_token && registrationResponse?.refresh_token) {
+      // Use centralized localStorage service for consistent token storage
+      LocalStorageService.setAuthDataFromRegistration(registrationResponse);
+
+      // Redirect to dashboard
+      window.location.href = registrationResponse.redirect_url || '/dashboard';
     }
   };
 
@@ -71,8 +75,8 @@ export default function PatientSignupPage() {
               </p>
             </div>
 
-            {/* Success Message */}
-            {successMessage && (
+            {/* Success Message & Auto-Login Loader */}
+            {successMessage && !isAutoLogging && (
               <div className="mb-6 p-4 rounded-lg bg-vitalgo-green-lightest border border-vitalgo-green-light" data-testid="success-message">
                 <div className="flex items-center">
                   <svg className="h-5 w-5 text-vitalgo-green-light mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -80,9 +84,23 @@ export default function PatientSignupPage() {
                   </svg>
                   <span className="text-vitalgo-green font-medium">{successMessage}</span>
                 </div>
-                <p className="text-vitalgo-green text-sm mt-1">
-                  Iniciando sesión automáticamente...
-                </p>
+              </div>
+            )}
+
+            {/* Auto-Login Loader */}
+            {isAutoLogging && (
+              <div className="mb-6 p-6 rounded-lg bg-vitalgo-green-lightest border border-vitalgo-green-light" data-testid="auto-login-section">
+                <div className="flex items-center mb-4">
+                  <svg className="h-5 w-5 text-vitalgo-green-light mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-vitalgo-green font-medium">{successMessage}</span>
+                </div>
+                <AutoLoginLoader
+                  duration={3}
+                  onComplete={handleAutoLoginComplete}
+                  message="Te estamos iniciando sesión automáticamente..."
+                />
               </div>
             )}
 
@@ -99,7 +117,7 @@ export default function PatientSignupPage() {
             )}
 
             {/* Registration Form */}
-            {!successMessage && (
+            {!successMessage && !isAutoLogging && (
               <PatientSignupForm
                 onSuccess={handleSuccess}
                 onError={handleError}
