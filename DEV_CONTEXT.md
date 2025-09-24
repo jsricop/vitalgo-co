@@ -31,6 +31,13 @@
 - **Database connection information** for local development environment
 - **Quality assurance checkpoints** ensuring test consistency across development processes
 
+#### frontend/MANUAL_DE_MARCA.md
+- **Official brand manual and design system** with comprehensive visual identity guidelines
+- **Color palette and typography** including official VitalGo brand colors and implementation in Tailwind CSS
+- **Component specifications** following Atomic Design principles with exact sizing, styling, and usage guidelines
+- **Asset catalog** with complete logo library, icons, and routing paths for all brand resources
+- **Implementation tracking** with current status, migration checklist, and technical configuration details
+
 ### Usage Guidelines:
 
 #### Mandatory Reference Process
@@ -44,19 +51,21 @@
 - **Database Schema**: All table/field changes MUST be reflected in DB_FIELDS_REFERENCE.md including constraints and relationships
 - **Type Definitions**: New DTOs or interface changes MUST be documented in TYPES_REFERENCE.md with both frontend and backend versions
 - **Test Data**: New test users, scenarios, or credential changes MUST be documented in TEST_DB_DATA_REGISTER.md with complete user profiles and validation checkpoints
+- **Design Changes**: Any UI/UX modifications, color updates, or component changes MUST be reflected in frontend/MANUAL_DE_MARCA.md with updated specifications and implementation status
 
 #### Consistency Enforcement
 - **Frontend-Backend Alignment**: TypeScript interfaces must match Python DTOs exactly
 - **Database-Application Sync**: Model types must reflect actual database schema constraints
 - **API-Type Matching**: Request/response types must align with documented API schemas
 - **Test Data Persistence**: Test data in local development MUST be persistent and never deleted, ensuring consistent testing environment across all development processes
+- **Brand Consistency**: All UI components MUST follow the official VitalGo brand colors (`vitalgo-green`, `vitalgo-dark`) and design specifications from frontend/MANUAL_DE_MARCA.md
 
 #### Development Flow
 ```
 Reference Documents → Plan Implementation → Code Changes → Update Reference Documents → Test Data Validation → Validate Consistency
 ```
 
-**Critical Rule**: Each development process that involves API endpoints, database modifications, type changes, or test data management MUST consider and, if applicable, update these reference documents to maintain system integrity, developer experience, and testing quality consistency.
+**Critical Rule**: Each development process that involves API endpoints, database modifications, type changes, test data management, or UI/design changes MUST consider and, if applicable, update these reference documents to maintain system integrity, developer experience, brand consistency, and testing quality consistency.
 
 ## Development Standards & Architecture
 
@@ -150,6 +159,25 @@ Reference Documents → Plan Implementation → Code Changes → Update Referenc
 - Slice-specific: `/slices/[slice]/components/`
 - Shared across slices: `/shared/components/`
 - Rule: If used in 2+ slices, move to shared
+
+### Navigation Component Strategy
+**PatientNavbar**: Single consolidated navigation component for authenticated patients
+- **Location**: `/shared/components/organisms/PatientNavbar.tsx`
+- **Self-contained**: Internal `useAuthUser` hook eliminates prop drilling
+- **Features**: Authentication states, navigation items, user menu, mobile responsive
+- **Usage**: Replace both `AuthenticatedNavbar` + `DashboardNavigation` complexity
+- **Benefits**: 50% reduction in navigation complexity, no prop drilling, unified authentication
+
+### Authentication Architecture
+**AuthContext Pattern**: Single source of truth for authentication state
+- **Core Provider**: `/shared/contexts/AuthContext.tsx` - Centralized authentication state management
+- **Implementation**: React Context with `useAuth()` hook for accessing authentication state
+- **Benefits**: Eliminates race conditions, prevents multiple authentication sources, centralizes login/logout logic
+- **Integration**: All components use `useAuth()` instead of direct API calls or localStorage access
+- **State Management**: `{ user, isAuthenticated, isLoading, login, logout, error }`
+- **Route Protection**: `AuthGuard` component uses AuthContext for route-level authentication
+- **UI Components**: Navigation and user components consume authentication state through `useAuthUser` hook
+- **Security**: Token validation, storage management, and session handling centralized in AuthContext
 
 ### Static Assets Organization
 **CRITICAL**: Framework constraints override organizational preferences:

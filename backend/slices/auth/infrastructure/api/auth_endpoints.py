@@ -20,7 +20,7 @@ from slices.auth.infrastructure.persistence import (
     SQLAlchemyUserSessionRepository
 )
 from slices.auth.infrastructure.security.password_service import PasswordService
-from slices.auth.infrastructure.security.jwt_service import JWTService
+from slices.auth.infrastructure.security.jwt_service_singleton import get_jwt_service
 
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
 security = HTTPBearer()
@@ -33,7 +33,7 @@ def get_auth_use_case(db: Session = Depends(get_db)) -> AuthenticateUserUseCase:
     login_attempt_repository = SQLAlchemyLoginAttemptRepository(db)
     user_session_repository = SQLAlchemyUserSessionRepository(db)
     password_service = PasswordService()
-    jwt_service = JWTService()
+    jwt_service = get_jwt_service()
 
     return AuthenticateUserUseCase(
         auth_repository=auth_repository,
@@ -48,7 +48,7 @@ def get_validate_token_use_case(db: Session = Depends(get_db)) -> ValidateTokenU
     """Dependency injection for ValidateTokenUseCase"""
     auth_repository = SQLAlchemyAuthRepository(db)
     user_session_repository = SQLAlchemyUserSessionRepository(db)
-    jwt_service = JWTService()
+    jwt_service = get_jwt_service()
 
     return ValidateTokenUseCase(
         auth_repository=auth_repository,
@@ -60,7 +60,7 @@ def get_validate_token_use_case(db: Session = Depends(get_db)) -> ValidateTokenU
 def get_logout_use_case(db: Session = Depends(get_db)) -> LogoutUserUseCase:
     """Dependency injection for LogoutUserUseCase"""
     user_session_repository = SQLAlchemyUserSessionRepository(db)
-    jwt_service = JWTService()
+    jwt_service = get_jwt_service()
 
     return LogoutUserUseCase(
         user_session_repository=user_session_repository,
@@ -72,7 +72,7 @@ def get_refresh_token_use_case(db: Session = Depends(get_db)) -> RefreshTokenUse
     """Dependency injection for RefreshTokenUseCase"""
     auth_repository = SQLAlchemyAuthRepository(db)
     user_session_repository = SQLAlchemyUserSessionRepository(db)
-    jwt_service = JWTService()
+    jwt_service = get_jwt_service()
 
     return RefreshTokenUseCase(
         auth_repository=auth_repository,
@@ -266,7 +266,7 @@ async def get_current_user(
         # Create use case with proper dependency injection
         auth_repository = SQLAlchemyAuthRepository(db)
         user_session_repository = SQLAlchemyUserSessionRepository(db)
-        jwt_service = JWTService()
+        jwt_service = get_jwt_service()
 
         use_case = ValidateTokenUseCase(
             auth_repository=auth_repository,

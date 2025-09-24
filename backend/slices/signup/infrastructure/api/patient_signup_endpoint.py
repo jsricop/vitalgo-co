@@ -9,7 +9,7 @@ from slices.signup.application.dto.patient_registration import PatientRegistrati
 from slices.signup.application.use_cases.register_patient import RegisterPatientUseCase
 from slices.signup.infrastructure.persistence.user_repository import SQLAlchemyUserRepository
 from slices.signup.infrastructure.persistence.patient_repository import SQLAlchemyPatientRepository
-from slices.auth.infrastructure.security.jwt_service import JWTService
+from slices.auth.infrastructure.security.jwt_service_singleton import get_jwt_service
 from slices.auth.infrastructure.persistence.sqlalchemy_user_session_repository import SQLAlchemyUserSessionRepository
 from slices.auth.infrastructure.persistence.sqlalchemy_auth_repository import SQLAlchemyAuthRepository
 
@@ -20,7 +20,7 @@ def get_register_patient_use_case(db: Session = Depends(get_db)) -> RegisterPati
     """Dependency injection for RegisterPatientUseCase"""
     user_repository = SQLAlchemyUserRepository(db)
     patient_repository = SQLAlchemyPatientRepository(db)
-    jwt_service = JWTService()
+    jwt_service = get_jwt_service()
     user_session_repository = SQLAlchemyUserSessionRepository(db)
     auth_repository = SQLAlchemyAuthRepository(db)
     return RegisterPatientUseCase(
