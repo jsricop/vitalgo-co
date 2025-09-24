@@ -10,10 +10,11 @@
 6. [Componentes UI](#componentes-ui)
 7. [Estilos y Sombras](#estilos-y-sombras)
 8. [Espaciado y Layout](#espaciado-y-layout)
-9. [Animaciones y Transiciones](#animaciones-y-transiciones)
-10. [Temas y Modos](#temas-y-modos)
-11. [Responsive Design](#responsive-design)
-12. [Accesibilidad](#accesibilidad)
+9. [Patrones de Arquitectura de Página](#patrones-de-arquitectura-de-página)
+10. [Animaciones y Transiciones](#animaciones-y-transiciones)
+11. [Temas y Modos](#temas-y-modos)
+12. [Responsive Design](#responsive-design)
+13. [Accesibilidad](#accesibilidad)
 
 ---
 
@@ -234,6 +235,108 @@ size: {
 - Font-size: 16px (previene zoom en iOS)
 - Focus: Ring azul con `box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1)`
 
+### Modal Forms (Patrón Estándar)
+
+**Uso**: Para formularios de creación/edición en páginas principales como `/medications`, `/allergies`
+
+#### Estructura
+```tsx
+{showForm && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="bg-white rounded-xl max-w-2xl w-full max-h-screen overflow-y-auto">
+      <FormComponent
+        initialData={editingItem ? itemToFormData(editingItem) : {}}
+        onSubmit={handleFormSubmit}
+        onCancel={handleFormCancel}
+        isLoading={actionLoading}
+        mode={editingItem ? 'edit' : 'create'}
+      />
+    </div>
+  </div>
+)}
+```
+
+#### Características
+- **Overlay**: Fondo oscuro semitransparente (`bg-black bg-opacity-50`)
+- **Centrado**: `flex items-center justify-center`
+- **Responsive**: `max-w-2xl w-full` con padding de 4
+- **Scrolleable**: `max-h-screen overflow-y-auto`
+- **Z-index**: `z-50` para estar sobre otros elementos
+
+### Button Style Variants
+
+#### Botones Primarios (Acciones Principales)
+```tsx
+// ✅ CORRECTO - Solid Green
+className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150"
+
+// ❌ INCORRECTO - Light Green (usar solo para casos especiales)
+className="bg-vitalgo-green-lightest border border-vitalgo-green-lighter"
+```
+
+#### Estados de Botón
+- **Normal**: `bg-vitalgo-green text-white`
+- **Hover**: `hover:bg-vitalgo-green-light`
+- **Focus**: `focus:ring-2 focus:ring-vitalgo-green`
+- **Disabled**: `disabled:opacity-50`
+
+### Date Display Format (Estándar Unificado)
+
+**Formato**: `"Actualizado: dd mmm yyyy"`
+
+#### Implementación
+```tsx
+// ✅ CORRECTO
+<span className="text-xs text-vitalgo-dark-lighter">
+  Actualizado: {formatDateShort(item.updatedAt)}
+</span>
+
+// Helper function
+const formatDateShort = (dateString: string): string => {
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+  } catch {
+    return dateString;
+  }
+};
+```
+
+#### Ejemplos
+- ✅ `Actualizado: 23 sep 2025`
+- ✅ `Creado: 15 ene 2025`
+- ❌ `23/09/2025` (sin label)
+- ❌ `2025-09-23` (formato técnico)
+
+### Layout Patterns
+
+#### Single Column List (Patrón Estándar)
+```tsx
+// ✅ CORRECTO - Para páginas principales
+<div className="space-y-4">
+  {items.map((item) => (
+    <ItemCard key={item.id} item={item} />
+  ))}
+</div>
+
+// ❌ EVITAR - Grid en páginas principales
+<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+```
+
+**Cuándo usar Single Column**:
+- ✅ Páginas principales (`/medications`, `/allergies`)
+- ✅ Listas de elementos complejos
+- ✅ Cuando se requiere consistencia visual
+
+**Cuándo usar Grid**:
+- ✅ Dashboard cards (tarjetas simples)
+- ✅ Galleries de imágenes
+- ✅ Elementos simples sin mucho contenido
+
 ---
 
 ## 🎭 Estilos y Sombras
@@ -309,6 +412,170 @@ spacing-16: 4rem    /* 64px */
   gap: 1rem;
 }
 ```
+
+---
+
+## 🏗️ Patrones de Arquitectura de Página
+
+### Estructura Estándar de Páginas Principales
+
+Páginas como `/medications`, `/allergies`, `/surgeries` deben seguir este patrón unificado:
+
+#### 1. Layout Base
+```tsx
+<AuthGuard requiredUserType="patient">
+  <div className="min-h-screen bg-gray-50">
+    <PatientNavbar />
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Contenido de la página */}
+    </main>
+  </div>
+</AuthGuard>
+```
+
+#### 2. Header Section (Sección Superior)
+```tsx
+<div className="bg-white rounded-xl border border-gray-200 p-6 mb-8">
+  <div className="flex items-center justify-between">
+    {/* Left: Icon + Title + Description */}
+    <div className="flex items-center">
+      <Icon size="xl" color="primary" className="mr-4" />
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Título de la Sección
+        </h1>
+        <p className="text-gray-600">
+          Descripción de la funcionalidad
+        </p>
+      </div>
+    </div>
+
+    {/* Right: Primary Action Button */}
+    <button className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light">
+      <PlusIcon className="h-5 w-5 mr-2" />
+      Agregar Item
+    </button>
+  </div>
+
+  {/* Statistics Row */}
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200">
+    <div className="text-center">
+      <div className="text-2xl font-bold text-vitalgo-green">{stats.total}</div>
+      <div className="text-sm text-gray-600">Total</div>
+    </div>
+    {/* More stats... */}
+  </div>
+</div>
+```
+
+#### 3. Filter Controls Section
+```tsx
+<div className="bg-white rounded-xl border border-gray-200 p-4 mb-6">
+  <div className="flex items-center space-x-4">
+    <span className="text-sm font-medium text-gray-700">Filtrar por:</span>
+    <div className="flex space-x-2">
+      <FilterButton active={filter === 'all'} onClick={() => setFilter('all')}>
+        Todos ({counts.total})
+      </FilterButton>
+      {/* More filter buttons... */}
+    </div>
+  </div>
+</div>
+```
+
+#### 4. Content Area (Lista Principal)
+```tsx
+<div className="bg-white rounded-xl border border-gray-200 p-6">
+  {loading ? (
+    <LoadingState />
+  ) : error ? (
+    <ErrorState onRetry={refetch} />
+  ) : items.length > 0 ? (
+    <div className="space-y-4">
+      {items.map((item) => (
+        <ItemCard key={item.id} item={item} />
+      ))}
+    </div>
+  ) : (
+    <EmptyState onAddNew={handleAddNew} />
+  )}
+</div>
+```
+
+### Estados de la Página
+
+#### Loading State
+```tsx
+<div className="space-y-4">
+  {[...Array(3)].map((_, index) => (
+    <div key={index} className="animate-pulse">
+      <div className="bg-gray-200 rounded-lg h-24"></div>
+    </div>
+  ))}
+</div>
+```
+
+#### Error State
+```tsx
+<div className="text-center py-8">
+  <ErrorIcon className="h-12 w-12 text-red-500 mx-auto mb-4" />
+  <h3 className="text-lg font-medium text-gray-900 mb-2">
+    Error al cargar datos
+  </h3>
+  <p className="text-gray-600 mb-4">{error}</p>
+  <button
+    onClick={refetch}
+    className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light"
+  >
+    Intentar de nuevo
+  </button>
+</div>
+```
+
+#### Empty State
+```tsx
+<div className="text-center py-12">
+  <div className="mx-auto w-20 h-20 bg-vitalgo-green-lightest rounded-full flex items-center justify-center mb-6">
+    <Icon size="xl" color="primary" />
+  </div>
+  <h3 className="text-xl font-medium text-gray-900 mb-2">
+    No hay elementos registrados
+  </h3>
+  <p className="text-gray-600 mb-6">
+    Descripción de la acción que el usuario puede tomar
+  </p>
+  <button
+    onClick={handleAddNew}
+    className="inline-flex items-center px-6 py-3 text-base font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light"
+  >
+    <PlusIcon className="h-5 w-5 mr-2" />
+    Agregar primer elemento
+  </button>
+</div>
+```
+
+### Form Modal Pattern (Ya documentado en Componentes UI)
+
+**Aplicar** para todas las acciones de creación/edición en páginas principales.
+
+### Consistencia en Navigation
+
+#### Breadcrumbs (si aplica)
+```tsx
+<nav className="mb-6">
+  <ol className="flex items-center space-x-2 text-sm">
+    <li><a href="/dashboard">Dashboard</a></li>
+    <li className="text-gray-400">/</li>
+    <li className="text-vitalgo-green font-medium">Medicamentos</li>
+  </ol>
+</nav>
+```
+
+### Responsive Behavior
+
+- **Desktop (lg+)**: Layout completo con statistics en fila
+- **Tablet (md)**: Statistics en grid 2x2
+- **Mobile (sm)**: Stack vertical, botones full-width
 
 ---
 
@@ -518,6 +785,23 @@ Todos los assets están disponibles desde `/assets/` en la aplicación:
 - [ ] Aplicar transiciones suaves en interacciones
 - [ ] Implementar los colores oficiales VitalGo en lugar de `green-500` genérico
 
+#### Patrones Unificados (OBLIGATORIO seguir)
+- [ ] **Modal Forms**: Usar modal overlay para formularios en páginas principales
+- [ ] **Solid Green Buttons**: `bg-vitalgo-green text-white` para acciones primarias
+- [ ] **Date Format**: Usar `"Actualizado: dd mmm yyyy"` con labels claros
+- [ ] **Single Column Layout**: `space-y-4` para listas en páginas principales
+- [ ] **Page Structure**: Seguir Header → Statistics → Filters → Content pattern
+- [ ] **Error Buttons**: Usar solid green para retry/action buttons
+- [ ] **formatDateShort**: Implementar helper function para dates consistentes
+
+#### Páginas Principales (`/medications`, `/allergies`, etc.)
+- [ ] Seguir arquitectura: `AuthGuard > bg-gray-50 > PatientNavbar > main`
+- [ ] Header con icon + title + action button alineado a la derecha
+- [ ] Statistics grid responsive: 1 col mobile, 3+ col desktop
+- [ ] Filter controls en tarjeta separada
+- [ ] Content area con estados: loading, error, empty, success
+- [ ] Modal forms en lugar de inline forms o page navigation
+
 ### Para Diseñadores
 - [ ] Usar paleta de colores oficial
 - [ ] Mantener jerarquía tipográfica
@@ -543,6 +827,12 @@ Para consultas sobre el manual de marca o solicitudes de nuevos componentes, con
 - [x] Favicons y PWA icons
 - [x] Estructura de componentes Atomic Design
 - [x] Sistema de espaciado y grid responsivo
+- [x] **Modal Forms unificados**: Todas las páginas principales usan modal forms consistentes
+- [x] **Button Styling estándar**: Solid green buttons para acciones primarias unificado
+- [x] **Date Display Format**: Formato "Actualizado: dd mmm yyyy" con labels claros
+- [x] **Layout Consistency**: Single column lists en páginas principales
+- [x] **Page Architecture Pattern**: Header → Statistics → Filters → Content structure
+- [x] **Dashboard Cards unificación**: Medications y Allergies cards con estilos consistentes
 
 ### 🔄 En Proceso
 - [ ] Migración completa de `green-500` a `vitalgo-green`
@@ -557,6 +847,6 @@ Para consultas sobre el manual de marca o solicitudes de nuevos componentes, con
 
 ---
 
-**Última actualización**: Septiembre 2025
-**Versión**: 2.0.0
+**Última actualización**: Septiembre 2025 (Unificación de Estilos)
+**Versión**: 2.1.0
 **Proyecto**: VitalGo Platform - `/Users/jsricop/dev-rq/projects/vitalgo-co`
