@@ -203,7 +203,7 @@ class AllergiesAPIService {
     try {
       console.log('📊 Fetching allergies...');
 
-      const response = await fetch(`${API_BASE_URL}/api/allergies`, {
+      const response = await fetch(`${API_BASE_URL}/api/allergies/`, {
         method: 'GET',
         headers: await this.getAuthHeaders(),
       });
@@ -227,7 +227,7 @@ class AllergiesAPIService {
       console.log('📝 Creating allergy:', data.allergen);
 
       const apiRequest = this.transformToApiRequest(data);
-      const response = await fetch(`${API_BASE_URL}/api/allergies`, {
+      const response = await fetch(`${API_BASE_URL}/api/allergies/`, {
         method: 'POST',
         headers: await this.getAuthHeaders(),
         body: JSON.stringify(apiRequest),

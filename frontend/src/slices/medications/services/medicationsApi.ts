@@ -196,7 +196,7 @@ class MedicationsAPIService {
     try {
       console.log('📊 Fetching medications...');
 
-      const response = await fetch(`${API_BASE_URL}/api/medications`, {
+      const response = await fetch(`${API_BASE_URL}/api/medications/`, {
         method: 'GET',
         headers: await this.getAuthHeaders(),
       });
@@ -220,7 +220,7 @@ class MedicationsAPIService {
       console.log('📝 Creating medication:', data.medicationName);
 
       const apiRequest = this.transformToApiRequest(data);
-      const response = await fetch(`${API_BASE_URL}/api/medications`, {
+      const response = await fetch(`${API_BASE_URL}/api/medications/`, {
         method: 'POST',
         headers: await this.getAuthHeaders(),
         body: JSON.stringify(apiRequest),

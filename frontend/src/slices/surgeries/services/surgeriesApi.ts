@@ -204,7 +204,7 @@ class SurgeriesAPIService {
   async getAllSurgeries(): Promise<Surgery[]> {
     console.log('📡 SURGERIES API: Fetching all surgeries for patient');
 
-    const response = await fetch(`${API_BASE_URL}/api/surgeries`, {
+    const response = await fetch(`${API_BASE_URL}/api/surgeries/`, {
       method: 'GET',
       headers: await this.getAuthHeaders(),
     });
@@ -242,7 +242,7 @@ class SurgeriesAPIService {
 
     const apiData = this.transformToApiRequest(data);
 
-    const response = await fetch(`${API_BASE_URL}/api/surgeries`, {
+    const response = await fetch(`${API_BASE_URL}/api/surgeries/`, {
       method: 'POST',
       headers: await this.getAuthHeaders(),
       body: JSON.stringify(apiData),
