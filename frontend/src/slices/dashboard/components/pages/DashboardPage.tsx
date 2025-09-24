@@ -7,8 +7,7 @@
 import React from 'react';
 import { DashboardOverview } from '../organisms/DashboardOverview';
 import { AuthGuard } from '../../../../shared/components/guards/AuthGuard';
-import { AuthenticatedNavbar } from '../../../../shared/components/organisms/AuthenticatedNavbar';
-import { useAuthUser } from '../../../../shared/hooks/useAuthUser';
+import { PatientNavbar } from '../../../../shared/components/organisms/PatientNavbar';
 
 interface DashboardPageProps {
   'data-testid'?: string;
@@ -17,45 +16,11 @@ interface DashboardPageProps {
 export const DashboardPage: React.FC<DashboardPageProps> = ({
   'data-testid': testId
 }) => {
-  const { user, isLoading, logout, error } = useAuthUser()
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center" data-testid={testId}>
-        <div className="flex items-center space-x-2">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-vitalgo-green"></div>
-          <span className="text-gray-600">Cargando...</span>
-        </div>
-      </div>
-    )
-  }
-
-  if (error || !user) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center" data-testid={testId}>
-        <div className="text-center">
-          <p className="text-red-600 mb-4">{error || 'Error de autenticación'}</p>
-          <button
-            onClick={() => window.location.href = '/login'}
-            className="bg-vitalgo-green text-white px-4 py-2 rounded-md hover:bg-vitalgo-green/90"
-          >
-            Ir a Login
-          </button>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <AuthGuard requiredUserType="patient">
       <div className="min-h-screen bg-gray-50" data-testid={testId}>
-        {/* Authenticated Navbar with Dashboard Navigation */}
-        <AuthenticatedNavbar
-          user={user}
-          onLogout={logout}
-          showNavigation={true}
-          data-testid="dashboard-navbar"
-        />
+        {/* Patient Navbar with integrated auth and navigation */}
+        <PatientNavbar data-testid="dashboard-navbar" />
 
         {/* Main Content */}
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

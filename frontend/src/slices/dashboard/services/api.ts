@@ -4,12 +4,7 @@
  */
 
 import {
-  DashboardData,
-  PatientMedication,
-  PatientAllergy,
-  PatientSurgery,
-  PatientIllness,
-  MedicalDataFormData
+  DashboardData
 } from '../types';
 import { LocalStorageService } from '../../../shared/services/local-storage-service';
 
@@ -89,145 +84,12 @@ class DashboardAPIService {
     return this.handleResponse<DashboardData>(response);
   }
 
-  // Medication CRUD
-  async getMedications(): Promise<PatientMedication[]> {
-    const response = await fetch(`${API_BASE_URL}/api/dashboard/medications`, {
-      method: 'GET',
-      headers: await this.getAuthHeaders(),
-    });
-    return this.handleResponse<PatientMedication[]>(response);
-  }
-
-  async createMedication(data: MedicalDataFormData): Promise<PatientMedication> {
-    const response = await fetch(`${API_BASE_URL}/api/dashboard/medications`, {
-      method: 'POST',
-      headers: await this.getAuthHeaders(),
-      body: JSON.stringify(data),
-    });
-    return this.handleResponse<PatientMedication>(response);
-  }
-
-  async updateMedication(id: number, data: MedicalDataFormData): Promise<PatientMedication> {
-    const response = await fetch(`${API_BASE_URL}/api/dashboard/medications/${id}`, {
-      method: 'PUT',
-      headers: await this.getAuthHeaders(),
-      body: JSON.stringify(data),
-    });
-    return this.handleResponse<PatientMedication>(response);
-  }
-
-  async deleteMedication(id: number): Promise<void> {
-    const response = await fetch(`${API_BASE_URL}/api/dashboard/medications/${id}`, {
-      method: 'DELETE',
-      headers: await this.getAuthHeaders(),
-    });
-    await this.handleResponse(response);
-  }
-
-  // Allergy CRUD
-  async getAllergies(): Promise<PatientAllergy[]> {
-    const response = await fetch(`${API_BASE_URL}/api/dashboard/allergies`, {
-      method: 'GET',
-      headers: await this.getAuthHeaders(),
-    });
-    return this.handleResponse<PatientAllergy[]>(response);
-  }
-
-  async createAllergy(data: MedicalDataFormData): Promise<PatientAllergy> {
-    const response = await fetch(`${API_BASE_URL}/api/dashboard/allergies`, {
-      method: 'POST',
-      headers: await this.getAuthHeaders(),
-      body: JSON.stringify(data),
-    });
-    return this.handleResponse<PatientAllergy>(response);
-  }
-
-  async updateAllergy(id: number, data: MedicalDataFormData): Promise<PatientAllergy> {
-    const response = await fetch(`${API_BASE_URL}/api/dashboard/allergies/${id}`, {
-      method: 'PUT',
-      headers: await this.getAuthHeaders(),
-      body: JSON.stringify(data),
-    });
-    return this.handleResponse<PatientAllergy>(response);
-  }
-
-  async deleteAllergy(id: number): Promise<void> {
-    const response = await fetch(`${API_BASE_URL}/api/dashboard/allergies/${id}`, {
-      method: 'DELETE',
-      headers: await this.getAuthHeaders(),
-    });
-    await this.handleResponse(response);
-  }
-
-  // Surgery CRUD
-  async getSurgeries(): Promise<PatientSurgery[]> {
-    const response = await fetch(`${API_BASE_URL}/api/dashboard/surgeries`, {
-      method: 'GET',
-      headers: await this.getAuthHeaders(),
-    });
-    return this.handleResponse<PatientSurgery[]>(response);
-  }
-
-  async createSurgery(data: MedicalDataFormData): Promise<PatientSurgery> {
-    const response = await fetch(`${API_BASE_URL}/api/dashboard/surgeries`, {
-      method: 'POST',
-      headers: await this.getAuthHeaders(),
-      body: JSON.stringify(data),
-    });
-    return this.handleResponse<PatientSurgery>(response);
-  }
-
-  async updateSurgery(id: number, data: MedicalDataFormData): Promise<PatientSurgery> {
-    const response = await fetch(`${API_BASE_URL}/api/dashboard/surgeries/${id}`, {
-      method: 'PUT',
-      headers: await this.getAuthHeaders(),
-      body: JSON.stringify(data),
-    });
-    return this.handleResponse<PatientSurgery>(response);
-  }
-
-  async deleteSurgery(id: number): Promise<void> {
-    const response = await fetch(`${API_BASE_URL}/api/dashboard/surgeries/${id}`, {
-      method: 'DELETE',
-      headers: await this.getAuthHeaders(),
-    });
-    await this.handleResponse(response);
-  }
-
-  // Illness CRUD
-  async getIllnesses(): Promise<PatientIllness[]> {
-    const response = await fetch(`${API_BASE_URL}/api/dashboard/illnesses`, {
-      method: 'GET',
-      headers: await this.getAuthHeaders(),
-    });
-    return this.handleResponse<PatientIllness[]>(response);
-  }
-
-  async createIllness(data: MedicalDataFormData): Promise<PatientIllness> {
-    const response = await fetch(`${API_BASE_URL}/api/dashboard/illnesses`, {
-      method: 'POST',
-      headers: await this.getAuthHeaders(),
-      body: JSON.stringify(data),
-    });
-    return this.handleResponse<PatientIllness>(response);
-  }
-
-  async updateIllness(id: number, data: MedicalDataFormData): Promise<PatientIllness> {
-    const response = await fetch(`${API_BASE_URL}/api/dashboard/illnesses/${id}`, {
-      method: 'PUT',
-      headers: await this.getAuthHeaders(),
-      body: JSON.stringify(data),
-    });
-    return this.handleResponse<PatientIllness>(response);
-  }
-
-  async deleteIllness(id: number): Promise<void> {
-    const response = await fetch(`${API_BASE_URL}/api/dashboard/illnesses/${id}`, {
-      method: 'DELETE',
-      headers: await this.getAuthHeaders(),
-    });
-    await this.handleResponse(response);
-  }
+  // ALL MEDICAL CRUD OPERATIONS REMOVED - Now handled by dedicated slices:
+  // - Medications: frontend/src/slices/medications/services/medicationsApi.ts -> /api/medications
+  // - Allergies: Use dedicated allergies slice -> /api/allergies
+  // - Surgeries: Use dedicated surgeries slice -> /api/surgeries
+  // - Illnesses: Use dedicated illnesses slice -> /api/illnesses
+  // Dashboard only handles summary/statistics data
 }
 
 export const dashboardAPI = new DashboardAPIService();

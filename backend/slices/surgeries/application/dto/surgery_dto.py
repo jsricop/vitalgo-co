@@ -3,7 +3,7 @@ Surgery DTOs for API request/response
 """
 from datetime import datetime, date
 from typing import Optional
-from pydantic import BaseModel, Field, field_serializer
+from pydantic import BaseModel, Field, field_serializer, field_validator
 
 
 class CreateSurgeryDTO(BaseModel):
@@ -44,6 +44,12 @@ class PatientSurgeryDTO(BaseModel):
     complications: Optional[str] = None
     created_at: datetime
     updated_at: datetime
+
+    @field_validator('patient_id', mode='before')
+    @classmethod
+    def convert_uuid_to_string(cls, v):
+        """Convert UUID objects to string for validation"""
+        return str(v) if v is not None else None
 
     @field_serializer('patient_id', when_used='json')
     def serialize_patient_id(self, patient_id) -> str:

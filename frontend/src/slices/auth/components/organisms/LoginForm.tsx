@@ -1,7 +1,7 @@
 'use client';
 /**
- * Login Form organism component
- * Complete login form with validation, error handling, and API integration
+ * Login Form organism component - Pure UI form using centralized AuthContext
+ * No direct API calls or router logic - uses AuthContext for authentication
  */
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -10,7 +10,7 @@ import { LoginOptionsForm } from '../molecules/LoginOptionsForm';
 import { LoginButton } from '../atoms/LoginButton';
 import { LoginLegalText } from '../atoms/LoginLegalText';
 import { LoginForm as LoginFormType, LoginErrorResponse, FieldValidationState } from '../../types';
-import { authApiClient } from '../../services/authApiClient';
+import { useAuth } from '../../../../shared/contexts/AuthContext';
 
 interface LoginFormProps {
   onSuccess?: (redirectUrl?: string) => void;
@@ -24,6 +24,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   'data-testid': testId
 }) => {
   const router = useRouter();
+  const { login, isLoading, error } = useAuth();
 
   // Form state
   const [formData, setFormData] = useState<LoginFormType>({
@@ -32,7 +33,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     rememberMe: false
   });
 
-  const [isLoading, setIsLoading] = useState(false);
   const [generalError, setGeneralError] = useState<string | null>(null);
   const [emailValidation, setEmailValidation] = useState<FieldValidationState>({
     isValidating: false,
@@ -102,50 +102,35 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       return;
     }
 
-    setIsLoading(true);
-
     try {
-      const response = await authApiClient.login(formData);
+      console.log('🔍 LOGIN FORM: Using AuthContext login', {
+        timestamp: new Date().toISOString(),
+        email: formData.email,
+        currentPath: window.location.pathname
+      });
+      const redirectUrl = await login(formData);
 
-      // Successful login - Add comprehensive debugging checkpoints
-      console.log('🔍 LOGIN SUCCESS CHECKPOINT 1: API Response received', {
-        hasOnSuccess: !!onSuccess,
-        redirectUrl: response.redirectUrl,
-        fullResponse: response
+      console.log('🔍 LOGIN FORM: Login successful', {
+        timestamp: new Date().toISOString(),
+        redirectUrl,
+        hasOnSuccess: !!onSuccess
       });
 
       if (onSuccess) {
-        console.log('🔍 LOGIN SUCCESS CHECKPOINT 2: Using onSuccess callback');
-        onSuccess(response.redirectUrl);
+        onSuccess(redirectUrl);
       } else {
-        // Default redirect behavior
-        const redirectUrl = response.redirectUrl || '/dashboard';
-        console.log('🔍 LOGIN SUCCESS CHECKPOINT 3: Using router.push', {
-          redirectUrl,
-          routerType: typeof router,
-          routerMethods: Object.getOwnPropertyNames(router)
+        const targetUrl = redirectUrl || '/dashboard';
+        console.log('🔍 LOGIN FORM: Redirecting to:', {
+          timestamp: new Date().toISOString(),
+          targetUrl,
+          currentPath: window.location.pathname,
+          redirectMethod: 'router.replace'
         });
-
-        try {
-          // Add a delay to ensure localStorage is available and stable
-          console.log('🔍 LOGIN SUCCESS CHECKPOINT 3.5: Adding delay to ensure localStorage stability');
-          await new Promise(resolve => setTimeout(resolve, 250));
-
-          await router.push(redirectUrl);
-          console.log('🔍 LOGIN SUCCESS CHECKPOINT 4: router.push completed successfully');
-        } catch (routerError) {
-          console.error('🔍 LOGIN SUCCESS CHECKPOINT 4 ERROR: router.push failed', {
-            error: routerError,
-            redirectUrl
-          });
-          // Fallback: Try window.location
-          console.log('🔍 LOGIN SUCCESS CHECKPOINT 5: Attempting window.location fallback');
-          window.location.href = redirectUrl;
-        }
+        router.replace(targetUrl);
       }
 
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('🔍 LOGIN FORM: Login failed', error);
 
       // Handle login error responses
       if (error && typeof error === 'object' && 'success' in error) {
@@ -172,8 +157,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       if (onError && error instanceof Error) {
         onError(error.message);
       }
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -199,8 +182,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           </p>
         </div>
 
-        {/* General error message */}
-        {generalError && (
+        {/* General error message - Show both local and AuthContext errors */}
+        {(generalError || error) && (
           <div
             className="bg-red-50 border border-red-200 rounded-lg p-4"
             data-testid="login-error-message"
@@ -212,7 +195,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                 </svg>
               </div>
               <div className="ml-3">
-                <p className="text-sm text-red-800">{generalError}</p>
+                <p className="text-sm text-red-800">{generalError || error}</p>
               </div>
             </div>
           </div>

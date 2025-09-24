@@ -43,6 +43,10 @@ export function PatientNavbar({
     {
       label: "Alergias",
       href: "/allergies"
+    },
+    {
+      label: "Cirugías",
+      href: "/surgeries"
     }
   ]
 
@@ -55,6 +59,9 @@ export function PatientNavbar({
     }
     if (href === "/allergies") {
       return pathname === "/allergies"
+    }
+    if (href === "/surgeries") {
+      return pathname === "/surgeries"
     }
     return pathname?.startsWith(href)
   }

@@ -9,13 +9,14 @@ from sqlalchemy import and_, func, desc
 from sqlalchemy.exc import SQLAlchemyError
 
 from slices.dashboard.application.ports.dashboard_repository import DashboardRepositoryPort
-from slices.dashboard.domain.models.medical_models import (
-    PatientMedication,
-    PatientAllergy,
-    PatientSurgery,
-    PatientIllness,
-    DashboardActivityLog
-)
+# Import medical models from dedicated slices for dashboard queries
+from slices.medications.domain.models.medication_model import PatientMedication
+from slices.allergies.domain.models.allergy_model import PatientAllergy
+from slices.surgeries.domain.models.surgery_model import PatientSurgery
+from slices.illnesses.domain.models.illness_model import PatientIllness
+
+# Import dashboard-specific models only
+from slices.dashboard.domain.models.medical_models import DashboardActivityLog
 from slices.dashboard.domain.entities.dashboard_stats import DashboardStats, MedicalDataSummary
 from slices.signup.domain.models.patient_model import Patient
 from slices.signup.domain.models.user_model import User
@@ -185,255 +186,7 @@ class DashboardRepository(DashboardRepositoryPort):
         except SQLAlchemyError as e:
             raise Exception(f"Database error getting medical summary: {str(e)}")
 
-    # Medication operations
-    async def get_medications(self, patient_id: UUID) -> List[PatientMedication]:
-        """Get all medications for a patient"""
-        try:
-            return self.db.query(PatientMedication).filter(
-                PatientMedication.patient_id == patient_id
-            ).order_by(desc(PatientMedication.created_at)).all()
-        except SQLAlchemyError as e:
-            raise Exception(f"Database error getting medications: {str(e)}")
-
-    async def create_medication(self, medication: PatientMedication) -> PatientMedication:
-        """Create a new medication record"""
-        try:
-            self.db.add(medication)
-            self.db.commit()
-            self.db.refresh(medication)
-            return medication
-        except SQLAlchemyError as e:
-            self.db.rollback()
-            raise Exception(f"Database error creating medication: {str(e)}")
-
-    async def update_medication(self, medication_id: int, medication_data: dict) -> Optional[PatientMedication]:
-        """Update a medication record"""
-        try:
-            medication = self.db.query(PatientMedication).filter(
-                PatientMedication.id == medication_id
-            ).first()
-
-            if not medication:
-                return None
-
-            for key, value in medication_data.items():
-                if hasattr(medication, key):
-                    setattr(medication, key, value)
-
-            self.db.commit()
-            self.db.refresh(medication)
-            return medication
-        except SQLAlchemyError as e:
-            self.db.rollback()
-            raise Exception(f"Database error updating medication: {str(e)}")
-
-    async def delete_medication(self, medication_id: int, patient_id: UUID) -> bool:
-        """Delete a medication record (with patient ownership check)"""
-        try:
-            medication = self.db.query(PatientMedication).filter(
-                and_(
-                    PatientMedication.id == medication_id,
-                    PatientMedication.patient_id == patient_id
-                )
-            ).first()
-
-            if not medication:
-                return False
-
-            self.db.delete(medication)
-            self.db.commit()
-            return True
-        except SQLAlchemyError as e:
-            self.db.rollback()
-            raise Exception(f"Database error deleting medication: {str(e)}")
-
-    # Allergy operations (similar pattern)
-    async def get_allergies(self, patient_id: UUID) -> List[PatientAllergy]:
-        """Get all allergies for a patient"""
-        try:
-            return self.db.query(PatientAllergy).filter(
-                PatientAllergy.patient_id == patient_id
-            ).order_by(desc(PatientAllergy.created_at)).all()
-        except SQLAlchemyError as e:
-            raise Exception(f"Database error getting allergies: {str(e)}")
-
-    async def create_allergy(self, allergy: PatientAllergy) -> PatientAllergy:
-        """Create a new allergy record"""
-        try:
-            self.db.add(allergy)
-            self.db.commit()
-            self.db.refresh(allergy)
-            return allergy
-        except SQLAlchemyError as e:
-            self.db.rollback()
-            raise Exception(f"Database error creating allergy: {str(e)}")
-
-    async def update_allergy(self, allergy_id: int, allergy_data: dict) -> Optional[PatientAllergy]:
-        """Update an allergy record"""
-        try:
-            allergy = self.db.query(PatientAllergy).filter(
-                PatientAllergy.id == allergy_id
-            ).first()
-
-            if not allergy:
-                return None
-
-            for key, value in allergy_data.items():
-                if hasattr(allergy, key):
-                    setattr(allergy, key, value)
-
-            self.db.commit()
-            self.db.refresh(allergy)
-            return allergy
-        except SQLAlchemyError as e:
-            self.db.rollback()
-            raise Exception(f"Database error updating allergy: {str(e)}")
-
-    async def delete_allergy(self, allergy_id: int, patient_id: UUID) -> bool:
-        """Delete an allergy record (with patient ownership check)"""
-        try:
-            allergy = self.db.query(PatientAllergy).filter(
-                and_(
-                    PatientAllergy.id == allergy_id,
-                    PatientAllergy.patient_id == patient_id
-                )
-            ).first()
-
-            if not allergy:
-                return False
-
-            self.db.delete(allergy)
-            self.db.commit()
-            return True
-        except SQLAlchemyError as e:
-            self.db.rollback()
-            raise Exception(f"Database error deleting allergy: {str(e)}")
-
-    # Surgery operations (similar pattern)
-    async def get_surgeries(self, patient_id: UUID) -> List[PatientSurgery]:
-        """Get all surgeries for a patient"""
-        try:
-            return self.db.query(PatientSurgery).filter(
-                PatientSurgery.patient_id == patient_id
-            ).order_by(desc(PatientSurgery.surgery_date)).all()
-        except SQLAlchemyError as e:
-            raise Exception(f"Database error getting surgeries: {str(e)}")
-
-    async def create_surgery(self, surgery: PatientSurgery) -> PatientSurgery:
-        """Create a new surgery record"""
-        try:
-            self.db.add(surgery)
-            self.db.commit()
-            self.db.refresh(surgery)
-            return surgery
-        except SQLAlchemyError as e:
-            self.db.rollback()
-            raise Exception(f"Database error creating surgery: {str(e)}")
-
-    async def update_surgery(self, surgery_id: int, surgery_data: dict) -> Optional[PatientSurgery]:
-        """Update a surgery record"""
-        try:
-            surgery = self.db.query(PatientSurgery).filter(
-                PatientSurgery.id == surgery_id
-            ).first()
-
-            if not surgery:
-                return None
-
-            for key, value in surgery_data.items():
-                if hasattr(surgery, key):
-                    setattr(surgery, key, value)
-
-            self.db.commit()
-            self.db.refresh(surgery)
-            return surgery
-        except SQLAlchemyError as e:
-            self.db.rollback()
-            raise Exception(f"Database error updating surgery: {str(e)}")
-
-    async def delete_surgery(self, surgery_id: int, patient_id: UUID) -> bool:
-        """Delete a surgery record (with patient ownership check)"""
-        try:
-            surgery = self.db.query(PatientSurgery).filter(
-                and_(
-                    PatientSurgery.id == surgery_id,
-                    PatientSurgery.patient_id == patient_id
-                )
-            ).first()
-
-            if not surgery:
-                return False
-
-            self.db.delete(surgery)
-            self.db.commit()
-            return True
-        except SQLAlchemyError as e:
-            self.db.rollback()
-            raise Exception(f"Database error deleting surgery: {str(e)}")
-
-    # Illness operations (similar pattern)
-    async def get_illnesses(self, patient_id: UUID) -> List[PatientIllness]:
-        """Get all illnesses for a patient"""
-        try:
-            return self.db.query(PatientIllness).filter(
-                PatientIllness.patient_id == patient_id
-            ).order_by(desc(PatientIllness.diagnosis_date)).all()
-        except SQLAlchemyError as e:
-            raise Exception(f"Database error getting illnesses: {str(e)}")
-
-    async def create_illness(self, illness: PatientIllness) -> PatientIllness:
-        """Create a new illness record"""
-        try:
-            self.db.add(illness)
-            self.db.commit()
-            self.db.refresh(illness)
-            return illness
-        except SQLAlchemyError as e:
-            self.db.rollback()
-            raise Exception(f"Database error creating illness: {str(e)}")
-
-    async def update_illness(self, illness_id: int, illness_data: dict) -> Optional[PatientIllness]:
-        """Update an illness record"""
-        try:
-            illness = self.db.query(PatientIllness).filter(
-                PatientIllness.id == illness_id
-            ).first()
-
-            if not illness:
-                return None
-
-            for key, value in illness_data.items():
-                if hasattr(illness, key):
-                    setattr(illness, key, value)
-
-            self.db.commit()
-            self.db.refresh(illness)
-            return illness
-        except SQLAlchemyError as e:
-            self.db.rollback()
-            raise Exception(f"Database error updating illness: {str(e)}")
-
-    async def delete_illness(self, illness_id: int, patient_id: UUID) -> bool:
-        """Delete an illness record (with patient ownership check)"""
-        try:
-            illness = self.db.query(PatientIllness).filter(
-                and_(
-                    PatientIllness.id == illness_id,
-                    PatientIllness.patient_id == patient_id
-                )
-            ).first()
-
-            if not illness:
-                return False
-
-            self.db.delete(illness)
-            self.db.commit()
-            return True
-        except SQLAlchemyError as e:
-            self.db.rollback()
-            raise Exception(f"Database error deleting illness: {str(e)}")
-
-    # Recent data for dashboard
+    # Private helper methods to calculate stats from existing data
     async def get_recent_medications(self, patient_id: UUID, limit: int = 5) -> List[PatientMedication]:
         """Get recent medications for dashboard display"""
         try:
@@ -490,18 +243,6 @@ class DashboardRepository(DashboardRepositoryPort):
 
         except SQLAlchemyError as e:
             raise Exception(f"Database error getting recent activities: {str(e)}")
-
-    # Activity logging
-    async def log_activity(self, activity: DashboardActivityLog) -> DashboardActivityLog:
-        """Log dashboard activity"""
-        try:
-            self.db.add(activity)
-            self.db.commit()
-            self.db.refresh(activity)
-            return activity
-        except SQLAlchemyError as e:
-            self.db.rollback()
-            raise Exception(f"Database error logging activity: {str(e)}")
 
     # Private helper methods
     def _calculate_profile_completeness(self, patient: Optional[Patient]) -> float:

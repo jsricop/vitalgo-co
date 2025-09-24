@@ -8,7 +8,6 @@ import React from 'react';
 import { AllergyCardProps } from '../../types';
 import { AllergyIcon } from '../atoms/AllergyIcon';
 import { SeverityBadge } from '../atoms/SeverityBadge';
-import { AllergyActions } from '../atoms/AllergyActions';
 import { formatDateShort } from '../../../medications/utils/medicationHelpers';
 
 // Helper function to format dates
@@ -144,17 +143,33 @@ export const AllergyCard: React.FC<AllergyCardProps> = ({
           </span>
         </div>
 
-        {/* Actions */}
+        {/* Actions - Using the same pattern from SurgeriesCard that user likes */}
         {showActions && (onEdit || onDelete) && (
-          <div className="flex-shrink-0">
-            <AllergyActions
-              allergy={allergy}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              size={compact ? 'sm' : 'md'}
-              layout={compact ? 'icons' : 'horizontal'}
-              data-testid={`${testId}-actions`}
-            />
+          <div className="flex items-center space-x-2">
+            {onEdit && (
+              <button
+                onClick={() => onEdit(allergy)}
+                className="inline-flex items-center text-xs font-medium text-vitalgo-green hover:text-vitalgo-green-light transition-colors duration-150"
+                data-testid={`${testId}-edit-button`}
+              >
+                <svg className="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Editar
+              </button>
+            )}
+            {onDelete && (
+              <button
+                onClick={() => onDelete(allergy.id)}
+                className="inline-flex items-center text-xs font-medium text-red-600 hover:text-red-700 transition-colors duration-150"
+                data-testid={`${testId}-delete-button`}
+              >
+                <svg className="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Eliminar
+              </button>
+            )}
           </div>
         )}
       </div>

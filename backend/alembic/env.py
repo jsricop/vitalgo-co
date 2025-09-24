@@ -43,14 +43,14 @@ from slices.signup.domain.models import User, Patient, DocumentType
 # Import auth models for autogenerate
 from slices.auth.domain.models import LoginAttempt, UserSession
 
-# Import dashboard medical models for autogenerate
-from slices.dashboard.domain.models.medical_models import (
-    PatientMedication,
-    PatientAllergy,
-    PatientSurgery,
-    PatientIllness,
-    DashboardActivityLog
-)
+# Import medical models from dedicated slices for autogenerate
+from slices.medications.domain.models.medication_model import PatientMedication
+from slices.allergies.domain.models.allergy_model import PatientAllergy
+from slices.surgeries.domain.models.surgery_model import PatientSurgery
+from slices.illnesses.domain.models.illness_model import PatientIllness
+
+# Import dashboard-specific models only
+from slices.dashboard.domain.models.medical_models import DashboardActivityLog
 
 target_metadata = Base.metadata
 

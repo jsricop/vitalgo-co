@@ -5,7 +5,7 @@ Pydantic models for dashboard statistics and data
 from typing import Dict, Optional, List
 from datetime import datetime
 from pydantic import BaseModel
-from .medical_data_dto import PatientMedicationDTO
+from slices.medications.application.dto.medication_dto import PatientMedicationDTO
 
 
 class DashboardStatsDTO(BaseModel):

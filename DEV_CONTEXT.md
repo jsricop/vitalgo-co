@@ -75,9 +75,78 @@ Reference Documents → Plan Implementation → Code Changes → Update Referenc
 - **Critical Consistency**: Identical slice names across backend/frontend (e.g., `auth`)
 
 ### Stack
-**Backend**: FastAPI, SQLAlchemy, AsyncPG, PostgreSQL, Redis, Pydantic, Poetry, PyJWT, Bcrypt  
-**Frontend**: Next.js, React, TypeScript, Tailwind CSS, Radix UI, React Hook Form, Zustand, SWR, Lucide React  
+**Backend**: FastAPI, SQLAlchemy, AsyncPG, PostgreSQL, Redis, Pydantic, Poetry, PyJWT, Bcrypt
+**Frontend**: Next.js, React, TypeScript, Tailwind CSS, Radix UI, React Hook Form, Zustand, SWR, Lucide React
 **DevTools**: Docker, Pytest, Playwright, Prettier, Black, isort
+
+### Backend Development Standards
+
+#### UUID Validation Pattern (MANDATORY)
+All DTO classes that receive UUID fields from SQLAlchemy models MUST include a field_validator to convert UUID objects to strings:
+
+```python
+from pydantic import BaseModel, Field, field_serializer, field_validator
+
+@field_validator('patient_id', mode='before')
+@classmethod
+def convert_uuid_to_string(cls, v):
+    """Convert UUID objects to string for validation"""
+    return str(v) if v is not None else None
+
+@field_serializer('patient_id', when_used='json')
+def serialize_patient_id(self, patient_id) -> str:
+    """Ensure patient_id is always serialized as string"""
+    return str(patient_id)
+```
+
+**Why Required**: SQLAlchemy models with `UUID(as_uuid=True)` fields return UUID objects, but Pydantic DTOs expect string types. Without the validator, this causes `ValidationError: Input should be a valid string` errors.
+
+**Applied In**: All medical data DTOs (`PatientSurgeryDTO`, `PatientAllergyDTO`, `PatientMedicationDTO`, etc.) that contain `patient_id` fields.
+
+### Frontend Development Standards
+
+#### React Lifecycle Best Practices (MANDATORY)
+NEVER call router navigation methods (`router.push()`, `router.replace()`) directly during component render. This violates React's setState-in-render rules and causes errors like "Cannot update a component while rendering a different component".
+
+**Correct Pattern**: Use `useEffect` hooks for navigation side effects:
+
+```typescript
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
+// ❌ WRONG - Causes React rendering errors
+const BadComponent = ({ isAuthenticated }) => {
+  const router = useRouter();
+
+  if (!isAuthenticated) {
+    router.replace('/login'); // Error: setState during render
+    return <div>Redirecting...</div>;
+  }
+
+  return <div>Protected content</div>;
+};
+
+// ✅ CORRECT - Use useEffect for side effects
+const GoodComponent = ({ isAuthenticated }) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.replace('/login'); // Safe: runs after render
+    }
+  }, [isAuthenticated, router]);
+
+  if (!isAuthenticated) {
+    return <div>Redirecting...</div>;
+  }
+
+  return <div>Protected content</div>;
+};
+```
+
+**Why Required**: React's render phase must be pure and side-effect free. Navigation is a side effect that must happen after render completion.
+
+**Applied In**: All guard components, authentication redirects, and conditional navigation logic.
 
 ## Directory Structure
 ```

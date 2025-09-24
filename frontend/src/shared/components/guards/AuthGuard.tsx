@@ -1,12 +1,12 @@
 /**
  * Authentication Guard Component
- * Protects routes that require authentication
+ * Protects routes that require authentication - simplified to use AuthContext only
  */
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { LocalStorageService } from '../../services/local-storage-service';
+import React, { useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -19,103 +19,73 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
   requiredUserType,
   fallbackUrl = '/login'
 }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const [userType, setUserType] = useState<string | null>(null);
+  const { isAuthenticated, isLoading, user } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
+  console.log('🔍 AUTHGUARD: Detailed state check', {
+    timestamp: new Date().toISOString(),
+    currentPath: pathname,
+    isAuthenticated,
+    isLoading,
+    userType: user?.userType,
+    requiredUserType,
+    hasUser: !!user,
+    fullUser: user,
+    // Check localStorage directly for debugging
+    localStorageState: typeof window !== 'undefined' ? {
+      hasAccessToken: !!localStorage.getItem('accessToken'),
+      hasRefreshToken: !!localStorage.getItem('refreshToken'),
+      hasUser: !!localStorage.getItem('user'),
+      accessTokenLength: localStorage.getItem('accessToken')?.length,
+      userFromStorage: localStorage.getItem('user')
+    } : null
+  });
+
+  // Handle authentication redirect - moved to useEffect to avoid setState during render
   useEffect(() => {
-    const checkAuthentication = () => {
-      try {
-        console.log('🔍 AUTHGUARD CHECKPOINT 1: Starting authentication check');
-
-        // Check for access token using centralized service
-        const accessToken = LocalStorageService.getAccessToken();
-        const userInfo = LocalStorageService.getUser();
-
-        console.log('🔍 AUTHGUARD CHECKPOINT 2: localStorage values',
-          LocalStorageService.getAuthDebugInfo()
-        );
-
-        if (!accessToken) {
-          console.log('🔍 AUTHGUARD CHECKPOINT 3: No access token found - setting unauthenticated');
-          setIsAuthenticated(false);
-          return;
+    if (!isLoading && !isAuthenticated) {
+      console.log('❌ AUTHGUARD: CRITICAL - Not authenticated, redirecting:', {
+        timestamp: new Date().toISOString(),
+        currentPath: pathname,
+        fallbackUrl,
+        authContextState: {
+          isAuthenticated,
+          isLoading,
+          hasUser: !!user,
+          userType: user?.userType
+        },
+        possibleCauses: {
+          noTokensInStorage: typeof window !== 'undefined' ?
+            !localStorage.getItem('accessToken') || !localStorage.getItem('refreshToken') : 'unknown',
+          noUserInStorage: typeof window !== 'undefined' ?
+            !localStorage.getItem('user') : 'unknown',
+          authContextNotInitialized: isLoading,
+          userTypeIssue: user && user.userType !== 'patient'
         }
-
-        // Get user info from centralized service (already parsed)
-        if (userInfo) {
-          setUserType(userInfo.userType);
-        }
-
-        // Check token expiration (basic check)
-        try {
-          const tokenPayload = JSON.parse(atob(accessToken.split('.')[1]));
-          const currentTime = Math.floor(Date.now() / 1000);
-
-          if (tokenPayload.exp && tokenPayload.exp < currentTime) {
-            // Token expired - clear using centralized service
-            LocalStorageService.clearAuthenticationData();
-            setIsAuthenticated(false);
-            return;
-          }
-        } catch (error) {
-          // Invalid token format
-          console.error('Invalid token format:', error);
-          LocalStorageService.clearAuthenticationData();
-          setIsAuthenticated(false);
-          return;
-        }
-
-        console.log('🔍 AUTHGUARD CHECKPOINT 4: Token validation passed - setting authenticated');
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error('🔍 AUTHGUARD CHECKPOINT ERROR: Authentication check failed', error);
-        setIsAuthenticated(false);
-      }
-    };
-
-    checkAuthentication();
-  }, []);
-
-  useEffect(() => {
-    console.log('🔍 AUTHGUARD CHECKPOINT 5: Effect triggered', {
-      isAuthenticated,
-      userType,
-      requiredUserType,
-      currentPath: window.location.pathname
-    });
-
-    if (isAuthenticated === false) {
-      // Don't redirect if we already have tokens in localStorage
-      const hasTokens = LocalStorageService.isAuthenticated();
-      if (hasTokens) {
-        console.log('🔍 AUTHGUARD CHECKPOINT 5.5: Tokens found, retrying authentication check');
-        // Force re-check authentication with fresh localStorage data
-        setTimeout(() => {
-          setIsAuthenticated(null); // Reset to trigger re-check
-        }, 100);
-        return;
-      }
-
-      console.log('🔍 AUTHGUARD CHECKPOINT 6: Redirecting to login due to unauthenticated state');
+      });
       router.replace(fallbackUrl);
-      return;
     }
+  }, [isLoading, isAuthenticated, router, fallbackUrl, pathname, user]);
 
-    if (isAuthenticated === true && requiredUserType && userType !== requiredUserType) {
-      // User type doesn't match requirement
-      console.warn(`🔍 AUTHGUARD CHECKPOINT 7: Access denied: required ${requiredUserType}, got ${userType}`);
+  // Handle user type mismatch redirect - moved to useEffect to avoid setState during render
+  useEffect(() => {
+    if (!isLoading && isAuthenticated && requiredUserType && user?.userType !== requiredUserType) {
+      console.error('❌ AUTHGUARD: USER TYPE MISMATCH - Access denied', {
+        timestamp: new Date().toISOString(),
+        currentPath: pathname,
+        required: requiredUserType,
+        actual: user?.userType,
+        fullUser: user,
+        isUserDefined: !!user,
+        redirectingTo: '/unauthorized'
+      });
       router.replace('/unauthorized');
-      return;
     }
+  }, [isLoading, isAuthenticated, requiredUserType, user, router, pathname]);
 
-    if (isAuthenticated === true) {
-      console.log('🔍 AUTHGUARD CHECKPOINT 8: User authenticated, allowing access');
-    }
-  }, [isAuthenticated, userType, requiredUserType, router, fallbackUrl]);
-
-  // Show loading state while checking authentication
-  if (isAuthenticated === null) {
+  // Show loading state while authentication is being determined
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -126,8 +96,8 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
     );
   }
 
-  // Show loading state while redirecting
-  if (isAuthenticated === false) {
+  // Show loading while redirecting if not authenticated
+  if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -138,6 +108,25 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
     );
   }
 
-  // User is authenticated, render protected content
+  // Show loading while redirecting for user type mismatch
+  if (requiredUserType && user?.userType !== requiredUserType) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-600 text-xl font-semibold mb-4">Acceso Denegado</div>
+          <p className="text-gray-600">No tienes permisos para acceder a esta página.</p>
+        </div>
+      </div>
+    );
+  }
+
+  console.log('🔍 AUTHGUARD: Authentication successful, rendering children', {
+    timestamp: new Date().toISOString(),
+    currentPath: pathname,
+    userId: user?.id,
+    userType: user?.userType
+  });
+
+  // User is authenticated and authorized, render protected content
   return <>{children}</>;
 };

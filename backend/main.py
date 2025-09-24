@@ -11,6 +11,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from slices.signup.infrastructure.api import patient_signup_router, validation_router
 from slices.auth.infrastructure.api import auth_router
 from slices.dashboard.infrastructure.api.dashboard_router import router as dashboard_router
+from slices.medications.infrastructure.api.medications_router import router as medications_router
+from slices.allergies.infrastructure.api.allergies_router import router as allergies_router
+from slices.surgeries.infrastructure.api.surgeries_router import router as surgeries_router
+from slices.illnesses.infrastructure.api.illnesses_router import router as illnesses_router
 
 # Create FastAPI app instance
 app = FastAPI(
@@ -33,6 +37,10 @@ app.include_router(patient_signup_router)
 app.include_router(validation_router)
 app.include_router(auth_router)
 app.include_router(dashboard_router)
+app.include_router(medications_router)
+app.include_router(allergies_router)
+app.include_router(surgeries_router)
+app.include_router(illnesses_router)
 
 
 @app.get("/")

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import '../styles/globals.css'
+import { AuthProvider } from '../shared/contexts/AuthContext'
 
 export const metadata: Metadata = {
   metadataBase: new URL('http://localhost:3000'),
@@ -87,8 +88,10 @@ export default function RootLayout({
   return (
     <html lang="es-CO">
       <body className="antialiased">
-        {/* App Router layout - actual layouts should be in slice templates */}
-        {children}
+        <AuthProvider>
+          {/* App Router layout - actual layouts should be in slice templates */}
+          {children}
+        </AuthProvider>
       </body>
     </html>
   )

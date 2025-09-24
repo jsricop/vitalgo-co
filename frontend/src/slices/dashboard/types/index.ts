@@ -10,16 +10,8 @@ export interface MedicalDataBase {
   updated_at: string;
 }
 
-export interface PatientMedication extends MedicalDataBase {
-  medication_name: string;
-  dosage: string;
-  frequency: string;
-  start_date: string;
-  end_date?: string;
-  prescribed_by?: string;
-  notes?: string;
-  is_active: boolean;
-}
+// PatientMedication interface REMOVED - Now handled by medications slice
+// See: frontend/src/slices/medications/types/index.ts
 
 export interface PatientAllergy extends MedicalDataBase {
   allergy_name: string;
@@ -81,18 +73,13 @@ export interface DashboardData {
 }
 
 export interface MedicalDataFormData {
-  medication_name?: string;
-  dosage?: string;
-  frequency?: string;
-  start_date?: string;
-  end_date?: string;
-  prescribing_doctor?: string;
-  notes?: string;
-  is_active?: boolean;
+  // Medication fields REMOVED - Now handled by medications slice
+  // See: frontend/src/slices/medications/types/index.ts
 
   allergy_name?: string;
   severity?: 'mild' | 'moderate' | 'severe';
   reaction?: string;
+  notes?: string;
 
   surgery_name?: string;
   surgery_date?: string;

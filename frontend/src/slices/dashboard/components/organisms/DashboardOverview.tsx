@@ -6,6 +6,9 @@ import React, { useState, useEffect } from 'react';
 import { DashboardStats } from '../molecules/DashboardStats';
 import { MedicalDataCard } from '../atoms/MedicalDataCard';
 import { MedicalDataForm } from '../molecules/MedicalDataForm';
+import { MedicationsCard } from '../../../medications/components/molecules/MedicationsCard';
+import { AllergiesCard } from '../../../allergies/components/molecules/AllergiesCard';
+import { SurgeriesCard } from '../../../surgeries/components/molecules/SurgeriesCard';
 import { DashboardData, PatientMedication, MedicalDataType, MedicalDataFormData } from '../../types';
 import { dashboardAPI } from '../../services/api';
 
@@ -45,21 +48,21 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   }, []);
 
   const handleQuickAction = (type: MedicalDataType) => {
+    // Skip medications as they're handled by the dedicated slice
+    if (type === 'medications') return;
+
     setQuickFormType(type);
     setShowQuickForm(true);
   };
 
   const handleQuickFormSubmit = async (formData: MedicalDataFormData) => {
-    if (!quickFormType) return;
+    if (!quickFormType || quickFormType === 'medications') return;
 
     try {
       setFormLoading(true);
 
       let newItem;
       switch (quickFormType) {
-        case 'medications':
-          newItem = await dashboardAPI.createMedication(formData);
-          break;
         case 'allergies':
           newItem = await dashboardAPI.createAllergy(formData);
           break;
@@ -156,64 +159,35 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         />
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Recent Medications */}
-        <div className="bg-white rounded-lg p-6 border border-gray-200">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Medicamentos Recientes
-            </h2>
-            <button
-              onClick={() => window.location.href = '/dashboard/medications'}
-              className="text-vitalgo-green hover:text-vitalgo-green/80 font-medium text-sm"
-            >
-              Ver todos
-            </button>
-          </div>
+      {/* Medical Cards Grid */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+        {/* Medications Management Card */}
+        <MedicationsCard
+          maxItems={3}
+          showAddButton={true}
+          onNavigateToFull={() => window.location.href = '/medications'}
+          data-testid="dashboard-medications-card"
+        />
 
-          {loading ? (
-            <div className="space-y-4">
-              {[...Array(3)].map((_, index) => (
-                <div key={index} className="p-4 border border-gray-200 rounded-lg animate-pulse">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <div className="h-5 w-5 bg-gray-300 rounded"></div>
-                    <div className="space-y-1 flex-1">
-                      <div className="h-4 bg-gray-300 rounded w-32"></div>
-                      <div className="h-3 bg-gray-300 rounded w-24"></div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : dashboardData?.recent_medications?.length ? (
-            <div className="space-y-4">
-              {dashboardData.recent_medications.map((medication) => (
-                <MedicalDataCard
-                  key={medication.id}
-                  data={medication}
-                  type="medication"
-                  data-testid={`recent-medication-${medication.id}`}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-gray-500">
-              <svg className="h-12 w-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-              </svg>
-              <p>No hay medicamentos registrados</p>
-              <button
-                onClick={() => handleQuickAction('medications')}
-                className="mt-3 text-vitalgo-green hover:text-vitalgo-green/80 font-medium"
-              >
-                Agregar medicamento
-              </button>
-            </div>
-          )}
-        </div>
+        {/* Allergies Management Card */}
+        <AllergiesCard
+          maxItems={3}
+          showAddButton={true}
+          onNavigateToFull={() => window.location.href = '/allergies'}
+          data-testid="dashboard-allergies-card"
+        />
 
-        {/* Recent Activities */}
-        <div className="bg-white rounded-lg p-6 border border-gray-200">
+        {/* Surgeries Management Card */}
+        <SurgeriesCard
+          maxItems={3}
+          showAddButton={true}
+          onNavigateToFull={() => window.location.href = '/surgeries'}
+          data-testid="dashboard-surgeries-card"
+        />
+      </div>
+
+      {/* Recent Activities */}
+      <div className="bg-white rounded-lg p-6 border border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900 mb-6">
             Actividad Reciente
           </h2>
@@ -259,7 +233,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </div>
           )}
         </div>
-      </div>
 
       {/* Quick Actions */}
       <div className="bg-white rounded-lg p-6 border border-gray-200">
@@ -267,16 +240,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           Acciones Rápidas
         </h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <button
-            onClick={() => handleQuickAction('medications')}
-            className="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            <svg className="h-8 w-8 text-blue-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-            </svg>
-            <span className="text-sm font-medium text-gray-900">Agregar Medicamento</span>
-          </button>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
           <button
             onClick={() => handleQuickAction('allergies')}
@@ -317,8 +281,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">
-                  Agregar {quickFormType === 'medications' ? 'Medicamento' :
-                           quickFormType === 'allergies' ? 'Alergia' :
+                  Agregar {quickFormType === 'allergies' ? 'Alergia' :
                            quickFormType === 'surgeries' ? 'Cirugía' : 'Enfermedad'}
                 </h3>
                 <button

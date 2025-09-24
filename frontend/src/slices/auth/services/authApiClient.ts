@@ -34,20 +34,58 @@ class AuthApiClientImpl implements AuthApiClient {
 
   async login(credentials: LoginForm): Promise<LoginResponse> {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      const requestUrl = `${API_BASE_URL}/api/auth/login`;
+      const requestBody = {
+        email: credentials.email,
+        password: credentials.password,
+        remember_me: credentials.rememberMe
+      };
+
+      console.log('🔍 API CLIENT DEBUG: Making login request', {
+        url: requestUrl,
+        body: requestBody,
+        API_BASE_URL: API_BASE_URL
+      });
+
+      // Persist debug info to prevent loss on page redirect
+      localStorage.setItem('debugLoginRequest', JSON.stringify({
+        timestamp: new Date().toISOString(),
+        url: requestUrl,
+        body: requestBody
+      }));
+
+      const response = await fetch(requestUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email: credentials.email,
-          password: credentials.password,
-          remember_me: credentials.rememberMe
-        }),
+        body: JSON.stringify(requestBody),
       });
+
+      console.log('🔍 API CLIENT DEBUG: Response received', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        headers: Object.fromEntries(response.headers.entries())
+      });
+
+      // Persist response debug info
+      localStorage.setItem('debugLoginResponse', JSON.stringify({
+        timestamp: new Date().toISOString(),
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        headers: Object.fromEntries(response.headers.entries())
+      }));
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+
+        console.log('🔍 API CLIENT DEBUG: Error response', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData: errorData
+        });
 
         // Handle specific error responses from backend
         if (response.status === 401) {
@@ -74,12 +112,26 @@ class AuthApiClientImpl implements AuthApiClient {
 
       const data = await response.json();
 
-      // Add debugging checkpoints for API response
-      console.log('🔍 API CLIENT CHECKPOINT 1: Raw API response', {
+      console.log('🔍 API CLIENT DEBUG: Success response data', {
+        success: data.success,
+        hasAccessToken: !!data.access_token,
+        hasRefreshToken: !!data.refresh_token,
+        hasUser: !!data.user,
         hasRedirectUrl: 'redirect_url' in data,
         redirectUrl: data.redirect_url,
         responseKeys: Object.keys(data)
       });
+
+      // Persist success response debug info
+      localStorage.setItem('debugLoginSuccess', JSON.stringify({
+        timestamp: new Date().toISOString(),
+        success: data.success,
+        hasAccessToken: !!data.access_token,
+        hasRefreshToken: !!data.refresh_token,
+        hasUser: !!data.user,
+        redirectUrl: data.redirect_url,
+        responseKeys: Object.keys(data)
+      }));
 
       // JWT TOKEN DEBUG: Analyze received token immediately
       try {

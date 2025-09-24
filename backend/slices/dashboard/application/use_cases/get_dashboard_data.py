@@ -1,12 +1,8 @@
 """
-Get dashboard data use case
+Get dashboard data use case - ONLY summary/statistics operations
 """
-from uuid import UUID
-from typing import Optional
-
 from slices.dashboard.application.ports.dashboard_repository import DashboardRepositoryPort
-from slices.dashboard.domain.entities.dashboard_stats import DashboardData, DashboardStats, MedicalDataSummary, Activity
-from slices.dashboard.application.dto.medical_data_dto import PatientMedicationDTO
+from slices.dashboard.domain.entities.dashboard_stats import DashboardData
 from slices.signup.domain.models.user_model import User
 from slices.signup.domain.models.patient_model import Patient
 
