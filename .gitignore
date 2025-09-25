@@ -134,4 +134,4 @@ scripts/local-deploy-*.log
 # Development reference files - Local development use only (moved to docs/)
 docs/DB.md
 docs/APIS.md
-docs/TYPES.mdscripts/README.md
+docs/TYPES.md
