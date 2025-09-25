@@ -192,6 +192,11 @@ check_file_sensitivity() {
 all_files=$(git diff --name-only HEAD 2>/dev/null; git ls-files --others --exclude-standard)
 
 for file in $all_files; do
+  # Skip README.md files and docs/*.md files as they're generally safe documentation
+  if [[ "$file" == "README.md" || "$file" == */README.md || "$file" == docs/*.md ]]; then
+    continue
+  fi
+
   if [[ -f "$file" && "$file" == *.md || "$file" == *.env* || "$file" == *.config* ]]; then
     if check_file_sensitivity "$file"; then
       sensitive_files+=("$file")

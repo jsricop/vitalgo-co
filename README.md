@@ -67,6 +67,11 @@ vitalgo-co/
 ### Scripts Disponibles
 
 ```bash
+# Smart commit con revisión automática
+./scripts/smart-commit.sh                    # Proceso completo automatizado
+./scripts/smart-commit.sh --auto             # Modo automático sin confirmaciones
+./scripts/smart-commit.sh --message "msg"    # Mensaje personalizado
+
 # Despliegue local (desarrollo)
 ./scripts/local-deploy.sh                    # Configuración estándar
 ./scripts/local-deploy.sh --clean            # Inicio limpio
@@ -153,12 +158,45 @@ El script `scripts/deploy.sh` maneja:
 - Encriptación bcrypt para contraseñas
 - CORS configurado para producción
 
+## 🚀 Smart Commit Script
+
+El script `smart-commit.sh` automatiza el proceso completo de commit con revisiones de seguridad:
+
+### Características
+
+✅ **Revisión de Documentación**: Verifica automáticamente cambios en `/docs`
+✅ **Escaneo de Seguridad**: Detecta información sensible (passwords, API keys, tokens)
+✅ **Auto .gitignore**: Añade automáticamente archivos sensibles a .gitignore
+✅ **Mensajes Inteligentes**: Genera mensajes de commit basados en los cambios
+✅ **Integración GitHub**: Despliega cambios con confirmación
+
+### Uso
+
+```bash
+# Modo interactivo (recomendado)
+./scripts/smart-commit.sh
+
+# Modo automático
+./scripts/smart-commit.sh --auto
+
+# Mensaje personalizado
+./scripts/smart-commit.sh --message "feat(auth): implement OAuth2"
+```
+
+### Proceso
+
+1. **Revisión de documentación** - Verifica estado de archivos en `/docs`
+2. **Escaneo de seguridad** - Detecta patrones sensibles
+3. **Actualización .gitignore** - Protege archivos sensibles
+4. **Generación de mensaje** - Sugiere mensaje de commit inteligente
+5. **Despliegue GitHub** - Crea commit y push automático
+
 ## 🤝 Contribución
 
-1. Consulta `docs/DEV_CONTEXT.md` para contexto completo
-2. Revisa `docs/API_REFERENCE.md` para contratos de API
-3. Sigue los patrones establecidos en `docs/TYPES_REFERENCE.md`
-4. Usa `scripts/local-deploy.sh` para configuración consistente
+1. Usa `./scripts/smart-commit.sh` para commits seguros y consistentes
+2. Consulta `docs/DEV.md` para patrones de desarrollo
+3. Revisa `docs/BRAND.md` para estándares de UI
+4. Usa `scripts/local-deploy.sh` para configuración local
 
 ## 📝 Licencia
 
