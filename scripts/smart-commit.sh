@@ -51,6 +51,7 @@ while [[ $# -gt 0 ]]; do
       echo "  --help           Show this help"
       echo ""
       echo "This script will:"
+      echo "  0. Ensure README.md quality and accuracy"
       echo "  1. Review /docs for latest changes"
       echo "  2. Check for sensitive information"
       echo "  3. Update .gitignore if needed"
@@ -69,6 +70,102 @@ cd "$PROJECT_ROOT"
 
 echo -e "${BLUE}🚀 VitalGo Smart Commit Process${NC}"
 echo "=================================================="
+
+# Step 0: Update README.md to ensure quality and accuracy
+echo -e "\n${YELLOW}📋 Step 0: Ensuring README.md quality and accuracy...${NC}"
+
+# Function to update README.md based on current project state
+update_readme_quality() {
+  local readme_updated=false
+
+  echo "Analyzing project structure..."
+
+  # Check if docs directory structure has changed
+  if [[ -d "docs" ]]; then
+    current_docs=$(ls docs/*.md 2>/dev/null | sort)
+    echo "Current docs files: $(echo $current_docs | tr '\n' ' ')"
+
+    # Check if README mentions non-existent files
+    for old_file in "DEV_CONTEXT.md" "API_REFERENCE.md" "TYPES_REFERENCE.md" "DB_FIELDS_REFERENCE.md" "BRAND_MANUAL.md" "DEPLOYMENT.md"; do
+      if grep -q "$old_file" README.md 2>/dev/null; then
+        echo -e "  ${YELLOW}⚠️  Found reference to non-existent file: $old_file${NC}"
+        readme_updated=true
+      fi
+    done
+
+    # Check if README is missing references to existing files
+    for doc_file in $current_docs; do
+      filename=$(basename "$doc_file")
+      if ! grep -q "$filename" README.md 2>/dev/null; then
+        echo -e "  ${YELLOW}⚠️  Missing reference to existing file: $filename${NC}"
+        readme_updated=true
+      fi
+    done
+  fi
+
+  # Check if scripts directory structure has changed
+  if [[ -d "scripts" ]]; then
+    current_scripts=$(ls scripts/*.sh 2>/dev/null | xargs -n 1 basename | sort)
+    echo "Current script files: $(echo $current_scripts | tr '\n' ' ')"
+
+    # Check if smart-commit.sh is mentioned
+    if [[ -f "scripts/smart-commit.sh" ]] && ! grep -q "smart-commit.sh" README.md 2>/dev/null; then
+      echo -e "  ${YELLOW}⚠️  README.md should mention smart-commit.sh script${NC}"
+      readme_updated=true
+    fi
+  fi
+
+  # Check frontend/backend slice consistency
+  if [[ -d "frontend/src/slices" ]] && [[ -d "backend/slices" ]]; then
+    frontend_slices=$(ls frontend/src/slices 2>/dev/null | sort)
+    backend_slices=$(ls backend/slices 2>/dev/null | sort)
+
+    # Find common slices
+    common_slices=""
+    for slice in $frontend_slices; do
+      if [[ -d "backend/slices/$slice" ]]; then
+        common_slices="$common_slices $slice"
+      fi
+    done
+
+    if [[ -n "$common_slices" ]]; then
+      echo "Detected slices: $(echo $common_slices | tr ' ' ',')"
+
+      # Check if README structure section reflects current slices
+      for slice in $common_slices; do
+        if ! grep -A 20 "backend/" README.md | grep -q "$slice" 2>/dev/null; then
+          echo -e "  ${YELLOW}⚠️  README.md structure missing slice: $slice${NC}"
+          readme_updated=true
+        fi
+      done
+    fi
+  fi
+
+  if [[ "$readme_updated" == "true" ]]; then
+    echo -e "  ${YELLOW}📝 README.md needs updates for project consistency${NC}"
+    if [[ "$AUTO_MODE" == "false" ]]; then
+      read -p "Would you like to continue with current README.md? (Y/n): " -n 1 -r
+      echo
+      if [[ $REPLY =~ ^[Nn]$ ]]; then
+        echo -e "${RED}❌ Please update README.md manually and run the script again${NC}"
+        echo ""
+        echo "Suggestions:"
+        echo "  - Remove references to non-existent documentation files"
+        echo "  - Add references to current docs/ files"
+        echo "  - Update project structure diagram"
+        echo "  - Ensure scripts section is complete"
+        exit 1
+      fi
+    else
+      echo -e "  ${YELLOW}⚠️  Auto mode: Proceeding with current README.md${NC}"
+    fi
+  else
+    echo -e "  ${GREEN}✅ README.md appears to be up-to-date${NC}"
+  fi
+}
+
+# Run README quality check
+update_readme_quality
 
 # Step 1: Review documentation for latest changes
 echo -e "\n${YELLOW}📖 Step 1: Reviewing documentation for latest changes...${NC}"
