@@ -28,7 +28,11 @@ vitalgo-co/
 │   └── slices/                 # Vertical slicing
 │       ├── auth/               # Autenticación
 │       ├── signup/             # Registro de usuarios
-│       └── dashboard/          # Dashboard
+│       ├── dashboard/          # Dashboard
+│       ├── medications/        # Gestión de medicamentos
+│       ├── allergies/          # Gestión de alergias
+│       ├── illnesses/          # Gestión de enfermedades
+│       └── surgeries/          # Gestión de cirugías
 ├── frontend/                    # Next.js frontend
 └── docker-compose.local.yml    # Configuración Docker local
 ```
@@ -102,11 +106,12 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 Documentación completa en el directorio `docs/`:
 
-- **[DEV_CONTEXT.md](docs/DEV_CONTEXT.md)** - Contexto completo del proyecto
-- **[API_REFERENCE.md](docs/API_REFERENCE.md)** - Referencia completa de APIs
-- **[TYPES_REFERENCE.md](docs/TYPES_REFERENCE.md)** - Diccionario TypeScript
-- **[DB_FIELDS_REFERENCE.md](docs/DB_FIELDS_REFERENCE.md)** - Esquema de base de datos
-- **[TEST_DB_DATA_REGISTER.md](docs/TEST_DB_DATA_REGISTER.md)** - Datos de prueba
+- **[DEV.md](docs/DEV.md)** - Contexto completo del proyecto
+- **[APIS.md](docs/APIS.md)** - Referencia completa de APIs
+- **[TYPES.md](docs/TYPES.md)** - Diccionario TypeScript
+- **[DB.md](docs/DB.md)** - Esquema de base de datos
+- **[TEST_DATA.md](docs/TEST_DATA.md)** - Datos de prueba
+- **[BRAND.md](docs/BRAND.md)** - Manual de marca
 - **[scripts/deploy.sh](scripts/deploy.sh)** - Script de despliegue a producción (usar `./scripts/deploy.sh --help`)
 
 ## 🧪 Testing
