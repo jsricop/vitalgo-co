@@ -4,36 +4,38 @@ VitalGo es una plataforma de expedientes médicos digitales que permite a pacien
 
 ## 🏗 Arquitectura
 
-- **Backend**: FastAPI + PostgreSQL + Redis (Arquitectura Hexagonal)
-- **Frontend**: Next.js 15 + TypeScript + Tailwind CSS (Atomic Design)
+- **Backend**: FastAPI + PostgreSQL + Redis + SQLAlchemy (Vertical Slicing + Hexagonal Architecture)
+- **Frontend**: Next.js 15 + TypeScript + Tailwind CSS (Vertical Slicing + Atomic Design)
 - **Base de Datos**: PostgreSQL (`vitalgo_dev` local, AWS RDS producción)
+- **Autenticación**: JWT con refresh tokens + bcrypt password hashing
+- **Deployment**: Docker containers con CI/CD automatizado
 
 ## 📁 Estructura del Proyecto
 
 ```
 vitalgo-co/
-├── README.md                    # Documentación principal
-├── docs/                        # Documentación completa
-│   ├── DEV_CONTEXT.md          # Contexto del proyecto
-│   ├── API_REFERENCE.md        # Diccionario de APIs
-│   ├── TYPES_REFERENCE.md      # Elementos TypeScript
-│   ├── DB_FIELDS_REFERENCE.md  # Esquema de base de datos
-│   ├── TEST_DB_DATA_REGISTER.md # Registro de datos de prueba
-│   ├── BRAND_MANUAL.md         # Manual de marca
-│   └── DEPLOYMENT.md           # Guía de despliegue
+├── README.md                    # Documentación principal del proyecto
+├── docs/                        # Documentación técnica de referencia
+│   ├── DEV.md                  # Guía de desarrollo y patrones
+│   ├── BRAND.md                # Manual de marca y estilos UI
+│   ├── APIS.md                 # Referencia completa de endpoints API
+│   ├── TYPES.md                # Definiciones TypeScript/Python
+│   ├── DB.md                   # Esquema de base de datos
+│   └── TEST_DATA.md            # Datos de prueba (credenciales sensibles)
 ├── scripts/                     # Scripts de automatización
+│   ├── smart-commit.sh         # Commit inteligente con revisión de seguridad
 │   ├── deploy.sh               # Despliegue a producción
 │   └── local-deploy.sh         # Despliegue local
 ├── backend/                     # FastAPI backend
-│   └── slices/                 # Vertical slicing
-│       ├── auth/               # Autenticación
+│   └── slices/                 # Arquitectura de slicing vertical
+│       ├── auth/               # Autenticación y sesiones
 │       ├── signup/             # Registro de usuarios
-│       ├── dashboard/          # Dashboard
+│       ├── dashboard/          # Panel principal del paciente
 │       ├── medications/        # Gestión de medicamentos
 │       ├── allergies/          # Gestión de alergias
 │       ├── illnesses/          # Gestión de enfermedades
 │       └── surgeries/          # Gestión de cirugías
-├── frontend/                    # Next.js frontend
+├── frontend/                    # Next.js 15 frontend
 └── docker-compose.local.yml    # Configuración Docker local
 ```
 
@@ -109,15 +111,22 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 ## 📖 Documentación
 
-Documentación completa en el directorio `docs/`:
+Documentación técnica completa disponible en el directorio `docs/`:
 
-- **[DEV.md](docs/DEV.md)** - Contexto completo del proyecto
-- **[APIS.md](docs/APIS.md)** - Referencia completa de APIs
-- **[TYPES.md](docs/TYPES.md)** - Diccionario TypeScript
-- **[DB.md](docs/DB.md)** - Esquema de base de datos
-- **[TEST_DATA.md](docs/TEST_DATA.md)** - Datos de prueba
-- **[BRAND.md](docs/BRAND.md)** - Manual de marca
-- **[scripts/deploy.sh](scripts/deploy.sh)** - Script de despliegue a producción (usar `./scripts/deploy.sh --help`)
+### 📋 Documentación de Desarrollo
+- **[DEV.md](docs/DEV.md)** - Guía de desarrollo, patrones arquitectónicos y convenciones
+- **[BRAND.md](docs/BRAND.md)** - Manual de marca, sistema de diseño y componentes UI
+
+### 🔧 Referencias Técnicas
+- **[APIS.md](docs/APIS.md)** - Documentación completa de endpoints API con ejemplos
+- **[TYPES.md](docs/TYPES.md)** - Definiciones TypeScript/Python y contratos de datos
+- **[DB.md](docs/DB.md)** - Esquema de base de datos con relaciones y constraints
+- **[TEST_DATA.md](docs/TEST_DATA.md)** - Datos de prueba y credenciales de desarrollo
+
+### 🚀 Scripts de Automatización
+- **[smart-commit.sh](scripts/smart-commit.sh)** - Commit inteligente con revisión automática (`./scripts/smart-commit.sh --help`)
+- **[local-deploy.sh](scripts/local-deploy.sh)** - Configuración de desarrollo local (`./scripts/local-deploy.sh --help`)
+- **[deploy.sh](scripts/deploy.sh)** - Despliegue a producción AWS (`./scripts/deploy.sh --help`)
 
 ## 🧪 Testing
 
