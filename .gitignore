@@ -124,7 +124,7 @@ docker-compose.local.yml
 vitalgo_deployment_backups/
 
 # Test database data registry - Contains sensitive test credentials (moved to docs/)
-docs/TEST_DB_DATA_REGISTER.md
+docs/TEST_DATA.md
 
 # Local deployment scripts with sensitive information
 scripts/local-deploy.sh
@@ -132,6 +132,6 @@ scripts/local-deploy.env
 scripts/local-deploy-*.log
 
 # Development reference files - Local development use only (moved to docs/)
-docs/DB_FIELDS_REFERENCE.md
-docs/API_REFERENCE.md
-docs/TYPES_REFERENCE.md
+docs/DB.md
+docs/APIS.md
+docs/TYPES.mdscripts/README.md

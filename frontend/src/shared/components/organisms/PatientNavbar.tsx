@@ -45,6 +45,10 @@ export function PatientNavbar({
       href: "/allergies"
     },
     {
+      label: "Enfermedades",
+      href: "/illnesses"
+    },
+    {
       label: "Cirugías",
       href: "/surgeries"
     }
@@ -59,6 +63,9 @@ export function PatientNavbar({
     }
     if (href === "/allergies") {
       return pathname === "/allergies"
+    }
+    if (href === "/illnesses") {
+      return pathname === "/illnesses"
     }
     if (href === "/surgeries") {
       return pathname === "/surgeries"
@@ -114,9 +121,9 @@ export function PatientNavbar({
             <BrandHeader isAuthenticated={true} />
           </div>
 
-          {/* Desktop Navigation - Centered */}
-          <div className="flex-1 flex justify-center">
-            <div className="hidden md:flex space-x-8">
+          {/* Desktop Navigation - Left-aligned with spacing */}
+          <div className="flex-1 ml-8 md:ml-12 lg:ml-16">
+            <div className="hidden md:flex space-x-8 justify-start">
               {navigationItems.map((item) => {
                 const isActive = isActiveRoute(item.href)
 
