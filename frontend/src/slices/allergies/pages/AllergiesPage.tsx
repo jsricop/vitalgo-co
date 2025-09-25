@@ -319,6 +319,30 @@ export default function AllergiesPage({
             )}
           </div>
         </main>
+
+        {/* Footer */}
+        <footer className="bg-white border-t border-gray-200 mt-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-6">
+                <p className="text-gray-500 text-sm">
+                  © 2024 VitalGo. Todos los derechos reservados.
+                </p>
+              </div>
+              <div className="flex items-center space-x-6">
+                <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
+                  Privacidad
+                </a>
+                <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
+                  Términos
+                </a>
+                <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
+                  Soporte
+                </a>
+              </div>
+            </div>
+          </div>
+        </footer>
       </div>
 
       {/* Form Modal */}

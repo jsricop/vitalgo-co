@@ -162,14 +162,10 @@ export default function SurgeriesPage({
             </div>
 
             {/* Statistics */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t border-gray-200">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200">
               <div className="text-center">
                 <div className="text-2xl font-bold text-vitalgo-green">{surgeryCounts.total}</div>
                 <div className="text-sm text-gray-600">Total</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{surgeryCounts.thisYear}</div>
-                <div className="text-sm text-gray-600">Este Año</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-purple-600">{surgeryCounts.recent}</div>
@@ -310,6 +306,30 @@ export default function SurgeriesPage({
             )}
           </div>
         </main>
+
+        {/* Footer */}
+        <footer className="bg-white border-t border-gray-200 mt-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-6">
+                <p className="text-gray-500 text-sm">
+                  © 2024 VitalGo. Todos los derechos reservados.
+                </p>
+              </div>
+              <div className="flex items-center space-x-6">
+                <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
+                  Privacidad
+                </a>
+                <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
+                  Términos
+                </a>
+                <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
+                  Soporte
+                </a>
+              </div>
+            </div>
+          </div>
+        </footer>
       </div>
 
       {/* Form Modal */}
