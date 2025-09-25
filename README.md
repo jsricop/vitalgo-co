@@ -31,10 +31,13 @@ vitalgo-co/
 │       ├── auth/               # Autenticación y sesiones
 │       ├── signup/             # Registro de usuarios
 │       ├── dashboard/          # Panel principal del paciente
+│       ├── home/               # Página principal y landing
+│       ├── profile/            # Gestión de perfil de usuario
 │       ├── medications/        # Gestión de medicamentos
 │       ├── allergies/          # Gestión de alergias
 │       ├── illnesses/          # Gestión de enfermedades
-│       └── surgeries/          # Gestión de cirugías
+│       ├── surgeries/          # Gestión de cirugías
+│       └── emergency/          # Acceso de emergencia
 ├── frontend/                    # Next.js 15 frontend
 └── docker-compose.local.yml    # Configuración Docker local
 ```
