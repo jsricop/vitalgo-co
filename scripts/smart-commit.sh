@@ -93,11 +93,15 @@ update_readme_quality() {
       fi
     done
 
-    # Check if README is missing references to existing files
+    # Check if README is missing references to existing files (exclude .gitignored docs)
     for doc_file in $current_docs; do
       filename=$(basename "$doc_file")
+      # Skip files that should be excluded from public README (in .gitignore)
+      if [[ "$filename" == "APIS.md" || "$filename" == "TYPES.md" || "$filename" == "DB.md" || "$filename" == "TEST_DATA.md" ]]; then
+        continue
+      fi
       if ! grep -q "$filename" README.md 2>/dev/null; then
-        echo -e "  ${YELLOW}⚠️  Missing reference to existing file: $filename${NC}"
+        echo -e "  ${YELLOW}⚠️  Missing reference to public documentation file: $filename${NC}"
         readme_updated=true
       fi
     done

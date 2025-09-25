@@ -15,13 +15,9 @@ VitalGo es una plataforma de expedientes médicos digitales que permite a pacien
 ```
 vitalgo-co/
 ├── README.md                    # Documentación principal del proyecto
-├── docs/                        # Documentación técnica de referencia
+├── docs/                        # Documentación técnica
 │   ├── DEV.md                  # Guía de desarrollo y patrones
-│   ├── BRAND.md                # Manual de marca y estilos UI
-│   ├── APIS.md                 # Referencia completa de endpoints API
-│   ├── TYPES.md                # Definiciones TypeScript/Python
-│   ├── DB.md                   # Esquema de base de datos
-│   └── TEST_DATA.md            # Datos de prueba (credenciales sensibles)
+│   └── BRAND.md                # Manual de marca y estilos UI
 ├── scripts/                     # Scripts de automatización
 │   ├── smart-commit.sh         # Commit inteligente con revisión de seguridad
 │   ├── deploy.sh               # Despliegue a producción
@@ -114,17 +110,9 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 ## 📖 Documentación
 
-Documentación técnica completa disponible en el directorio `docs/`:
-
-### 📋 Documentación de Desarrollo
+### 📋 Documentación Disponible
 - **[DEV.md](docs/DEV.md)** - Guía de desarrollo, patrones arquitectónicos y convenciones
 - **[BRAND.md](docs/BRAND.md)** - Manual de marca, sistema de diseño y componentes UI
-
-### 🔧 Referencias Técnicas
-- **[APIS.md](docs/APIS.md)** - Documentación completa de endpoints API con ejemplos
-- **[TYPES.md](docs/TYPES.md)** - Definiciones TypeScript/Python y contratos de datos
-- **[DB.md](docs/DB.md)** - Esquema de base de datos con relaciones y constraints
-- **[TEST_DATA.md](docs/TEST_DATA.md)** - Datos de prueba y credenciales de desarrollo
 
 ### 🚀 Scripts de Automatización
 - **[smart-commit.sh](scripts/smart-commit.sh)** - Commit inteligente con revisión automática (`./scripts/smart-commit.sh --help`)
