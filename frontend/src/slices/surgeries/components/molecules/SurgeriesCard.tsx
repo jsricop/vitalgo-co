@@ -132,36 +132,24 @@ export const SurgeriesCard: React.FC<SurgeriesCardProps> = ({
               Cirugías
             </h2>
             <p className="text-sm text-vitalgo-dark-light">
-              Gestiona tus cirugías
+              {surgeries.length} {surgeries.length === 1 ? 'cirugía registrada' : 'cirugías registradas'}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center space-x-3">
-          {showAddButton && (
-            <button
-              onClick={handleAddNew}
-              disabled={loading || actionLoading}
-              className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150 disabled:opacity-50"
-              data-testid={`${testId}-add-button`}
-            >
-              <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Agregar
-            </button>
-          )}
-
-          {onNavigateToFull && surgeries.length > 0 && (
-            <button
-              onClick={handleViewAll}
-              className="text-sm font-medium text-vitalgo-green hover:text-vitalgo-green-light transition-colors duration-150"
-              data-testid={`${testId}-view-all-button`}
-            >
-              Ver todos ({surgeries.length})
-            </button>
-          )}
-        </div>
+        {showAddButton && (
+          <button
+            onClick={handleAddNew}
+            disabled={loading || actionLoading}
+            className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150 disabled:opacity-50"
+            data-testid={`${testId}-add-button`}
+          >
+            <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Agregar
+          </button>
+        )}
       </div>
 
       {/* Content */}
@@ -186,12 +174,16 @@ export const SurgeriesCard: React.FC<SurgeriesCardProps> = ({
             />
           ))}
 
-          {/* Summary Footer */}
-          {surgeries.length > maxItems && (
+          {/* View All Footer */}
+          {surgeries.length >= 1 && onNavigateToFull && (
             <div className="pt-4 border-t border-vitalgo-dark-lightest">
-              <p className="text-sm text-vitalgo-dark-light text-center">
-                Mostrando {maxItems} de {surgeries.length} cirugías
-              </p>
+              <button
+                onClick={handleViewAll}
+                className="w-full text-center text-sm text-vitalgo-green hover:text-vitalgo-green-light font-medium"
+                data-testid={`${testId}-view-all-footer`}
+              >
+                Ver todas las cirugías ({surgeries.length})
+              </button>
             </div>
           )}
         </div>

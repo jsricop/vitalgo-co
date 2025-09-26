@@ -30,6 +30,7 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
     documentNumber: '',
     phoneInternational: '', // Computed from country + phone
     birthDate: '',
+    originCountry: 'CO', // Default to Colombia
     email: '',
     password: '',
     confirmPassword: '',
@@ -144,6 +145,11 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
     });
   };
 
+  // Handle origin country change
+  const handleOriginCountryChange = (country: Country) => {
+    setFormData(prev => ({ ...prev, originCountry: country.code }));
+  };
+
   // Handle field blur validation
   const handleFieldBlur = async (field: string) => {
     const value = formData[field as keyof PatientRegistrationForm];
@@ -198,7 +204,7 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
   const isRequiredField = (field: string): boolean => {
     const requiredFields = [
       'firstName', 'lastName', 'documentType', 'documentNumber',
-      'phoneInternational', 'birthDate', 'email',
+      'phoneInternational', 'birthDate', 'originCountry', 'email',
       'password', 'confirmPassword'
     ];
     return requiredFields.includes(field);
@@ -380,6 +386,7 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
       formData.documentNumber,
       phoneState.phoneNumber,
       formData.birthDate,
+      formData.originCountry,
       formData.email,
       formData.password,
       formData.confirmPassword
@@ -430,11 +437,13 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
         documentType={formData.documentType}
         documentNumber={formData.documentNumber}
         birthDate={formData.birthDate}
+        originCountry={formData.originCountry}
         countryCode={phoneState.countryCode}
         phoneNumber={phoneState.phoneNumber}
         onInputChange={handleInputChange}
         onFieldBlur={handleFieldBlur}
         onCountryChange={handleCountryChange}
+        onOriginCountryChange={handleOriginCountryChange}
         documentTypes={documentTypes}
         validationStates={{
           firstName: validationStates.firstName,
@@ -445,7 +454,8 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
         errors={{
           documentType: errors.documentType,
           birthDate: errors.birthDate,
-          phone: errors.phone
+          phone: errors.phone,
+          originCountry: errors.originCountry
         }}
       />
 

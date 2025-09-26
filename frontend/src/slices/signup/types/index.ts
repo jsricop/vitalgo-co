@@ -16,6 +16,7 @@ export interface PatientRegistrationForm {
   documentNumber: string;
   phoneInternational: string;
   birthDate: string;
+  originCountry: string;
   email: string;
   password: string;
   confirmPassword: string;

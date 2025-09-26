@@ -33,6 +33,10 @@ export function PatientNavbar({
 
   const navigationItems: NavigationItem[] = [
     {
+      label: "Mis Datos",
+      href: "/profile"
+    },
+    {
       label: "Dashboard",
       href: "/dashboard"
     },
@@ -55,6 +59,9 @@ export function PatientNavbar({
   ]
 
   const isActiveRoute = (href: string) => {
+    if (href === "/profile") {
+      return pathname === "/profile"
+    }
     if (href === "/dashboard") {
       return pathname === "/dashboard"
     }

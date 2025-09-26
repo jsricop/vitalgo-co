@@ -1,5 +1,13 @@
 # Types Reference
 
+## Data Transformation Notes
+
+**Field Naming Conventions:**
+- Backend uses `snake_case` for field names (e.g., `origin_country`, `first_name`)
+- Frontend uses `camelCase` for field names (e.g., `originCountry`, `firstName`)
+- API services automatically transform between these formats
+- Profile API service includes `originCountry` ↔ `origin_country` transformation
+
 ## Frontend TypeScript Types
 
 ### Core User & Auth Types (from /src/slices/auth/types/index.ts)
@@ -65,6 +73,7 @@ interface PatientRegistrationForm {
   documentNumber: string;
   phoneInternational: string;
   birthDate: string;
+  originCountry: string; // ISO 3166-1 alpha-2 country code
   email: string;
   password: string;
   confirmPassword: string;
@@ -95,6 +104,57 @@ interface RegistrationResponse {
   user?: UserResponse;
   redirect_url?: string;
   errors?: Record<string, string[]>;
+}
+```
+
+### Profile Types (from /src/slices/profile/types/index.ts)
+```typescript
+// Tab identifiers
+type ProfileTab = 'basic' | 'personal' | 'medical' | 'gynecological';
+
+// Basic information interfaces (from signup)
+interface BasicPatientInfo {
+  firstName: string;
+  lastName: string;
+  documentType: string;
+  documentNumber: string;
+  phoneInternational: string;
+  birthDate: string;
+  originCountry: string; // ISO 3166-1 alpha-2 country code
+  email: string;
+}
+
+// Basic information update interface
+interface BasicPatientUpdate {
+  firstName?: string;
+  lastName?: string;
+  documentType?: string;
+  documentNumber?: string;
+  phoneInternational?: string;
+  birthDate?: string;
+  originCountry?: string; // ISO 3166-1 alpha-2 country code
+  email?: string;
+}
+
+// Hook result interfaces
+interface UseBasicPatientInfoResult {
+  basicInfo: BasicPatientInfo | null;
+  loading: boolean;
+  error: string | null;
+  updateBasicInfo: (data: BasicPatientUpdate) => Promise<{ success: boolean; message: string }>;
+  refetch: () => Promise<void>;
+}
+
+// Tab component props
+interface TabContentProps {
+  'data-testid'?: string;
+}
+
+// Tab navigation props
+interface TabNavigationProps {
+  activeTab: ProfileTab;
+  onTabChange: (tab: ProfileTab) => void;
+  'data-testid'?: string;
 }
 ```
 
@@ -737,6 +797,42 @@ class CreateIllnessDTO(BaseModel):
     cie10_code: Optional[str] = None
     diagnosed_by: Optional[str] = None
     notes: Optional[str] = None
+```
+
+### Profile DTOs (from /slices/profile/application/dto/)
+```python
+from datetime import date
+from typing import Optional
+from pydantic import BaseModel, EmailStr, Field
+
+class BasicPatientInfoDTO(BaseModel):
+    """DTO for basic patient information (from signup)"""
+    first_name: str = Field(..., min_length=2, max_length=100, description="Patient first name")
+    last_name: str = Field(..., min_length=2, max_length=100, description="Patient last name")
+    document_type: str = Field(..., min_length=2, max_length=5, description="Document type code")
+    document_number: str = Field(..., min_length=6, max_length=20, description="Document number")
+    phone_international: str = Field(..., min_length=10, max_length=20, description="Phone in international format")
+    birth_date: date = Field(..., description="Birth date")
+    email: EmailStr = Field(..., description="Email address")
+
+    class Config:
+        str_strip_whitespace = True
+        validate_assignment = True
+
+class BasicPatientUpdateDTO(BaseModel):
+    """DTO for updating basic patient information"""
+    first_name: Optional[str] = Field(None, min_length=2, max_length=100, description="Patient first name")
+    last_name: Optional[str] = Field(None, min_length=2, max_length=100, description="Patient last name")
+    document_type: Optional[str] = Field(None, min_length=2, max_length=5, description="Document type code")
+    document_number: Optional[str] = Field(None, min_length=6, max_length=20, description="Document number")
+    phone_international: Optional[str] = Field(None, min_length=10, max_length=20, description="Phone in international format")
+    birth_date: Optional[date] = Field(None, description="Birth date")
+    origin_country: Optional[str] = Field(None, min_length=2, max_length=2, description="Country of origin (ISO 3166-1 alpha-2)")
+    email: Optional[EmailStr] = Field(None, description="Email address")
+
+    class Config:
+        str_strip_whitespace = True
+        validate_assignment = True
 ```
 
 ## Database Enums & Constraints

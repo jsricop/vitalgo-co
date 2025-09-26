@@ -150,36 +150,24 @@ export const MedicationsCard: React.FC<MedicationsCardProps> = ({
                 Medicamentos
               </h2>
               <p className="text-sm text-vitalgo-dark-light">
-                Gestiona tus medicamentos
+                {medications.length} {medications.length === 1 ? 'medicamento registrado' : 'medicamentos registrados'}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-3">
-            {showAddButton && (
-              <button
-                onClick={handleAddNew}
-                disabled={loading || actionLoading}
-                className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150 disabled:opacity-50"
-                data-testid={`${testId}-add-button`}
-              >
-                <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                Agregar
-              </button>
-            )}
-
-            {onNavigateToFull && medications.length > 0 && (
-              <button
-                onClick={handleViewAll}
-                className="text-sm font-medium text-vitalgo-green hover:text-vitalgo-green-light transition-colors duration-150"
-                data-testid={`${testId}-view-all-button`}
-              >
-                Ver todos ({medications.length})
-              </button>
-            )}
-          </div>
+          {showAddButton && (
+            <button
+              onClick={handleAddNew}
+              disabled={loading || actionLoading}
+              className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150 disabled:opacity-50"
+              data-testid={`${testId}-add-button`}
+            >
+              <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              Agregar
+            </button>
+          )}
         </div>
 
         {/* Content */}
@@ -206,12 +194,16 @@ export const MedicationsCard: React.FC<MedicationsCardProps> = ({
               />
             ))}
 
-            {/* Summary Footer */}
-            {medications.length > maxItems && (
+            {/* View All Footer */}
+            {medications.length >= 1 && onNavigateToFull && (
               <div className="pt-4 border-t border-vitalgo-dark-lightest">
-                <p className="text-sm text-vitalgo-dark-light text-center">
-                  Mostrando {maxItems} de {medications.length} medicamentos
-                </p>
+                <button
+                  onClick={handleViewAll}
+                  className="w-full text-center text-sm text-vitalgo-green hover:text-vitalgo-green-light font-medium"
+                  data-testid={`${testId}-view-all-footer`}
+                >
+                  Ver todos los medicamentos ({medications.length})
+                </button>
               </div>
             )}
           </div>

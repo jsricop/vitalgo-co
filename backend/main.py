@@ -15,6 +15,7 @@ from slices.medications.infrastructure.api.medications_router import router as m
 from slices.allergies.infrastructure.api.allergies_router import router as allergies_router
 from slices.surgeries.infrastructure.api.surgeries_router import router as surgeries_router
 from slices.illnesses.infrastructure.api.illnesses_router import router as illnesses_router
+from slices.profile.infrastructure.api.profile_endpoints import router as profile_router
 
 # Create FastAPI app instance
 app = FastAPI(
@@ -41,6 +42,7 @@ app.include_router(medications_router)
 app.include_router(allergies_router)
 app.include_router(surgeries_router)
 app.include_router(illnesses_router)
+app.include_router(profile_router)
 
 
 @app.get("/")

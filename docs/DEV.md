@@ -123,8 +123,33 @@ export function useDataHook() {
 ```
 
 ### Frontend: API Service Pattern (MANDATORY)
-Always use LocalStorageService for token access:
 
+**✅ PREFERRED**: Use Unified API Client (New Standard)
+
+```typescript
+import { apiClient, ApiError } from '../../../shared/services/apiClient';
+
+class YourAPIService {
+  async getData(): Promise<DataType> {
+    try {
+      const response = await apiClient.get<DataType>('/your-endpoint');
+      return response.data;
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw new Error(error.message);
+      }
+      throw error;
+    }
+  }
+
+  async updateData(data: UpdateType): Promise<ResultType> {
+    const response = await apiClient.put<ResultType>('/your-endpoint', data);
+    return response.data;
+  }
+}
+```
+
+**🔄 LEGACY**: Manual Authentication (Being Phased Out)
 ```typescript
 import { LocalStorageService } from '../../../shared/services/local-storage-service';
 
@@ -139,9 +164,72 @@ const getHeaders = (): HeadersInit => {
 
 **Never use**: `localStorage.getItem('access_token')` - wrong key format
 
+### Unified API Client Benefits
+
+**Why Use Unified Client**:
+- ✅ **Zero Duplication**: No more auth code copying
+- ✅ **Automatic Auth**: Token handling, login redirects
+- ✅ **Consistent Errors**: Standardized error messages
+- ✅ **Type Safety**: Generic responses with proper types
+- ✅ **Simplified Code**: `apiClient.get()` vs manual fetch + auth
+
+**Available Methods**:
+```typescript
+apiClient.get<T>(endpoint)       // GET request
+apiClient.post<T>(endpoint, data)  // POST request
+apiClient.put<T>(endpoint, data)   // PUT request
+apiClient.delete<T>(endpoint)      // DELETE request
+apiClient.patch<T>(endpoint, data) // PATCH request
+```
+
+**Response Format**:
+```typescript
+interface ApiResponse<T> {
+  data: T;        // Your actual data
+  status: number; // HTTP status code
+  statusText: string;
+}
+```
+
+**Error Handling**:
+```typescript
+try {
+  const response = await apiClient.get<User>('/profile/basic');
+  return response.data;
+} catch (error) {
+  // Auth failures automatically redirect to login
+  // Only handle business logic errors here
+
+  // IMPORTANT: ApiError is an interface, not a class
+  // Use duck typing instead of instanceof checks
+  if (error && typeof error === 'object' && 'message' in error && typeof (error as any).status === 'number') {
+    throw new Error((error as any).message);
+  }
+  throw error;
+}
+```
+
+**⚠️ Common Mistake**:
+```typescript
+// ❌ WRONG - ApiError is an interface, not a class
+if (error instanceof ApiError) { ... }
+
+// ✅ CORRECT - Use duck typing pattern
+if (error && typeof error === 'object' && 'message' in error && typeof (error as any).status === 'number') { ... }
+```
+
 ### Authentication Debugging Guide
 
 **Common Issue**: "Not authenticated" errors
+
+**✅ NEW APPROACH**: Use Unified API Client
+```typescript
+// ✅ CORRECT - No manual auth needed
+const response = await apiClient.get<Data>('/endpoint');
+// Auth headers, error handling, login redirects all automatic
+```
+
+**🔄 LEGACY DEBUGGING** (for services not yet migrated):
 
 **Root Causes & Solutions**:
 
@@ -164,9 +252,69 @@ const getHeaders = (): HeadersInit => {
    ```
 
 **Debugging Steps**:
-1. Check localStorage keys: `console.log(Object.keys(localStorage))`
-2. Verify Authorization header in Network tab
-3. Follow working patterns from `medicationsApi.ts`
+1. **First**: Try using `apiClient` instead of manual auth
+2. Check localStorage keys: `console.log(Object.keys(localStorage))`
+3. Verify Authorization header in Network tab
+4. Follow working patterns from `basicProfileApi.ts` (new) or `medicationsApi.ts` (legacy)
+
+**Migration Status** (✅ COMPLETED):
+- ✅ **Profile API** (Basic): Uses unified client
+- ✅ **Medications API**: Migrated (373→242 lines, -35%)
+- ✅ **Allergies API**: Migrated (354→209 lines, -41%)
+- ✅ **Surgeries API**: Migrated (302→172 lines, -43%)
+- ✅ **Illnesses API**: Migrated (179→93 lines, -48%)
+- ✅ **Dashboard API**: Migrated (95→27 lines, -72%)
+- ✅ **Signup API**: Enhanced with consistent error handling (public endpoints)
+
+**Migration Results**:
+- **Total Lines Eliminated**: 560+ lines of duplicated auth code
+- **Average Reduction**: 45% across authenticated APIs
+- **Benefits**: Unified auth, consistent errors, automatic login redirects
+
+### Profile Endpoints Troubleshooting
+
+**Common Issue**: Profile page showing "Not Found" or TypeErrors
+
+**Root Causes & Solutions**:
+
+1. **Router Prefix Mismatch**
+   - **Issue**: Router defined with `/profile` instead of `/api/profile`
+   - **Fix**: Use `router = APIRouter(prefix="/api/profile", tags=["profile"])`
+   - **Detection**: Check browser Network tab for 404 errors on `/api/profile/*`
+
+2. **Type Annotation Errors**
+   - **Issue**: `TypeError: 'User' object is not subscriptable`
+   - **Cause**: Using `current_user: dict` instead of `current_user: User`
+   - **Fix**: Import User model and use proper typing:
+     ```python
+     from slices.signup.domain.models.user_model import User
+     current_user: User = Depends(get_current_user)
+     # Use current_user.id instead of current_user["id"]
+     ```
+
+3. **Field Mapping Issues**
+   - **Issue**: Frontend expecting `originCountry` but backend returning `origin_country`
+   - **Fix**: Ensure API service transforms field names:
+     ```typescript
+     // GET transformation
+     originCountry: data.origin_country,
+     // PUT transformation
+     origin_country: data.originCountry,
+     ```
+
+4. **Database Safety Issues**
+   - **Issue**: NULL values for required fields like `origin_country`
+   - **Fix**: Add fallbacks in use case methods:
+     ```python
+     origin_country=patient.origin_country or 'CO'
+     ```
+
+**Debugging Steps**:
+1. Check server logs for TypeErrors during API calls
+2. Verify router registration in main.py uses correct prefix
+3. Test endpoints directly with curl to isolate backend issues
+4. Check browser Network tab for failed API calls
+5. Verify field transformations in API service layer
 
 ## Naming Conventions
 
@@ -223,19 +371,21 @@ Before generating code:
 1. ✅ Identify the correct slice and layer
 2. ✅ Verify directory structure compliance
 3. ✅ Check naming convention consistency
-4. ✅ Ensure proper authentication patterns
+4. ✅ **Use unified apiClient** for new API services (preferred)
 5. ✅ Add required UUID validators (backend)
-6. ✅ Use LocalStorageService (frontend APIs)
+6. ✅ Use LocalStorageService (legacy APIs only)
 7. ✅ Follow useState + useEffect pattern (not SWR)
+8. ✅ Ensure proper authentication patterns
 
 ## Critical Rules
 
 1. **Slice Consistency**: Identical slice names across backend/frontend
 2. **Authentication**: Never use SWR with AuthGuard components
-3. **UUID Handling**: Always add field_serializer for UUID fields
-4. **Token Access**: Always use LocalStorageService, never direct localStorage
-5. **Dependencies**: Domain layer has zero external dependencies
-6. **Reference Docs**: Update immediately after any API/DB/Type changes
+3. **API Services**: Use unified `apiClient` for new services (eliminates auth duplication)
+4. **UUID Handling**: Always add field_serializer for UUID fields
+5. **Token Access**: Use `apiClient` (preferred) or LocalStorageService (legacy), never direct localStorage
+6. **Dependencies**: Domain layer has zero external dependencies
+7. **Reference Docs**: Update immediately after any API/DB/Type changes
 
 ---
 

@@ -125,7 +125,7 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
   return (
     <div className={cardClasses} data-testid={testId}>
       {/* Card Header */}
-      <div className="flex items-center justify-between p-6 border-b border-gray-200">
+      <div className="flex items-center justify-between p-6">
         <div className="flex items-center space-x-3">
           <IllnessIcon size="lg" color="primary" />
           <div>
@@ -202,20 +202,26 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
         {/* Illnesses List */}
         {!isLoading && !error && illnesses.length === 0 && !showAddForm ? (
           <div className="text-center py-8">
-            <IllnessIcon size="lg" color="secondary" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No hay enfermedades registradas</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              Comienza agregando la primera enfermedad del paciente.
+            <div className="mx-auto w-16 h-16 bg-vitalgo-green-lightest rounded-full flex items-center justify-center mb-4">
+              <IllnessIcon size="xl" color="primary" data-testid={`${testId}-empty-icon`} />
+            </div>
+            <h3 className="text-lg font-medium text-vitalgo-dark mb-2">
+              No hay enfermedades registradas
+            </h3>
+            <p className="text-vitalgo-dark-light mb-4">
+              Comienza agregando tu primera enfermedad para llevar un mejor control de tu historial médico.
             </p>
             {showAddButton && (
               <button
                 onClick={handleAddClick}
-                className="mt-3 inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-vitalgo-green"
+                disabled={isActionsLoading}
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150 disabled:opacity-50"
+                data-testid={`${testId}-empty-add-button`}
               >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                Agregar Enfermedad
+                Agregar primera enfermedad
               </button>
             )}
           </div>
@@ -229,7 +235,7 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
                 onDelete={handleDeleteIllness}
                 onToggleCured={handleToggleCured}
                 showActions={!showAddForm && !editingIllness}
-                compact={false}
+                compact={true}
                 data-testid={`${testId}-illness-${index}`}
               />
             ))}
@@ -237,7 +243,7 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
         )}
 
         {/* Show More Link */}
-        {hasMoreItems && onNavigateToFull && (
+        {sortedIllnesses.length >= 1 && onNavigateToFull && (
           <div className="mt-4 pt-4 border-t border-gray-200">
             <button
               onClick={onNavigateToFull}

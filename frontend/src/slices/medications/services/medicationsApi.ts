@@ -1,6 +1,6 @@
 /**
  * Medications API service
- * Handles all medication-related API calls with authentication and data transformation
+ * Handles all medication-related API calls using unified authentication
  * Converts between camelCase (frontend) and snake_case (backend)
  */
 
@@ -10,134 +10,9 @@ import {
   CreateMedicationRequest,
   MedicationApiResponse
 } from '../types';
-import { LocalStorageService } from '../../../shared/services/local-storage-service';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+import { apiClient } from '../../../shared/services/apiClient';
 
 class MedicationsAPIService {
-  private async getAuthHeaders(): Promise<HeadersInit> {
-    const token = LocalStorageService.getAccessToken();
-
-    // JWT TOKEN DEBUG: Frontend token analysis for medications
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        const currentTime = Math.floor(Date.now() / 1000);
-        const timeUntilExp = payload.exp - currentTime;
-
-        console.log('🔍 MEDICATIONS API JWT DEBUG - Token Analysis:');
-        console.log(`   Current timestamp: ${currentTime}`);
-        console.log(`   Token exp timestamp: ${payload.exp}`);
-        console.log(`   Time until expiration: ${timeUntilExp} seconds`);
-        console.log(`   Token valid: ${timeUntilExp > 0}`);
-
-        if (timeUntilExp <= 0) {
-          console.log('❌ MEDICATIONS API JWT DEBUG - TOKEN ALREADY EXPIRED!');
-        }
-      } catch (e) {
-        console.error('❌ MEDICATIONS API JWT DEBUG - Token parsing failed:', e);
-      }
-    } else {
-      console.log('❌ MEDICATIONS API JWT DEBUG - No access token found');
-    }
-
-    return {
-      'Content-Type': 'application/json',
-      'Authorization': token ? `Bearer ${token}` : '',
-    };
-  }
-
-  private async handleResponse<T>(response: Response): Promise<T> {
-    if (!response.ok) {
-      let errorData;
-      let errorMessage: string;
-
-      try {
-        errorData = await response.json();
-      } catch (jsonError) {
-        console.error('🔍 MEDICATIONS API ERROR: Failed to parse error response as JSON:', jsonError);
-        errorMessage = `HTTP ${response.status} - Failed to parse error response`;
-        throw new Error(errorMessage);
-      }
-
-      // Debug log the full error structure for analysis
-      console.error('🔍 MEDICATIONS API ERROR: Full error object:', errorData);
-
-      // Extract meaningful error message from different error structures
-      if (typeof errorData === 'string') {
-        errorMessage = errorData;
-      } else if (errorData.detail) {
-        // Check if detail is the new validation error format from our enhanced backend
-        if (typeof errorData.detail === 'object' && errorData.detail.errors && Array.isArray(errorData.detail.errors)) {
-          // New enhanced validation error format: { message: "...", errors: [...] }
-          const validationErrors = errorData.detail.errors;
-          if (validationErrors.length > 0) {
-            // Format multiple validation errors for user display
-            const errorMessages = validationErrors.map((error: any) => {
-              return `${error.field}: ${error.message}`;
-            });
-            errorMessage = `Validation failed: ${errorMessages.join(', ')}`;
-          } else {
-            errorMessage = errorData.detail.message || 'Validation failed';
-          }
-          console.log('🔍 MEDICATIONS API: Parsed validation errors:', validationErrors);
-        } else if (typeof errorData.detail === 'string') {
-          // Standard FastAPI error
-          errorMessage = errorData.detail;
-        } else if (Array.isArray(errorData.detail)) {
-          // Standard FastAPI validation errors array format
-          const firstError = errorData.detail[0];
-          errorMessage = firstError.msg || firstError.message || 'Validation error';
-        } else {
-          // Complex detail object - try to extract meaningful info
-          errorMessage = JSON.stringify(errorData.detail);
-        }
-      } else if (errorData.message) {
-        // Alternative error format
-        errorMessage = errorData.message;
-      } else if (Array.isArray(errorData) && errorData.length > 0) {
-        // Direct validation errors array format (legacy FastAPI)
-        const firstError = errorData[0];
-        errorMessage = firstError.msg || firstError.message || 'Validation error';
-      } else if (typeof errorData === 'object') {
-        // Complex object - try to extract meaningful info
-        const errorKeys = Object.keys(errorData);
-        if (errorKeys.length > 0) {
-          const firstKey = errorKeys[0];
-          const firstValue = errorData[firstKey];
-          errorMessage = `${firstKey}: ${typeof firstValue === 'string' ? firstValue : JSON.stringify(firstValue)}`;
-        } else {
-          errorMessage = `HTTP ${response.status} - Server error`;
-        }
-      } else {
-        errorMessage = `HTTP ${response.status} - Unknown error format`;
-      }
-
-      console.error('🔍 MEDICATIONS API ERROR: Extracted message:', errorMessage);
-
-      // Only redirect to login for specific authentication failures
-      if (response.status === 401 || response.status === 403) {
-        const isAuthFailure = errorMessage.includes('Authentication required') ||
-                             errorMessage.includes('Invalid token') ||
-                             errorMessage.includes('Token expired') ||
-                             errorMessage.includes('Session not found') ||
-                             errorMessage.includes('Account is locked');
-
-        if (isAuthFailure) {
-          console.log('🚨 Medications API: Authentication failure detected, redirecting to login:', errorMessage);
-          LocalStorageService.clearAuthenticationData();
-          window.location.href = '/login';
-        } else {
-          console.warn(`⚠️ Medications API: ${response.status} error but not an auth failure:`, errorMessage);
-        }
-
-        throw new Error(errorMessage || `HTTP ${response.status} - Access denied`);
-      }
-
-      throw new Error(errorMessage);
-    }
-    return response.json();
-  }
 
   /**
    * Transform frontend medication data (camelCase) to API request format (snake_case)
@@ -196,18 +71,17 @@ class MedicationsAPIService {
     try {
       console.log('📊 Fetching medications...');
 
-      const response = await fetch(`${API_BASE_URL}/api/medications/`, {
-        method: 'GET',
-        headers: await this.getAuthHeaders(),
-      });
-
-      const apiMedications = await this.handleResponse<MedicationApiResponse[]>(response);
-      const medications = apiMedications.map(med => this.transformFromApiResponse(med));
+      const response = await apiClient.get<MedicationApiResponse[]>('/medications/');
+      const medications = response.data.map(med => this.transformFromApiResponse(med));
 
       console.log('✅ Medications loaded successfully:', medications.length, 'items');
       return medications;
     } catch (error) {
       console.error('❌ Error fetching medications:', error);
+      // Re-throw as standard Error for consistent error handling
+      if (error && typeof error === 'object' && 'message' in error && typeof (error as any).status === 'number') {
+        throw new Error((error as any).message);
+      }
       throw error;
     }
   }
@@ -220,19 +94,17 @@ class MedicationsAPIService {
       console.log('📝 Creating medication:', data.medicationName);
 
       const apiRequest = this.transformToApiRequest(data);
-      const response = await fetch(`${API_BASE_URL}/api/medications/`, {
-        method: 'POST',
-        headers: await this.getAuthHeaders(),
-        body: JSON.stringify(apiRequest),
-      });
-
-      const apiMedication = await this.handleResponse<MedicationApiResponse>(response);
-      const medication = this.transformFromApiResponse(apiMedication);
+      const response = await apiClient.post<MedicationApiResponse>('/medications/', apiRequest);
+      const medication = this.transformFromApiResponse(response.data);
 
       console.log('✅ Medication created successfully:', medication.medicationName);
       return medication;
     } catch (error) {
       console.error('❌ Error creating medication:', error);
+      // Re-throw as standard Error for consistent error handling
+      if (error && typeof error === 'object' && 'message' in error && typeof (error as any).status === 'number') {
+        throw new Error((error as any).message);
+      }
       throw error;
     }
   }
@@ -245,19 +117,17 @@ class MedicationsAPIService {
       console.log('📝 Updating medication ID:', id, 'Name:', data.medicationName);
 
       const apiRequest = this.transformToApiRequest(data);
-      const response = await fetch(`${API_BASE_URL}/api/medications/${id}`, {
-        method: 'PUT',
-        headers: await this.getAuthHeaders(),
-        body: JSON.stringify(apiRequest),
-      });
-
-      const apiMedication = await this.handleResponse<MedicationApiResponse>(response);
-      const medication = this.transformFromApiResponse(apiMedication);
+      const response = await apiClient.put<MedicationApiResponse>(`/medications/${id}`, apiRequest);
+      const medication = this.transformFromApiResponse(response.data);
 
       console.log('✅ Medication updated successfully:', medication.medicationName);
       return medication;
     } catch (error) {
       console.error('❌ Error updating medication:', error);
+      // Re-throw as standard Error for consistent error handling
+      if (error && typeof error === 'object' && 'message' in error && typeof (error as any).status === 'number') {
+        throw new Error((error as any).message);
+      }
       throw error;
     }
   }
@@ -269,15 +139,14 @@ class MedicationsAPIService {
     try {
       console.log('🗑️ Deleting medication ID:', id);
 
-      const response = await fetch(`${API_BASE_URL}/api/medications/${id}`, {
-        method: 'DELETE',
-        headers: await this.getAuthHeaders(),
-      });
-
-      await this.handleResponse(response);
+      await apiClient.delete(`/medications/${id}`);
       console.log('✅ Medication deleted successfully');
     } catch (error) {
       console.error('❌ Error deleting medication:', error);
+      // Re-throw as standard Error for consistent error handling
+      if (error && typeof error === 'object' && 'message' in error && typeof (error as any).status === 'number') {
+        throw new Error((error as any).message);
+      }
       throw error;
     }
   }

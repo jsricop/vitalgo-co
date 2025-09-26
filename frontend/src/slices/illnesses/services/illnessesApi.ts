@@ -7,52 +7,8 @@
  */
 
 import { PatientIllnessDTO, IllnessFormData } from '../types';
-import { LocalStorageService } from '../../../shared/services/local-storage-service';
+import { apiClient } from '../../../shared/services/apiClient';
 
-// API configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-const API_ENDPOINTS = {
-  illnesses: '/api/illnesses',
-} as const;
-
-// Request headers with authentication - using LocalStorageService like medications
-const getHeaders = (): HeadersInit => {
-  const token = LocalStorageService.getAccessToken();
-  return {
-    'Content-Type': 'application/json',
-    'Authorization': token ? `Bearer ${token}` : '',
-  };
-};
-
-// API Response Error
-class ApiError extends Error {
-  constructor(public status: number, message: string) {
-    super(message);
-    this.name = 'ApiError';
-  }
-}
-
-// Handle API response
-const handleResponse = async <T>(response: Response): Promise<T> => {
-  if (!response.ok) {
-    let errorMessage = `HTTP ${response.status}`;
-    try {
-      const errorData = await response.json();
-      errorMessage = errorData.detail || errorData.message || errorMessage;
-    } catch {
-      // Use status text if JSON parsing fails
-      errorMessage = response.statusText || errorMessage;
-    }
-    throw new ApiError(response.status, errorMessage);
-  }
-
-  try {
-    return await response.json();
-  } catch {
-    // Return empty object if no content
-    return {} as T;
-  }
-};
 
 // Transform API response (snake_case) to frontend format (camelCase)
 const transformFromApiResponse = (apiData: any): PatientIllnessDTO => ({
@@ -86,86 +42,96 @@ const transformToApiRequest = (frontendData: IllnessFormData): Record<string, an
 export class IllnessesApi {
   // Get all illnesses for current patient
   async fetchIllnesses(): Promise<PatientIllnessDTO[]> {
-    console.log('🔍 IllnessesAPI: Fetching illnesses');
+    try {
+      console.log('🔍 IllnessesAPI: Fetching illnesses');
 
-    const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.illnesses}/`, {
-      method: 'GET',
-      headers: getHeaders(),
-    });
+      const response = await apiClient.get<any[]>('/illnesses/');
+      const illnesses = response.data.map(transformFromApiResponse);
 
-    const data = await handleResponse<any[]>(response);
-    const illnesses = data.map(transformFromApiResponse);
-
-    console.log('✅ IllnessesAPI: Fetched', illnesses.length, 'illnesses');
-    return illnesses;
+      console.log('✅ IllnessesAPI: Fetched', illnesses.length, 'illnesses');
+      return illnesses;
+    } catch (error) {
+      console.error('❌ Error fetching illnesses:', error);
+      if (error && typeof error === 'object' && 'message' in error && typeof (error as any).status === 'number') {
+        throw new Error((error as any).message);
+      }
+      throw error;
+    }
   }
 
   // Get specific illness by ID
   async fetchIllnessById(id: number): Promise<PatientIllnessDTO> {
-    console.log('🔍 IllnessesAPI: Fetching illness ID:', id);
+    try {
+      console.log('🔍 IllnessesAPI: Fetching illness ID:', id);
 
-    const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.illnesses}/${id}`, {
-      method: 'GET',
-      headers: getHeaders(),
-    });
+      const response = await apiClient.get<any>(`/illnesses/${id}`);
+      const illness = transformFromApiResponse(response.data);
 
-    const data = await handleResponse<any>(response);
-    const illness = transformFromApiResponse(data);
-
-    console.log('✅ IllnessesAPI: Fetched illness:', illness.illnessName);
-    return illness;
+      console.log('✅ IllnessesAPI: Fetched illness:', illness.illnessName);
+      return illness;
+    } catch (error) {
+      console.error('❌ Error fetching illness by ID:', error);
+      if (error && typeof error === 'object' && 'message' in error && typeof (error as any).status === 'number') {
+        throw new Error((error as any).message);
+      }
+      throw error;
+    }
   }
 
   // Create new illness
   async createIllness(illnessData: IllnessFormData): Promise<PatientIllnessDTO> {
-    console.log('📝 IllnessesAPI: Creating illness:', illnessData.illnessName);
+    try {
+      console.log('📝 IllnessesAPI: Creating illness:', illnessData.illnessName);
 
-    const requestData = transformToApiRequest(illnessData);
+      const requestData = transformToApiRequest(illnessData);
+      const response = await apiClient.post<any>('/illnesses/', requestData);
+      const illness = transformFromApiResponse(response.data);
 
-    const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.illnesses}/`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify(requestData),
-    });
-
-    const data = await handleResponse<any>(response);
-    const illness = transformFromApiResponse(data);
-
-    console.log('✅ IllnessesAPI: Created illness:', illness.illnessName);
-    return illness;
+      console.log('✅ IllnessesAPI: Created illness:', illness.illnessName);
+      return illness;
+    } catch (error) {
+      console.error('❌ Error creating illness:', error);
+      if (error && typeof error === 'object' && 'message' in error && typeof (error as any).status === 'number') {
+        throw new Error((error as any).message);
+      }
+      throw error;
+    }
   }
 
   // Update existing illness
   async updateIllness(id: number, illnessData: IllnessFormData): Promise<PatientIllnessDTO> {
-    console.log('📝 IllnessesAPI: Updating illness ID:', id, 'Name:', illnessData.illnessName);
+    try {
+      console.log('📝 IllnessesAPI: Updating illness ID:', id, 'Name:', illnessData.illnessName);
 
-    const requestData = transformToApiRequest(illnessData);
+      const requestData = transformToApiRequest(illnessData);
+      const response = await apiClient.put<any>(`/illnesses/${id}`, requestData);
+      const illness = transformFromApiResponse(response.data);
 
-    const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.illnesses}/${id}`, {
-      method: 'PUT',
-      headers: getHeaders(),
-      body: JSON.stringify(requestData),
-    });
-
-    const data = await handleResponse<any>(response);
-    const illness = transformFromApiResponse(data);
-
-    console.log('✅ IllnessesAPI: Updated illness:', illness.illnessName);
-    return illness;
+      console.log('✅ IllnessesAPI: Updated illness:', illness.illnessName);
+      return illness;
+    } catch (error) {
+      console.error('❌ Error updating illness:', error);
+      if (error && typeof error === 'object' && 'message' in error && typeof (error as any).status === 'number') {
+        throw new Error((error as any).message);
+      }
+      throw error;
+    }
   }
 
   // Delete illness
   async deleteIllness(id: number): Promise<void> {
-    console.log('🗑️ IllnessesAPI: Deleting illness ID:', id);
+    try {
+      console.log('🗑️ IllnessesAPI: Deleting illness ID:', id);
 
-    const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.illnesses}/${id}`, {
-      method: 'DELETE',
-      headers: getHeaders(),
-    });
-
-    await handleResponse<void>(response);
-
-    console.log('✅ IllnessesAPI: Deleted illness ID:', id);
+      await apiClient.delete(`/illnesses/${id}`);
+      console.log('✅ IllnessesAPI: Deleted illness ID:', id);
+    } catch (error) {
+      console.error('❌ Error deleting illness:', error);
+      if (error && typeof error === 'object' && 'message' in error && typeof (error as any).status === 'number') {
+        throw new Error((error as any).message);
+      }
+      throw error;
+    }
   }
 }
 

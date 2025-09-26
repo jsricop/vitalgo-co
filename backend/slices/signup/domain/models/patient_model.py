@@ -32,6 +32,9 @@ class Patient(Base):
     # Legacy field - maintained for backward compatibility
     phone_international = Column(String(20), nullable=False)
     birth_date = Column(Date, nullable=False)
+
+    # Country information - Patient's country of origin
+    origin_country = Column(String(2), nullable=False, server_default='CO')
     accept_terms = Column(Boolean, nullable=False)
     accept_terms_date = Column(DateTime(timezone=True), nullable=False)
     accept_policy = Column(Boolean, nullable=False)
@@ -43,9 +46,9 @@ class Patient(Base):
     user = relationship("User", backref="patient")
     document_type = relationship("DocumentType", backref="patients")
 
-    def set_phone_data(self, country_code: str, dial_code: str, phone_number: str):
+    def set_phone_data(self, phone_country_code: str, dial_code: str, phone_number: str):
         """Set phone data using new separated fields and update legacy field"""
-        self.country_code = country_code
+        self.country_code = phone_country_code  # This is for phone, not origin country
         self.dial_code = dial_code
         self.phone_number = phone_number
         # Update legacy field for backward compatibility
@@ -77,6 +80,18 @@ class Patient(Base):
                 return ''.join(filter(str.isdigit, parts[1]))
             return ''.join(filter(str.isdigit, self.phone_international))
         return ""
+
+    @property
+    def origin_country_name(self) -> str:
+        """Get country name from origin country code"""
+        from shared.utils.countries import get_country_name
+        return get_country_name(self.origin_country or 'CO')
+
+    @property
+    def origin_country_display(self) -> str:
+        """Get country with flag emoji for display"""
+        from shared.utils.countries import get_country_display
+        return get_country_display(self.origin_country or 'CO')
 
     def __repr__(self):
         return f"<Patient(name='{self.full_name}', document_number='{self.document_number}')>"

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { ChevronDown } from "lucide-react"
 import { UserAvatar } from "../atoms/UserAvatar"
 import { LogoutButton } from "../atoms/LogoutButton"
@@ -47,6 +48,20 @@ export function UserMenu({ user, onLogout, className = "", 'data-testid': testId
             <div className="px-4 py-2 border-b border-gray-100">
               <p className="text-sm font-medium text-gray-900">{user.name}</p>
               <p className="text-xs text-gray-500 capitalize">{user.role}</p>
+            </div>
+
+            <div className="py-1">
+              <Link
+                href="/profile"
+                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+                data-testid="user-menu-profile-link"
+                onClick={() => setIsOpen(false)}
+              >
+                <svg className="h-4 w-4 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                Perfil
+              </Link>
             </div>
 
             <div className="border-t border-gray-100 pt-1">

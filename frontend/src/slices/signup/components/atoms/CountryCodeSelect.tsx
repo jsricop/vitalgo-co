@@ -79,7 +79,7 @@ export const CountryCodeSelect: React.FC<CountryCodeSelectProps> = ({
   return (
     <div className="relative" ref={dropdownRef}>
       <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
-        País
+        Indicativo
         <span className="text-red-500 ml-1">*</span>
       </label>
 

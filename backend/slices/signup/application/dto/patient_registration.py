@@ -20,6 +20,7 @@ class PatientRegistrationDTO(BaseModel):
     document_number: str = Field(..., min_length=6, max_length=20, description="Document number")
     phone_international: str = Field(..., min_length=10, max_length=20, description="Phone in international format")
     birth_date: date = Field(..., description="Birth date")
+    origin_country: str = Field(default="CO", min_length=2, max_length=2, description="Country of origin (ISO 3166-1 alpha-2)")
     email: EmailStr = Field(..., description="Email address")
     password: str = Field(..., min_length=8, max_length=128, description="Password")
     confirm_password: str = Field(..., min_length=8, max_length=128, description="Password confirmation")

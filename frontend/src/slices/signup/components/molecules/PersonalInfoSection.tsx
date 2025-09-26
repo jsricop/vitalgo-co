@@ -6,6 +6,7 @@ import { TextInput } from '../atoms/TextInput';
 import { DocumentTypeSelect } from '../atoms/DocumentTypeSelect';
 import { DateInput } from '../atoms/DateInput';
 import { PhoneInputGroup } from './PhoneInputGroup';
+import { CountrySelect } from '../atoms/CountrySelect';
 import { DocumentType, FieldValidationState } from '../../types';
 import { Country } from '../../data/countries';
 
@@ -15,12 +16,14 @@ interface PersonalInfoSectionProps {
   documentType: string;
   documentNumber: string;
   birthDate: string;
+  originCountry: string;
   // New phone fields
   countryCode: string;
   phoneNumber: string;
   onInputChange: (field: string, value: string) => void;
   onFieldBlur: (field: string) => void;
   onCountryChange: (country: Country) => void;
+  onOriginCountryChange: (country: Country) => void;
   documentTypes: DocumentType[];
   validationStates: {
     firstName?: FieldValidationState;
@@ -32,6 +35,7 @@ interface PersonalInfoSectionProps {
     documentType?: string;
     birthDate?: string;
     phone?: string;
+    originCountry?: string;
   };
 }
 
@@ -41,11 +45,13 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   documentType,
   documentNumber,
   birthDate,
+  originCountry,
   countryCode,
   phoneNumber,
   onInputChange,
   onFieldBlur,
   onCountryChange,
+  onOriginCountryChange,
   documentTypes,
   validationStates,
   errors
@@ -115,6 +121,18 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         />
 
         <div className="md:col-span-2">
+          <CountrySelect
+            value={originCountry}
+            onChange={onOriginCountryChange}
+            label="País de origen"
+            placeholder="Selecciona tu país de origen"
+            error={errors.originCountry}
+            required
+            data-testid="originCountry-select"
+          />
+        </div>
+
+        <div className="md:col-span-2">
           <PhoneInputGroup
             countryCode={countryCode}
             phoneNumber={phoneNumber}
@@ -127,17 +145,19 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           />
         </div>
 
-        <DateInput
-          id="birthDate"
-          name="birthDate"
-          label="Fecha de nacimiento"
-          value={birthDate}
-          onChange={(e) => onInputChange('birthDate', e.target.value)}
-          onBlur={() => onFieldBlur('birthDate')}
-          error={errors.birthDate}
-          required
-          data-testid="birthDate-input"
-        />
+        <div className="md:col-span-2">
+          <DateInput
+            id="birthDate"
+            name="birthDate"
+            label="Fecha de nacimiento"
+            value={birthDate}
+            onChange={(e) => onInputChange('birthDate', e.target.value)}
+            onBlur={() => onFieldBlur('birthDate')}
+            error={errors.birthDate}
+            required
+            data-testid="birthDate-input"
+          />
+        </div>
       </div>
 
       {errors.documentType && (

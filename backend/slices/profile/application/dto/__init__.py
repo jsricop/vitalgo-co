@@ -11,6 +11,10 @@ from .profile_completion_dto import (
     SurgeryDTO,
     GynecologicalHistoryDTO
 )
+from .basic_patient_dto import (
+    BasicPatientInfoDTO,
+    BasicPatientUpdateDTO
+)
 
 __all__ = [
     'ProfileCompletenessResponse',
@@ -20,5 +24,7 @@ __all__ = [
     'AllergyDTO',
     'DiseaseDTO',
     'SurgeryDTO',
-    'GynecologicalHistoryDTO'
+    'GynecologicalHistoryDTO',
+    'BasicPatientInfoDTO',
+    'BasicPatientUpdateDTO'
 ]

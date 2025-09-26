@@ -113,6 +113,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 ### 📋 Documentación Disponible
 - **[DEV.md](docs/DEV.md)** - Guía de desarrollo, patrones arquitectónicos y convenciones
 - **[BRAND.md](docs/BRAND.md)** - Manual de marca, sistema de diseño y componentes UI
+- **[UNIFIED_AUTH_MIGRATION.md](docs/UNIFIED_AUTH_MIGRATION.md)** - Guía de migración del sistema de autenticación unificado
 
 ### 🚀 Scripts de Automatización
 - **[smart-commit.sh](scripts/smart-commit.sh)** - Commit inteligente con revisión automática (`./scripts/smart-commit.sh --help`)

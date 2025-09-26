@@ -131,6 +131,11 @@ class RegisterPatientUseCase:
         if not data.accept_privacy:
             raise ValueError("Debe aceptar la política de privacidad")
 
+        # Validate origin country code
+        from shared.utils.countries import is_valid_country_code
+        if not is_valid_country_code(data.origin_country):
+            raise ValueError(f"Código de país inválido: {data.origin_country}")
+
     async def _create_user(self, data: PatientRegistrationDTO) -> User:
         """Create user with hashed password"""
 
@@ -170,6 +175,7 @@ class RegisterPatientUseCase:
             document_number=data.document_number,
             phone_international=data.phone_international,
             birth_date=data.birth_date,
+            origin_country=data.origin_country,
             accept_terms=data.accept_terms,
             accept_terms_date=acceptance_timestamp,
             accept_policy=data.accept_privacy,

@@ -119,36 +119,24 @@ export const AllergiesCard: React.FC<AllergiesCardProps> = ({
               Alergias
             </h3>
             <p className="text-sm text-vitalgo-dark-light">
-              Gestiona tus alergias
+              {allergies.length} {allergies.length === 1 ? 'alergia registrada' : 'alergias registradas'}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center space-x-3">
-          {showAddButton && (
-            <button
-              onClick={handleAddNew}
-              disabled={actionLoading}
-              className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150 disabled:opacity-50"
-              data-testid={`${testId}-add-button`}
-            >
-              <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Agregar
-            </button>
-          )}
-
-          {onNavigateToFull && allergies.length > 0 && (
-            <button
-              onClick={handleViewAll}
-              className="text-sm font-medium text-vitalgo-green hover:text-vitalgo-green-light transition-colors duration-150"
-              data-testid={`${testId}-view-all-button`}
-            >
-              Ver todas ({allergies.length})
-            </button>
-          )}
-        </div>
+        {showAddButton && (
+          <button
+            onClick={handleAddNew}
+            disabled={actionLoading}
+            className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150 disabled:opacity-50"
+            data-testid={`${testId}-add-button`}
+          >
+            <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Agregar
+          </button>
+        )}
       </div>
 
       {/* Content */}
@@ -184,16 +172,19 @@ export const AllergiesCard: React.FC<AllergiesCardProps> = ({
         ) : recentAllergies.length === 0 ? (
           /* Empty State */
           <div className="text-center py-8">
-            <AllergyIcon size="xl" color="default" className="mx-auto mb-3 opacity-50" />
-            <p className="text-sm font-medium text-vitalgo-dark-light mb-1">
-              Sin alergias registradas
-            </p>
-            <p className="text-xs text-vitalgo-dark-lighter mb-4">
-              Agrega información sobre tus alergias para un mejor seguimiento médico
+            <div className="mx-auto w-16 h-16 bg-vitalgo-green-lightest rounded-full flex items-center justify-center mb-4">
+              <AllergyIcon size="xl" color="primary" data-testid={`${testId}-empty-icon`} />
+            </div>
+            <h3 className="text-lg font-medium text-vitalgo-dark mb-2">
+              No hay alergias registradas
+            </h3>
+            <p className="text-vitalgo-dark-light mb-4">
+              Comienza agregando tu primera alergia para llevar un mejor control de tu historial médico.
             </p>
             {showAddButton && (
               <button
                 onClick={handleAddNew}
+                disabled={actionLoading}
                 className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150 disabled:opacity-50"
                 data-testid={`${testId}-empty-add-button`}
               >
@@ -205,28 +196,34 @@ export const AllergiesCard: React.FC<AllergiesCardProps> = ({
             )}
           </div>
         ) : (
-          /* Allergies List */
-          recentAllergies.map((allergy) => (
-            <AllergyCard
-              key={allergy.id}
-              allergy={allergy}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              compact={true}
-              data-testid={`${testId}-allergy-${allergy.id}`}
-            />
-          ))
+          <div className="space-y-4">
+            {/* Allergies List */}
+            {recentAllergies.map((allergy) => (
+              <AllergyCard
+                key={allergy.id}
+                allergy={allergy}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                compact={true}
+                data-testid={`${testId}-allergy-${allergy.id}`}
+              />
+            ))}
+
+            {/* View All Footer */}
+            {allergies.length >= 1 && onNavigateToFull && (
+              <div className="pt-4 border-t border-vitalgo-dark-lightest">
+                <button
+                  onClick={handleViewAll}
+                  className="w-full text-center text-sm text-vitalgo-green hover:text-vitalgo-green-light font-medium"
+                  data-testid={`${testId}-view-all-footer`}
+                >
+                  Ver todas las alergias ({allergies.length})
+                </button>
+              </div>
+            )}
+          </div>
         )}
       </div>
-
-      {/* Summary Footer */}
-      {allergies.length > maxItems && (
-        <div className="pt-4 border-t border-vitalgo-dark-lightest">
-          <p className="text-sm text-vitalgo-dark-light text-center">
-            Mostrando {maxItems} de {allergies.length} alergias
-          </p>
-        </div>
-      )}
     </div>
   );
 };

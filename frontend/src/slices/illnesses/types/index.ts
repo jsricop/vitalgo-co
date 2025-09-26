@@ -81,11 +81,13 @@ export interface UseIllnessActionsResult {
 
 export interface UseIllnessFormResult {
   formData: IllnessFormData;
-  handleChange: (field: keyof IllnessFormData, value: any) => void;
-  handleSubmit: (e: React.FormEvent) => void;
-  resetForm: () => void;
+  errors: Partial<Record<keyof IllnessFormData, string>>;
   isValid: boolean;
-  errors: Record<string, string>;
+  isSubmitting: boolean;
+  handleChange: (field: keyof IllnessFormData, value: any) => void;
+  handleSubmit: (e: React.FormEvent) => Promise<void>;
+  resetForm: () => void;
+  setFormData: (data: Partial<IllnessFormData>) => void;
 }
 
 // Status options for forms
@@ -98,7 +100,7 @@ export const ILLNESS_STATUS_OPTIONS: { value: IllnessStatus; label: string }[] =
 
 // Illness icon props
 export interface IllnessIconProps {
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   color?: 'primary' | 'secondary' | 'danger' | 'success';
   'data-testid'?: string;
 }
