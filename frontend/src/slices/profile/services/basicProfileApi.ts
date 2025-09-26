@@ -4,6 +4,7 @@
  */
 import { BasicPatientInfo, BasicPatientUpdate } from '../types';
 import { apiClient } from '../../../shared/services/apiClient';
+import { splitPhoneInternational } from '../utils/phoneUtils';
 
 class BasicProfileAPIService {
   /**
@@ -16,7 +17,7 @@ class BasicProfileAPIService {
       const response = await apiClient.get<any>('/profile/basic');
       const data = response.data;
 
-      // Transform snake_case to camelCase
+      // Transform snake_case to camelCase - use database fields directly (optimal!)
       const basicInfo: BasicPatientInfo = {
         firstName: data.first_name,
         lastName: data.last_name,
@@ -25,6 +26,9 @@ class BasicProfileAPIService {
         phoneInternational: data.phone_international,
         birthDate: data.birth_date,
         originCountry: data.origin_country,
+        countryCode: data.country_code,
+        dialCode: data.dial_code,          // Use database field directly!
+        phoneNumber: data.phone_number,    // Use database field directly!
         email: data.email,
       };
 
@@ -47,7 +51,7 @@ class BasicProfileAPIService {
     try {
       console.log('📝 Updating basic patient info:', data);
 
-      // Transform camelCase to snake_case
+      // Transform camelCase to snake_case (include new database fields)
       const apiRequest = {
         first_name: data.firstName,
         last_name: data.lastName,
@@ -56,6 +60,9 @@ class BasicProfileAPIService {
         phone_international: data.phoneInternational,
         birth_date: data.birthDate,
         origin_country: data.originCountry,
+        country_code: data.countryCode,
+        dial_code: data.dialCode,       // Include new database field
+        phone_number: data.phoneNumber, // Include new database field
         email: data.email,
       };
 

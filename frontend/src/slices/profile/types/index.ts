@@ -13,7 +13,7 @@ export interface TabConfig {
   testId: string;
 }
 
-// Basic information interfaces (from signup)
+// Basic information interfaces (from signup) - Aligned with database schema
 export interface BasicPatientInfo {
   firstName: string;
   lastName: string;
@@ -22,6 +22,9 @@ export interface BasicPatientInfo {
   phoneInternational: string;
   birthDate: string;
   originCountry: string;
+  countryCode: string;
+  dialCode?: string;      // From database: dial_code field
+  phoneNumber?: string;   // From database: phone_number field
   email: string;
 }
 
@@ -34,6 +37,9 @@ export interface BasicPatientUpdate {
   phoneInternational?: string;
   birthDate?: string;
   originCountry?: string;
+  countryCode?: string;
+  dialCode?: string;      // From database: dial_code field
+  phoneNumber?: string;   // From database: phone_number field
   email?: string;
 }
 

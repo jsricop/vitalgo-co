@@ -15,6 +15,9 @@ class BasicPatientInfoDTO(BaseModel):
     phone_international: str = Field(..., min_length=10, max_length=20, description="Phone in international format")
     birth_date: date = Field(..., description="Birth date")
     origin_country: str = Field(..., min_length=2, max_length=2, description="Country of origin (ISO 3166-1 alpha-2)")
+    country_code: str = Field(..., min_length=2, max_length=2, description="Country code for phone number (ISO 3166-1 alpha-2)")
+    dial_code: Optional[str] = Field(None, max_length=5, description="Country dial code (+57, +1, etc.)")
+    phone_number: Optional[str] = Field(None, max_length=15, description="Local phone number only")
     email: EmailStr = Field(..., description="Email address")
 
     class Config:
@@ -31,6 +34,9 @@ class BasicPatientUpdateDTO(BaseModel):
     phone_international: Optional[str] = Field(None, min_length=10, max_length=20, description="Phone in international format")
     birth_date: Optional[date] = Field(None, description="Birth date")
     origin_country: Optional[str] = Field(None, min_length=2, max_length=2, description="Country of origin (ISO 3166-1 alpha-2)")
+    country_code: Optional[str] = Field(None, min_length=2, max_length=2, description="Country code for phone number (ISO 3166-1 alpha-2)")
+    dial_code: Optional[str] = Field(None, max_length=5, description="Country dial code (+57, +1, etc.)")
+    phone_number: Optional[str] = Field(None, max_length=15, description="Local phone number only")
     email: Optional[EmailStr] = Field(None, description="Email address")
 
     class Config:

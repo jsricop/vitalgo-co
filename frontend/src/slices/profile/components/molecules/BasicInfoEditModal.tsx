@@ -6,6 +6,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { BasicPatientInfo, BasicPatientUpdate } from '../../types';
+import { PhoneInputGroup } from './PhoneInputGroup';
+import { Country, getCountryByCode } from '../../../signup/data/countries';
+import { splitPhoneInternational, combinePhoneInternational } from '../../utils/phoneUtils';
 
 interface BasicInfoEditModalProps {
   isOpen: boolean;
@@ -28,9 +31,36 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Phone field states for separated input
+  const [phoneCountryCode, setPhoneCountryCode] = useState<string>('CO');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+
   // Initialize form data when modal opens
   useEffect(() => {
     if (isOpen && initialData) {
+      console.log('🔍 Modal initializing with data:', {
+        phoneInternational: initialData.phoneInternational,
+        countryCode: initialData.countryCode,
+        dialCode: initialData.dialCode,
+        phoneNumber: initialData.phoneNumber
+      });
+
+      // STRATEGY 1: Use database fields directly if available (PREFERRED)
+      let countryCode = initialData.countryCode;
+      let phoneNumber = initialData.phoneNumber;
+
+      // STRATEGY 2: Fallback to parsing only if database fields are missing
+      if (!phoneNumber && initialData.phoneInternational) {
+        console.log('⚠️ Database phone_number missing, parsing phone_international');
+        const phoneData = splitPhoneInternational(
+          initialData.phoneInternational,
+          initialData.countryCode,
+          true  // Trust the database country_code!
+        );
+        countryCode = phoneData.countryCode;
+        phoneNumber = phoneData.phoneNumber;
+      }
+
       setFormData({
         firstName: initialData.firstName,
         lastName: initialData.lastName,
@@ -40,7 +70,12 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
         birthDate: initialData.birthDate,
         email: initialData.email,
       });
+
+      setPhoneCountryCode(countryCode);
+      setPhoneNumber(phoneNumber || '');
       setErrors({});
+
+      console.log('✅ Modal initialized with:', { countryCode, phoneNumber });
     }
   }, [isOpen, initialData]);
 
@@ -69,6 +104,43 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
+  };
+
+  // Phone input handlers - now updates all phone fields consistently
+  const handleCountryChange = (country: Country) => {
+    setPhoneCountryCode(country.code);
+    // Update all phone-related fields for consistency
+    const newPhoneInternational = combinePhoneInternational(country.code, phoneNumber);
+    setFormData(prev => ({
+      ...prev,
+      phoneInternational: newPhoneInternational,
+      countryCode: country.code,
+      dialCode: country.dialCode,     // Update database field
+      phoneNumber: phoneNumber        // Keep current phone number
+    }));
+    // Clear phone errors
+    if (errors.phoneInternational) {
+      setErrors(prev => ({ ...prev, phoneInternational: '' }));
+    }
+    console.log('📞 Country changed:', { country: country.code, dialCode: country.dialCode });
+  };
+
+  const handlePhoneChange = (newPhoneNumber: string) => {
+    setPhoneNumber(newPhoneNumber);
+    // Update all phone-related fields for consistency
+    const newPhoneInternational = combinePhoneInternational(phoneCountryCode, newPhoneNumber);
+    const country = getCountryByCode(phoneCountryCode);
+    setFormData(prev => ({
+      ...prev,
+      phoneInternational: newPhoneInternational,
+      phoneNumber: newPhoneNumber,    // Update database field
+      dialCode: country?.dialCode     // Ensure dial code is consistent
+    }));
+    // Clear phone errors
+    if (errors.phoneInternational) {
+      setErrors(prev => ({ ...prev, phoneInternational: '' }));
+    }
+    console.log('📞 Phone changed:', { phoneNumber: newPhoneNumber, phoneInternational: newPhoneInternational });
   };
 
   const validateForm = (): boolean => {
@@ -321,28 +393,17 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
                 </div>
               </div>
 
-              {/* Contact Fields */}
+              {/* Contact Fields - Phone Input Group */}
               <div>
-                <label htmlFor="phoneInternational" className={labelClasses}>
-                  Teléfono <span className={requiredClasses}>*</span>
-                </label>
-                <input
-                  type="tel"
-                  id="phoneInternational"
-                  value={formData.phoneInternational || ''}
-                  onChange={(e) => handleInputChange('phoneInternational', e.target.value)}
-                  className={fieldClasses('phoneInternational')}
-                  placeholder="Ej: +57 300 123 4567"
+                <PhoneInputGroup
+                  countryCode={phoneCountryCode}
+                  phoneNumber={phoneNumber}
+                  onCountryChange={handleCountryChange}
+                  onPhoneChange={handlePhoneChange}
+                  error={errors.phoneInternational}
                   disabled={isFormLoading}
-                  data-testid={`${testId}-phone`}
-                  style={{ fontSize: '16px' }}
-                  autoComplete="tel"
+                  data-testid={`${testId}-phone-group`}
                 />
-                {errors.phoneInternational && (
-                  <p className={errorClasses} data-testid={`${testId}-phone-error`}>
-                    {errors.phoneInternational}
-                  </p>
-                )}
               </div>
 
               <div>
