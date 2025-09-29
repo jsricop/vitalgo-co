@@ -220,7 +220,7 @@ if [[ "$FORCE_MIGRATIONS" == false && "$ROLLBACK_MODE" == false ]]; then
     log "Auto-detecting deployment type..."
 
     # Check for pending migrations
-    cd "$SCRIPT_DIR/backend"
+    cd "$SCRIPT_DIR/../backend"
     if poetry run alembic check &>/dev/null; then
         DEPLOYMENT_MODE="standard"
         log "✅ No pending migrations detected - Standard deployment mode"
@@ -263,6 +263,9 @@ fi
 
 if [[ "$DEPLOYMENT_MODE" != "rollback" ]]; then
     step "🐳 Phase 3: Docker Build & Push"
+
+    # Return to project root for Docker builds
+    cd "$SCRIPT_DIR/.."
 
     # Build and push backend
     log "Building backend image..."
