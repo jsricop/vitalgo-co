@@ -136,12 +136,44 @@ interface BasicPatientUpdate {
   email?: string;
 }
 
+// Personal information interfaces (RF002 fields)
+interface PersonalPatientInfo {
+  biological_sex?: string | null;
+  gender?: string | null;
+  birth_country?: string | null;
+  birth_department?: string | null;
+  birth_city?: string | null;
+  residence_address?: string | null;
+  residence_department?: string | null;
+  residence_city?: string | null;
+}
+
+// Personal information update interface
+interface PersonalPatientUpdate {
+  biological_sex?: string;
+  gender?: string;
+  birth_country?: string;
+  birth_department?: string;
+  birth_city?: string;
+  residence_address?: string;
+  residence_department?: string;
+  residence_city?: string;
+}
+
 // Hook result interfaces
 interface UseBasicPatientInfoResult {
   basicInfo: BasicPatientInfo | null;
   loading: boolean;
   error: string | null;
   updateBasicInfo: (data: BasicPatientUpdate) => Promise<{ success: boolean; message: string }>;
+  refetch: () => Promise<void>;
+}
+
+interface UsePersonalPatientInfoResult {
+  personalInfo: PersonalPatientInfo | null;
+  loading: boolean;
+  error: string | null;
+  updatePersonalInfo: (data: PersonalPatientUpdate) => Promise<{ success: boolean; message: string }>;
   refetch: () => Promise<void>;
 }
 
