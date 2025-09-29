@@ -5,7 +5,7 @@ import React from 'react';
 import { TextInput } from '../atoms/TextInput';
 import { DocumentTypeSelect } from '../atoms/DocumentTypeSelect';
 import { DateInput } from '../atoms/DateInput';
-import { PhoneInputGroup } from './PhoneInputGroup';
+import { PhoneInputGroup } from '../../../../shared/components/molecules/PhoneInputGroup';
 import { CountrySelect } from '../atoms/CountrySelect';
 import { DocumentType, FieldValidationState } from '../../types';
 import { Country } from '../../data/countries';

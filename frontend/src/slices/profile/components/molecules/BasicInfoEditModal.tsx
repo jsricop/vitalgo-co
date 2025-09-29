@@ -6,7 +6,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { BasicPatientInfo, BasicPatientUpdate } from '../../types';
-import { PhoneInputGroup } from './PhoneInputGroup';
+import { PhoneInputGroup } from '../../../../shared/components/molecules/PhoneInputGroup';
 import { Country, getCountryByCode } from '../../../signup/data/countries';
 import { splitPhoneInternational, combinePhoneInternational } from '../../utils/phoneUtils';
 

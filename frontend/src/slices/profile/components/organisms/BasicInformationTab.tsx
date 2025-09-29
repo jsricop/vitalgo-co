@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import { TabContentProps } from '../../types';
 import { useBasicPatientInfo } from '../../hooks/useBasicPatientInfo';
 import { BasicInfoEditModal } from '../molecules/BasicInfoEditModal';
+import { getCountryByCode } from '../../../signup/data/countries';
 
 export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) {
   const { basicInfo, loading, error, updateBasicInfo, refetch } = useBasicPatientInfo();
@@ -266,7 +267,20 @@ export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) 
               <div className="space-y-2">
                 <div>
                   <span className="text-xs text-vitalgo-dark-lighter block">Teléfono</span>
-                  <span className="text-sm font-medium text-vitalgo-dark">{basicInfo.phoneInternational}</span>
+                  <div className="flex items-center space-x-2 mt-1">
+                    {basicInfo.countryCode && (
+                      <span
+                        className="text-lg flex-shrink-0"
+                        role="img"
+                        aria-label={`Bandera de ${getCountryByCode(basicInfo.countryCode)?.name || 'país'}`}
+                      >
+                        {getCountryByCode(basicInfo.countryCode)?.flag || '🏳️'}
+                      </span>
+                    )}
+                    <span className="text-sm font-medium text-vitalgo-dark font-mono">
+                      {basicInfo.phoneInternational}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

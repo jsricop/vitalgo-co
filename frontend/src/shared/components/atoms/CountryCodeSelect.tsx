@@ -2,9 +2,10 @@
 /**
  * Country Code Select with flag emojis
  * Dropdown component for selecting country with visual flag display
+ * Shared component for use across multiple slices
  */
 import React, { useState, useRef, useEffect } from 'react';
-import { countries, Country, searchCountries, getDefaultCountry } from '../../data/countries';
+import { countries, Country, searchCountries, getDefaultCountry } from '../../../slices/signup/data/countries';
 
 interface CountryCodeSelectProps {
   id: string;

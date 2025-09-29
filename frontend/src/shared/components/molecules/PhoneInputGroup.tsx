@@ -2,12 +2,13 @@
 /**
  * Phone Input Group - Molecule component
  * Combines CountryCodeSelect and PhoneNumberInput for complete phone entry
+ * Shared component for use across multiple slices
  */
 import React from 'react';
 import { CountryCodeSelect } from '../atoms/CountryCodeSelect';
 import { PhoneNumberInput } from '../atoms/PhoneNumberInput';
-import { Country, getCountryByCode } from '../../data/countries';
-import { FieldValidationState } from '../../types';
+import { Country, getCountryByCode } from '../../../slices/signup/data/countries';
+import { FieldValidationState } from '../../../slices/signup/types';
 
 interface PhoneInputGroupProps {
   countryCode: string;
@@ -78,22 +79,36 @@ export const PhoneInputGroup: React.FC<PhoneInputGroupProps> = ({
       {/* Combined phone display preview */}
       {phoneNumber && (
         <div className="mt-3 p-3 bg-gray-50 rounded-lg" data-testid="phone-preview">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3">
             <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
               Número completo:
             </span>
-            <span className="font-mono text-sm text-gray-900">
+            <div className="flex items-center space-x-2">
+              {/* Country flag */}
               {countryCode && (
-                <span className="text-blue-600">
-                  {getCountryByCode(countryCode)?.dialCode || ''}
+                <span
+                  className="text-lg flex-shrink-0"
+                  role="img"
+                  aria-label={`Bandera de ${getCountryByCode(countryCode)?.name || 'país'}`}
+                >
+                  {getCountryByCode(countryCode)?.flag || '🏳️'}
                 </span>
               )}
-              {phoneNumber && (
-                <span className="ml-1">
-                  {phoneNumber.replace(/\D/g, '')}
-                </span>
-              )}
-            </span>
+
+              {/* Dial code and phone number */}
+              <span className="font-mono text-sm text-gray-900 flex items-center">
+                {countryCode && (
+                  <span className="text-blue-600 font-medium">
+                    {getCountryByCode(countryCode)?.dialCode || ''}
+                  </span>
+                )}
+                {phoneNumber && (
+                  <span className="ml-1">
+                    {phoneNumber.replace(/\D/g, '')}
+                  </span>
+                )}
+              </span>
+            </div>
           </div>
         </div>
       )}

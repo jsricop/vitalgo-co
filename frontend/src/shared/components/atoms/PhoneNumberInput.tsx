@@ -2,10 +2,11 @@
 /**
  * Phone Number Input with automatic formatting based on country
  * Formats phone numbers according to country-specific patterns
+ * Shared component for use across multiple slices
  */
 import React from 'react';
-import { getCountryByCode } from '../../data/countries';
-import { FieldValidationState } from '../../types';
+import { getCountryByCode } from '../../../slices/signup/data/countries';
+import { FieldValidationState } from '../../../slices/signup/types';
 
 interface PhoneNumberInputProps {
   id: string;
