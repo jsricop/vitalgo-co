@@ -25,6 +25,7 @@ export const COUNTRIES = [
 ];
 
 export const COLOMBIA_DEPARTMENTS = [
+  { value: 'Bogotá D.C.', label: 'Bogotá D.C.' },
   { value: 'Amazonas', label: 'Amazonas' },
   { value: 'Antioquia', label: 'Antioquia' },
   { value: 'Arauca', label: 'Arauca' },
@@ -56,8 +57,7 @@ export const COLOMBIA_DEPARTMENTS = [
   { value: 'Tolima', label: 'Tolima' },
   { value: 'Valle del Cauca', label: 'Valle del Cauca' },
   { value: 'Vaupés', label: 'Vaupés' },
-  { value: 'Vichada', label: 'Vichada' },
-  { value: 'Bogotá D.C.', label: 'Bogotá D.C.' }
+  { value: 'Vichada', label: 'Vichada' }
 ];
 
 // Major cities for each department - simplified for main cities

@@ -3,8 +3,11 @@
  * Handles biological sex, gender, and birth location information
  */
 import { SelectField } from '../atoms/SelectField';
+import { RadioButtonField } from '../atoms/RadioButtonField';
+import { SearchableSelect } from '../atoms/SearchableSelect';
 import { BIOLOGICAL_SEX_OPTIONS, GENDER_OPTIONS } from '../../../../shared/data/demographics';
-import { COUNTRIES, COLOMBIA_DEPARTMENTS, getCitiesForDepartment } from '../../../../shared/data/locations';
+import { COLOMBIA_DEPARTMENTS, getCitiesForDepartment } from '../../../../shared/data/locations';
+import { birthplaceCountries } from '../../data/countries';
 import { PersonalInfoFormData } from '../../types/personalInfo';
 
 interface DemographicInfoSectionProps {
@@ -21,9 +24,21 @@ export function DemographicInfoSection({
   const handleCountryChange = (country: string) => {
     onChange('birth_country', country);
     // Reset department and city when country changes
-    if (country !== 'Colombia') {
+    if (country !== 'CO') {
       onChange('birth_department', '');
       onChange('birth_city', '');
+    }
+    // Reset other field when not OTHER
+    if (country !== 'OTHER') {
+      onChange('birth_country_other', '');
+    }
+  };
+
+  const handleGenderChange = (gender: string) => {
+    onChange('gender', gender);
+    // Reset other field when not OTRO
+    if (gender !== 'OTRO') {
+      onChange('gender_other', '');
     }
   };
 
@@ -33,49 +48,59 @@ export function DemographicInfoSection({
     onChange('birth_city', '');
   };
 
-  const showColombianFields = data.birth_country === 'Colombia';
+  const showColombianFields = data.birth_country === 'CO';
   const departmentCities = data.birth_department
     ? getCitiesForDepartment(data.birth_department)
     : [];
 
   return (
     <div className="space-y-6">
-      <div className="bg-gray-50 px-4 py-3 rounded-lg">
+      <div className="bg-white px-4 py-3 rounded-lg border border-gray-200">
         <h4 className="text-sm font-medium text-gray-900 mb-3">
           Información Demográfica
         </h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <SelectField
+        <div className="space-y-4">
+          <RadioButtonField
             label="Sexo Biológico"
+            name="biological_sex"
             value={data.biological_sex || ''}
             onChange={(value) => onChange('biological_sex', value)}
             options={BIOLOGICAL_SEX_OPTIONS}
             required
             error={errors.biological_sex}
+            layout="columns"
           />
-          <SelectField
+          <RadioButtonField
             label="Género"
+            name="gender"
             value={data.gender || ''}
-            onChange={(value) => onChange('gender', value)}
+            onChange={handleGenderChange}
             options={GENDER_OPTIONS}
             required
             error={errors.gender}
+            otherOption={true}
+            otherValue={data.gender_other || ''}
+            onOtherChange={(value) => onChange('gender_other', value)}
+            layout="columns"
           />
         </div>
       </div>
 
-      <div className="bg-gray-50 px-4 py-3 rounded-lg">
+      <div className="bg-white px-4 py-3 rounded-lg border border-gray-200">
         <h4 className="text-sm font-medium text-gray-900 mb-3">
           Lugar de Nacimiento
         </h4>
         <div className="space-y-4">
-          <SelectField
+          <SearchableSelect
             label="País de Nacimiento"
             value={data.birth_country || ''}
             onChange={handleCountryChange}
-            options={COUNTRIES}
+            options={birthplaceCountries}
             required
             error={errors.birth_country}
+            hasOtherOption={true}
+            otherValue={data.birth_country_other || ''}
+            onOtherChange={(value) => onChange('birth_country_other', value)}
           />
 
           {showColombianFields && (

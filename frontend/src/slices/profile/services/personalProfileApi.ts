@@ -16,16 +16,32 @@ class PersonalProfileAPIService {
       const response = await apiClient.get<any>('/profile/extended');
       const data = response.data;
 
-      // Transform snake_case to camelCase - extract personal info fields
+      // Transform snake_case to camelCase - extract personal info fields including medical data
       const personalInfo: PersonalPatientInfo = {
         biological_sex: data.biological_sex,
         gender: data.gender,
+        gender_other: data.gender_other,
         birth_country: data.birth_country,
+        birth_country_other: data.birth_country_other,
         birth_department: data.birth_department,
         birth_city: data.birth_city,
         residence_address: data.residence_address,
+        residence_country: data.residence_country,
+        residence_country_other: data.residence_country_other,
         residence_department: data.residence_department,
         residence_city: data.residence_city,
+        // Medical information fields
+        eps: data.eps,
+        eps_other: data.eps_other,
+        occupation: data.occupation,
+        additional_insurance: data.additional_insurance,
+        complementary_plan: data.complementary_plan,
+        complementary_plan_other: data.complementary_plan_other,
+        blood_type: data.blood_type,
+        emergency_contact_name: data.emergency_contact_name,
+        emergency_contact_relationship: data.emergency_contact_relationship,
+        emergency_contact_phone: data.emergency_contact_phone,
+        emergency_contact_phone_alt: data.emergency_contact_phone_alt,
       };
 
       console.log('✅ Personal patient info loaded successfully:', personalInfo);
@@ -47,22 +63,38 @@ class PersonalProfileAPIService {
     try {
       console.log('📝 Updating personal patient info:', data);
 
-      // Data is already in snake_case format from our types
+      // Data is already in snake_case format from our types - include medical fields
       const apiRequest = {
         biological_sex: data.biological_sex,
         gender: data.gender,
+        gender_other: data.gender_other,
         birth_country: data.birth_country,
+        birth_country_other: data.birth_country_other,
         birth_department: data.birth_department,
         birth_city: data.birth_city,
         residence_address: data.residence_address,
+        residence_country: data.residence_country,
+        residence_country_other: data.residence_country_other,
         residence_department: data.residence_department,
         residence_city: data.residence_city,
+        // Medical information fields
+        eps: data.eps,
+        eps_other: data.eps_other,
+        occupation: data.occupation,
+        additional_insurance: data.additional_insurance,
+        complementary_plan: data.complementary_plan,
+        complementary_plan_other: data.complementary_plan_other,
+        blood_type: data.blood_type,
+        emergency_contact_name: data.emergency_contact_name,
+        emergency_contact_relationship: data.emergency_contact_relationship,
+        emergency_contact_phone: data.emergency_contact_phone,
+        emergency_contact_phone_alt: data.emergency_contact_phone_alt,
       };
 
       const response = await apiClient.put<{ success: boolean; message: string }>('/profile/complete', apiRequest);
 
       console.log('✅ Personal patient info updated successfully');
-      return { success: true, message: 'Información personal actualizada exitosamente' };
+      return { success: true, message: 'Información actualizada exitosamente' };
     } catch (error) {
       console.error('❌ Error updating personal patient info:', error);
       // Re-throw as standard Error for consistent error handling

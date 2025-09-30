@@ -56,6 +56,19 @@ class Patient(Base):
     residence_department = Column(String(100), nullable=True)
     residence_city = Column(String(100), nullable=True)
 
+    # RF002 Medical Information Fields - added for medical information tab
+    eps = Column(String(100), nullable=True)
+    eps_other = Column(String(100), nullable=True)
+    occupation = Column(String(200), nullable=True)
+    additional_insurance = Column(String(200), nullable=True)
+    complementary_plan = Column(String(100), nullable=True)
+    complementary_plan_other = Column(String(100), nullable=True)
+    blood_type = Column(String(10), nullable=True)
+    emergency_contact_name = Column(String(200), nullable=True)
+    emergency_contact_relationship = Column(String(50), nullable=True)
+    emergency_contact_phone = Column(String(20), nullable=True)
+    emergency_contact_phone_alt = Column(String(20), nullable=True)
+
     # Relationships
     user = relationship("User", backref="patient")
     document_type = relationship("DocumentType", backref="patients")

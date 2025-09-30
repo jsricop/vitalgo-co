@@ -140,24 +140,72 @@ interface BasicPatientUpdate {
 interface PersonalPatientInfo {
   biological_sex?: string | null;
   gender?: string | null;
+  gender_other?: string | null;
   birth_country?: string | null;
+  birth_country_other?: string | null;
   birth_department?: string | null;
   birth_city?: string | null;
   residence_address?: string | null;
+  residence_country?: string | null;
+  residence_country_other?: string | null;
   residence_department?: string | null;
   residence_city?: string | null;
+  eps?: string | null;
+  eps_other?: string | null;
+  occupation?: string | null;
+  additional_insurance?: string | null;
+  complementary_plan?: string | null;
+  complementary_plan_other?: string | null;
+  blood_type?: string | null;
+  emergency_contact_name?: string | null;
+  emergency_contact_relationship?: string | null;
+  emergency_contact_phone?: string | null;
+  emergency_contact_phone_alt?: string | null;
+  // Reproductive health fields (TODO: Future implementation)
+  is_pregnant?: boolean | null;
+  pregnancy_weeks?: number | null;
+  last_menstruation_date?: string | null;
+  pregnancies_count?: number | null;
+  births_count?: number | null;
+  cesareans_count?: number | null;
+  abortions_count?: number | null;
+  contraceptive_method?: string | null;
 }
 
 // Personal information update interface
 interface PersonalPatientUpdate {
   biological_sex?: string;
   gender?: string;
+  gender_other?: string;
   birth_country?: string;
+  birth_country_other?: string;
   birth_department?: string;
   birth_city?: string;
   residence_address?: string;
+  residence_country?: string;
+  residence_country_other?: string;
   residence_department?: string;
   residence_city?: string;
+  eps?: string;
+  eps_other?: string;
+  occupation?: string;
+  additional_insurance?: string;
+  complementary_plan?: string;
+  complementary_plan_other?: string;
+  blood_type?: string;
+  emergency_contact_name?: string;
+  emergency_contact_relationship?: string;
+  emergency_contact_phone?: string;
+  emergency_contact_phone_alt?: string;
+  // Reproductive health fields (TODO: Future implementation)
+  is_pregnant?: boolean;
+  pregnancy_weeks?: number;
+  last_menstruation_date?: string;
+  pregnancies_count?: number;
+  births_count?: number;
+  cesareans_count?: number;
+  abortions_count?: number;
+  contraceptive_method?: string;
 }
 
 // Hook result interfaces

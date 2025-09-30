@@ -43,11 +43,9 @@ Login Exitoso → Verificar Completitud del Perfil → Mostrar Wizard si Incompl
 - ✅ Departamento de residencia
 - ✅ Ciudad de residencia
 
-#### Seguridad Social:
+#### Información Médica Básica:
 - ✅ EPS
 - ✅ Ocupación
-
-#### Información Médica Básica:
 - ✅ Tipo de sangre
 - ✅ Nombre contacto de emergencia
 - ✅ Parentesco contacto emergencia
@@ -101,7 +99,8 @@ Login Exitoso → Verificar Completitud del Perfil → Mostrar Wizard si Incompl
 | **Departamento** | Select | 32 departamentos colombianos | ✅ |
 | **Ciudad** | HybridInput | Lista ciudades + input libre | ✅ |
 
-### 6.2 Paso 2: Seguridad Social y Ocupación ⭐ **OBLIGATORIO**
+### INFORMACIÓN MÉDICA
+### Seguridad Social y Ocupación
 
 | Campo | Tipo | Validación | Obligatorio |
 |-------|------|------------|-------------|
@@ -114,19 +113,18 @@ Login Exitoso → Verificar Completitud del Perfil → Mostrar Wizard si Incompl
 
 **Lista EPS:** Sura, Sanitas, Compensar, Famisanar, Nueva EPS, Salud Total, Coomeva, Cafesalud, Medimás, Coosalud, Otra
 
-### 6.3 Paso 3: Información Médica Básica ⭐ **OBLIGATORIO**
-
-#### 6.3.1 Información Médica
+#### Información Médica
 | Campo | Tipo | Validación | Obligatorio |
 |-------|------|------------|-------------|
 | **Tipo de Sangre** | Radio | O+, O-, A+, A-, B+, B-, AB+, AB- | ✅ |
 
-#### 6.3.2 Contacto de Emergencia
+#### Contacto de Emergencia
 | Campo | Tipo | Validación | Obligatorio |
 |-------|------|------------|-------------|
 | **Nombre Completo** | Text | Mínimo 5 caracteres | ✅ |
 | **Parentesco** | Select | Lista predefinida | ✅ |
-| **Teléfono Principal** | Phone | Formato +57 XXX XXX XXXX | ✅ |
+| **Parentesco Otro** | Text | Solo si selecciona "Otro" | ❌ |
+| **Teléfono Principal** | Phone | Formato Flag + indicativo + number (same a /signup format) | ✅ |
 | **Teléfono Alternativo** | Phone | Formato internacional | ❌ |
 
 **Opciones Parentesco:** Madre, Padre, Hermano/a, Esposo/a, Hijo/a, Primo/a, Tío/a, Abuelo/a, Amigo/a, Otro
@@ -186,8 +184,8 @@ Login Exitoso → Verificar Completitud del Perfil → Mostrar Wizard si Incompl
 
 | Campo | Tipo | Validación | Obligatorio |
 |-------|------|------------|-------------|
-| **¿Está embarazada?** | Radio | Sí, No | ✅ (solo mujeres) |
-| **Semanas embarazo** | Number | 1-42 semanas | ❌ (solo si embarazada) |
+| **¿Está embarazada?** | Radio | Sí, No | ❌ (solo mujeres) |
+| **Semanas embarazo** | Number | 1-42 semanas |  (solo si embarazada) |
 | **Fecha última menstruación** | Date | No futura | ❌ |
 | **Número embarazos** | Number | 0 o mayor | ❌ |
 | **Número partos** | Number | 0 o mayor | ❌ |

@@ -11,7 +11,6 @@ import { PersonalInfoEditModal } from '../molecules/PersonalInfoEditModal';
 import {
   formatDemographicData,
   formatResidenceData,
-  getPersonalInfoCompleteness,
   isPersonalInfoComplete,
   getMissingPersonalInfoFields
 } from '../../utils/personalInfoUtils';
@@ -119,7 +118,6 @@ export function PersonalInformationTab({ 'data-testid': testId }: TabContentProp
 
   const demographicData = formatDemographicData(personalInfo);
   const residenceData = formatResidenceData(personalInfo);
-  const completeness = getPersonalInfoCompleteness(personalInfo);
   const isComplete = isPersonalInfoComplete(personalInfo);
   const missingFields = getMissingPersonalInfoFields(personalInfo);
 
@@ -150,29 +148,6 @@ export function PersonalInformationTab({ 'data-testid': testId }: TabContentProp
 
         {/* Personal Information Cards */}
         <div className="bg-gradient-to-br from-vitalgo-green/5 to-blue-50 rounded-xl border border-vitalgo-green/10 p-6 shadow-sm">
-          {/* Completion Status */}
-          <div className="flex items-center justify-between mb-6 p-4 bg-white rounded-lg border border-gray-100">
-            <div className="flex items-center">
-              <div className={`w-3 h-3 rounded-full mr-3 ${isComplete ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-              <div>
-                <p className="text-sm font-medium text-vitalgo-dark">
-                  Información Personal {isComplete ? 'Completa' : 'Incompleta'}
-                </p>
-                <p className="text-xs text-vitalgo-dark-lighter">
-                  {completeness}% completado
-                </p>
-              </div>
-            </div>
-            <div className="text-right">
-              <div className={`w-16 h-2 rounded-full bg-gray-200`}>
-                <div
-                  className={`h-2 rounded-full transition-all duration-300 ${isComplete ? 'bg-green-500' : 'bg-yellow-500'}`}
-                  style={{ width: `${completeness}%` }}
-                ></div>
-              </div>
-            </div>
-          </div>
-
           {/* Information Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             {/* Demographic Information Card */}

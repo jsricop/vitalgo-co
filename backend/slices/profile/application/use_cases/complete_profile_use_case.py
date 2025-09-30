@@ -100,18 +100,18 @@ class CompleteProfileUseCase:
             residence_department=patient.residence_department,
             residence_city=patient.residence_city,
 
-            # Fields not yet in Patient model - returning None for now
-            eps=None,            # TODO: Add to Patient model
-            eps_other=None,      # TODO: Add to Patient model
-            occupation=None,     # TODO: Add to Patient model
-            additional_insurance=None, # TODO: Add to Patient model
-            complementary_plan=None,   # TODO: Add to Patient model
-            complementary_plan_other=None, # TODO: Add to Patient model
-            blood_type=None,     # TODO: Add to Patient model
-            emergency_contact_name=None, # TODO: Add to Patient model
-            emergency_contact_relationship=None, # TODO: Add to Patient model
-            emergency_contact_phone=None, # TODO: Add to Patient model
-            emergency_contact_phone_alt=None, # TODO: Add to Patient model
+            # Medical information fields - now reading from database
+            eps=patient.eps,
+            eps_other=patient.eps_other,
+            occupation=patient.occupation,
+            additional_insurance=patient.additional_insurance,
+            complementary_plan=patient.complementary_plan,
+            complementary_plan_other=patient.complementary_plan_other,
+            blood_type=patient.blood_type,
+            emergency_contact_name=patient.emergency_contact_name,
+            emergency_contact_relationship=patient.emergency_contact_relationship,
+            emergency_contact_phone=patient.emergency_contact_phone,
+            emergency_contact_phone_alt=patient.emergency_contact_phone_alt,
         )
 
     def update_extended_profile(self, user_id: str, profile_data: PatientProfileUpdateDTO) -> Dict[str, Any]:
@@ -160,11 +160,29 @@ class CompleteProfileUseCase:
             if profile_data.residence_city is not None:
                 patient.residence_city = profile_data.residence_city
 
-            # TODO: Extended fields not yet in Patient model:
-            # - eps, eps_other, occupation
-            # - additional_insurance, complementary_plan, complementary_plan_other
-            # - blood_type, emergency contact fields
-            # These will be added when Patient model is extended with additional RF002 fields
+            # Update medical information fields
+            if profile_data.eps is not None:
+                patient.eps = profile_data.eps
+            if profile_data.eps_other is not None:
+                patient.eps_other = profile_data.eps_other
+            if profile_data.occupation is not None:
+                patient.occupation = profile_data.occupation
+            if profile_data.additional_insurance is not None:
+                patient.additional_insurance = profile_data.additional_insurance
+            if profile_data.complementary_plan is not None:
+                patient.complementary_plan = profile_data.complementary_plan
+            if profile_data.complementary_plan_other is not None:
+                patient.complementary_plan_other = profile_data.complementary_plan_other
+            if profile_data.blood_type is not None:
+                patient.blood_type = profile_data.blood_type
+            if profile_data.emergency_contact_name is not None:
+                patient.emergency_contact_name = profile_data.emergency_contact_name
+            if profile_data.emergency_contact_relationship is not None:
+                patient.emergency_contact_relationship = profile_data.emergency_contact_relationship
+            if profile_data.emergency_contact_phone is not None:
+                patient.emergency_contact_phone = profile_data.emergency_contact_phone
+            if profile_data.emergency_contact_phone_alt is not None:
+                patient.emergency_contact_phone_alt = profile_data.emergency_contact_phone_alt
 
             self.db.commit()
 

@@ -303,17 +303,38 @@ All VitalGo API endpoints return consistent, standardized error responses for im
 **Out:** `ExtendedPatientProfileDTO`
 **Status:** 200 success, 401 unauthorized
 
+**🚧 Current Implementation Status:**
+- ✅ **Implemented**: Demographic fields (biological_sex, gender, birth location, residence location)
+- ✅ **Implemented**: Medical fields (eps, occupation, blood_type, emergency_contact_*)
+- ✅ **Implemented**: Extended insurance fields (additional_insurance, complementary_plan)
+- **Note**: All RF002 fields are now implemented and functional
+
 **ExtendedPatientProfileDTO Personal Information Fields:**
 ```json
 {
   "biological_sex": "string|null",
   "gender": "string|null",
+  "gender_other": "string|null",
   "birth_country": "string|null",
+  "birth_country_other": "string|null",
   "birth_department": "string|null",
   "birth_city": "string|null",
   "residence_address": "string|null",
+  "residence_country": "string|null",
+  "residence_country_other": "string|null",
   "residence_department": "string|null",
-  "residence_city": "string|null"
+  "residence_city": "string|null",
+  "eps": "string|null",
+  "eps_other": "string|null",
+  "occupation": "string|null",
+  "additional_insurance": "string|null",
+  "complementary_plan": "string|null",
+  "complementary_plan_other": "string|null",
+  "blood_type": "string|null",
+  "emergency_contact_name": "string|null",
+  "emergency_contact_relationship": "string|null",
+  "emergency_contact_phone": "string|null",
+  "emergency_contact_phone_alt": "string|null"
 }
 ```
 
@@ -323,17 +344,38 @@ All VitalGo API endpoints return consistent, standardized error responses for im
 **Out:** `{success: boolean, message: string, profile_completeness: number}`
 **Status:** 200 updated, 400 validation error, 401 unauthorized
 
+**🚧 Current Implementation Status:**
+- ✅ **Implemented**: Demographic fields (biological_sex, gender, birth location, residence location)
+- ✅ **Implemented**: Medical fields (eps, occupation, blood_type, emergency_contact_*)
+- ✅ **Implemented**: Extended insurance fields (additional_insurance, complementary_plan)
+- **Note**: All RF002 fields are now implemented and functional
+
 **CompleteProfileRequestDTO Personal Information Fields:**
 ```json
 {
   "biological_sex": "string",
   "gender": "string",
+  "gender_other": "string",
   "birth_country": "string",
+  "birth_country_other": "string",
   "birth_department": "string",
   "birth_city": "string",
   "residence_address": "string",
+  "residence_country": "string",
+  "residence_country_other": "string",
   "residence_department": "string",
-  "residence_city": "string"
+  "residence_city": "string",
+  "eps": "string",
+  "eps_other": "string",
+  "occupation": "string",
+  "additional_insurance": "string",
+  "complementary_plan": "string",
+  "complementary_plan_other": "string",
+  "blood_type": "string",
+  "emergency_contact_name": "string",
+  "emergency_contact_relationship": "string",
+  "emergency_contact_phone": "string",
+  "emergency_contact_phone_alt": "string"
 }
 ```
 

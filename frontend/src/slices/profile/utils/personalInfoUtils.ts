@@ -83,9 +83,41 @@ export const formatBirthLocation = (info: PersonalPatientInfo): string => {
  * Format residence location
  */
 export const formatResidenceLocation = (info: PersonalPatientInfo): string => {
-  if (!info.residence_department || !info.residence_city) return 'No especificado';
+  // If residence country is not specified, return "No especificado"
+  if (!info.residence_country) return 'No especificado';
 
-  return `${info.residence_department}, ${info.residence_city}`;
+  // For Colombia, show department and city if available
+  if (info.residence_country === 'CO' || info.residence_country === 'Colombia') {
+    if (info.residence_department && info.residence_city) {
+      return `${formatCountryWithFlag('Colombia')} - ${info.residence_department}, ${info.residence_city}`;
+    }
+    // If Colombian residence but missing department/city, show just Colombia
+    return formatCountryWithFlag('Colombia');
+  }
+
+  // For other countries, map country code to name and show with flag
+  const countryMap: Record<string, string> = {
+    'AR': 'Argentina',
+    'MX': 'México',
+    'US': 'Estados Unidos',
+    'BR': 'Brasil',
+    'CL': 'Chile',
+    'PE': 'Perú',
+    'EC': 'Ecuador',
+    'VE': 'Venezuela',
+    'UY': 'Uruguay',
+    'PY': 'Paraguay',
+    'BO': 'Bolivia',
+    'CA': 'Canadá',
+    'ES': 'España',
+    'FR': 'Francia',
+    'IT': 'Italia',
+    'DE': 'Alemania',
+    'GB': 'Reino Unido'
+  };
+
+  const countryName = countryMap[info.residence_country] || info.residence_country;
+  return formatCountryWithFlag(countryName);
 };
 
 /**
@@ -110,15 +142,18 @@ export const getPersonalInfoCompleteness = (info: PersonalPatientInfo): number =
     'biological_sex',
     'gender',
     'birth_country',
-    'residence_address',
-    'residence_department',
-    'residence_city'
+    'residence_address'
   ];
 
   // Add birth department and city as required if birth country is Colombia
   const fieldsToCheck = [...requiredFields];
   if (info.birth_country === 'Colombia') {
     fieldsToCheck.push('birth_department', 'birth_city');
+  }
+
+  // Add residence department and city as required only if residence country is Colombia
+  if (info.residence_country === 'CO' || info.residence_country === 'Colombia') {
+    fieldsToCheck.push('residence_department', 'residence_city');
   }
 
   const completedFields = fieldsToCheck.filter(field => {
@@ -146,13 +181,17 @@ export const getMissingPersonalInfoFields = (info: PersonalPatientInfo): string[
   if (!info.gender) missing.push('Género');
   if (!info.birth_country) missing.push('País de nacimiento');
   if (!info.residence_address) missing.push('Dirección de residencia');
-  if (!info.residence_department) missing.push('Departamento de residencia');
-  if (!info.residence_city) missing.push('Ciudad de residencia');
 
   // Add birth location fields if Colombia is selected
   if (info.birth_country === 'Colombia') {
     if (!info.birth_department) missing.push('Departamento de nacimiento');
     if (!info.birth_city) missing.push('Ciudad de nacimiento');
+  }
+
+  // Add residence location fields only if Colombia is selected
+  if (info.residence_country === 'CO' || info.residence_country === 'Colombia') {
+    if (!info.residence_department) missing.push('Departamento de residencia');
+    if (!info.residence_city) missing.push('Ciudad de residencia');
   }
 
   return missing;

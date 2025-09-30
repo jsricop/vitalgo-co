@@ -5,23 +5,57 @@
 export interface PersonalPatientInfo {
   biological_sex?: string;
   gender?: string;
+  gender_other?: string;  // For when gender is "OTRO"
   birth_country?: string;
+  birth_country_other?: string;  // For when birth_country is "OTHER"
   birth_department?: string;
   birth_city?: string;
   residence_address?: string;
+  residence_country?: string;
+  residence_country_other?: string;  // For when residence_country is "OTHER"
   residence_department?: string;
   residence_city?: string;
+
+  // Medical Information Fields (RF002)
+  eps?: string;
+  eps_other?: string;
+  occupation?: string;
+  additional_insurance?: string;
+  complementary_plan?: string;
+  complementary_plan_other?: string;
+  blood_type?: string;
+  emergency_contact_name?: string;
+  emergency_contact_relationship?: string;
+  emergency_contact_phone?: string;
+  emergency_contact_phone_alt?: string;
 }
 
 export interface PersonalPatientUpdate {
   biological_sex?: string;
   gender?: string;
+  gender_other?: string;  // For when gender is "OTRO"
   birth_country?: string;
+  birth_country_other?: string;  // For when birth_country is "OTHER"
   birth_department?: string;
   birth_city?: string;
   residence_address?: string;
+  residence_country?: string;
+  residence_country_other?: string;  // For when residence_country is "OTHER"
   residence_department?: string;
   residence_city?: string;
+
+  // Medical Information Fields (RF002)
+  eps?: string;
+  eps_other?: string;
+  occupation?: string;
+  additional_insurance?: string;
+  complementary_plan?: string;
+  complementary_plan_other?: string;
+  blood_type?: string;
+  emergency_contact_name?: string;
+  emergency_contact_relationship?: string;
+  emergency_contact_phone?: string;
+  emergency_contact_phone_alt?: string;
 }
 
 export interface UsePersonalPatientInfoResult {
@@ -31,6 +65,9 @@ export interface UsePersonalPatientInfoResult {
   updatePersonalInfo: (data: PersonalPatientUpdate) => Promise<{ success: boolean; message: string }>;
   refetch: () => Promise<void>;
 }
+
+// Alias for form data (same as PersonalPatientUpdate)
+export type PersonalInfoFormData = PersonalPatientUpdate;
 
 export interface SelectFieldProps {
   label: string;

@@ -38,10 +38,14 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
       setFormData({
         biological_sex: initialData.biological_sex || '',
         gender: initialData.gender || '',
+        gender_other: initialData.gender_other || '',
         birth_country: initialData.birth_country || '',
+        birth_country_other: initialData.birth_country_other || '',
         birth_department: initialData.birth_department || '',
         birth_city: initialData.birth_city || '',
         residence_address: initialData.residence_address || '',
+        residence_country: initialData.residence_country || '',
+        residence_country_other: initialData.residence_country_other || '',
         residence_department: initialData.residence_department || '',
         residence_city: initialData.residence_city || ''
       });
@@ -90,12 +94,22 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
       newErrors.gender = 'El género es obligatorio';
     }
 
+    // Validate "otro" gender field if selected
+    if (formData.gender === 'OTRO' && !formData.gender_other?.trim()) {
+      newErrors.gender_other = 'Especifica tu género';
+    }
+
     if (!formData.birth_country?.trim()) {
       newErrors.birth_country = 'El país de nacimiento es obligatorio';
     }
 
+    // Validate "otro" birth country field if selected
+    if (formData.birth_country === 'OTHER' && !formData.birth_country_other?.trim()) {
+      newErrors.birth_country_other = 'Especifica tu país de nacimiento';
+    }
+
     // Colombian birth location validation
-    if (formData.birth_country === 'Colombia') {
+    if (formData.birth_country === 'CO') {
       if (!formData.birth_department?.trim()) {
         newErrors.birth_department = 'El departamento de nacimiento es obligatorio para Colombia';
       }
@@ -109,12 +123,24 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
       newErrors.residence_address = 'La dirección de residencia es obligatoria';
     }
 
-    if (!formData.residence_department?.trim()) {
-      newErrors.residence_department = 'El departamento de residencia es obligatorio';
+    if (!formData.residence_country?.trim()) {
+      newErrors.residence_country = 'El país de residencia es obligatorio';
     }
 
-    if (!formData.residence_city?.trim()) {
-      newErrors.residence_city = 'La ciudad de residencia es obligatoria';
+    // Validate "otro" residence country field if selected
+    if (formData.residence_country === 'OTHER' && !formData.residence_country_other?.trim()) {
+      newErrors.residence_country_other = 'Especifica tu país de residencia';
+    }
+
+    // Only validate Colombian residence fields if residence country is Colombia
+    if (formData.residence_country === 'CO') {
+      if (!formData.residence_department?.trim()) {
+        newErrors.residence_department = 'El departamento de residencia es obligatorio';
+      }
+
+      if (!formData.residence_city?.trim()) {
+        newErrors.residence_city = 'La ciudad de residencia es obligatoria';
+      }
     }
 
     setErrors(newErrors);
