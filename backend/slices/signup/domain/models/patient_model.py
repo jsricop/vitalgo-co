@@ -42,6 +42,20 @@ class Patient(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
+    # RF002 Personal Information Fields - added by migration eb4f0500c848
+    biological_sex = Column(String(20), nullable=True)
+    gender = Column(String(20), nullable=True)
+    gender_other = Column(String(100), nullable=True)
+    birth_country = Column(String(100), nullable=True)
+    birth_country_other = Column(String(100), nullable=True)
+    birth_department = Column(String(100), nullable=True)
+    birth_city = Column(String(100), nullable=True)
+    residence_address = Column(String(500), nullable=True)
+    residence_country = Column(String(100), nullable=True)
+    residence_country_other = Column(String(100), nullable=True)
+    residence_department = Column(String(100), nullable=True)
+    residence_city = Column(String(100), nullable=True)
+
     # Relationships
     user = relationship("User", backref="patient")
     document_type = relationship("DocumentType", backref="patients")

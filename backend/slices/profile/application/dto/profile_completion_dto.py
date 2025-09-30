@@ -26,12 +26,16 @@ class ExtendedPatientProfileDTO(BaseModel):
     # RF002 Extended mandatory fields - Demographic Information
     biological_sex: Optional[str] = Field(None, description="Biological sex")
     gender: Optional[str] = Field(None, description="Gender identity")
+    gender_other: Optional[str] = Field(None, description="Other gender if selected")
     birth_country: Optional[str] = Field(None, description="Birth country")
+    birth_country_other: Optional[str] = Field(None, description="Other birth country if selected")
     birth_department: Optional[str] = Field(None, description="Birth department")
     birth_city: Optional[str] = Field(None, description="Birth city")
 
     # RF002 Extended mandatory fields - Residence Information
     residence_address: Optional[str] = Field(None, description="Residence address")
+    residence_country: Optional[str] = Field(None, description="Residence country")
+    residence_country_other: Optional[str] = Field(None, description="Other residence country if selected")
     residence_department: Optional[str] = Field(None, description="Residence department")
     residence_city: Optional[str] = Field(None, description="Residence city")
 
