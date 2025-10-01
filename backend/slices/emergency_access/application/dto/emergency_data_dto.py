@@ -59,6 +59,7 @@ class EmergencyDataResponseDTO(BaseModel):
     document_number: str
     birth_date: date
     biological_sex: Optional[str] = None
+    gender: Optional[str] = None
 
     # Personal Information
     blood_type: Optional[str] = None

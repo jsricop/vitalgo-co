@@ -103,6 +103,7 @@ class GetEmergencyDataUseCase:
             "document_number": patient.document_number,
             "birth_date": patient.birth_date,
             "biological_sex": patient.biological_sex,
+            "gender": patient.gender,
 
             # Personal Information
             "blood_type": patient.blood_type,

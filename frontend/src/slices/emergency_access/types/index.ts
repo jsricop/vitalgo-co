@@ -42,6 +42,7 @@ export interface EmergencyData {
   documentNumber: string;
   birthDate: string; // ISO date string
   biologicalSex?: string;
+  gender?: string;
 
   // Personal Information
   bloodType?: string;
