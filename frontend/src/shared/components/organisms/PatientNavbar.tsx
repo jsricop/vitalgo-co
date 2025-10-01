@@ -33,7 +33,7 @@ export function PatientNavbar({
 
   const navigationItems: NavigationItem[] = [
     {
-      label: "Mis Datos",
+      label: "Mi Perfil",
       href: "/profile"
     },
     {
@@ -41,20 +41,8 @@ export function PatientNavbar({
       href: "/dashboard"
     },
     {
-      label: "Medicamentos",
-      href: "/medications"
-    },
-    {
-      label: "Alergias",
-      href: "/allergies"
-    },
-    {
-      label: "Enfermedades",
-      href: "/illnesses"
-    },
-    {
-      label: "Cirugías",
-      href: "/surgeries"
+      label: "Mi QR",
+      href: "/qr"
     }
   ]
 
@@ -65,17 +53,8 @@ export function PatientNavbar({
     if (href === "/dashboard") {
       return pathname === "/dashboard"
     }
-    if (href === "/medications") {
-      return pathname === "/medications"
-    }
-    if (href === "/allergies") {
-      return pathname === "/allergies"
-    }
-    if (href === "/illnesses") {
-      return pathname === "/illnesses"
-    }
-    if (href === "/surgeries") {
-      return pathname === "/surgeries"
+    if (href === "/qr") {
+      return pathname === "/qr"
     }
     return pathname?.startsWith(href)
   }
@@ -128,9 +107,9 @@ export function PatientNavbar({
             <BrandHeader isAuthenticated={true} />
           </div>
 
-          {/* Desktop Navigation - Left-aligned with spacing */}
+          {/* Desktop Navigation - Centered */}
           <div className="flex-1 ml-8 md:ml-12 lg:ml-16">
-            <div className="hidden md:flex space-x-8 justify-start">
+            <div className="hidden md:flex space-x-8 justify-center">
               {navigationItems.map((item) => {
                 const isActive = isActiveRoute(item.href)
 

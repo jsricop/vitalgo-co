@@ -29,6 +29,7 @@ export function TabNavigation({ activeTab, onTabChange, biologicalSex, 'data-tes
             label={tab.label}
             isActive={activeTab === tab.id}
             onClick={() => onTabChange(tab.id)}
+            variant={tab.id === 'gynecological' ? 'purple' : 'green'}
             data-testid={tab.testId}
           />
         ))}

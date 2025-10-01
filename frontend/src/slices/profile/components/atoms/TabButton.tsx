@@ -7,10 +7,15 @@ interface TabButtonProps {
   label: string;
   isActive: boolean;
   onClick: () => void;
+  variant?: 'green' | 'purple';
   'data-testid'?: string;
 }
 
-export function TabButton({ label, isActive, onClick, 'data-testid': testId }: TabButtonProps) {
+export function TabButton({ label, isActive, onClick, variant = 'green', 'data-testid': testId }: TabButtonProps) {
+  const activeStyles = variant === 'purple'
+    ? 'bg-purple-500 text-white border-purple-500'
+    : 'bg-vitalgo-green text-white border-vitalgo-green';
+
   return (
     <button
       onClick={onClick}
@@ -20,7 +25,7 @@ export function TabButton({ label, isActive, onClick, 'data-testid': testId }: T
         border-b-2 relative
         ${
           isActive
-            ? 'bg-vitalgo-green text-white border-vitalgo-green'
+            ? activeStyles
             : 'bg-gray-50 text-gray-600 border-transparent hover:bg-gray-100 hover:text-gray-800'
         }
         first:rounded-tl-xl last:rounded-tr-xl
