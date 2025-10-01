@@ -710,3 +710,66 @@ The unified client automatically handles:
 - **Auth failures**: Detects authentication-related 401/403 errors
 - **Login redirect**: Automatically redirects to `/login` for auth failures
 - **Token cleanup**: Clears invalid tokens from localStorage
+---
+
+## QR Code API
+
+### GET /api/qr
+
+Get patient's QR code information for display.
+
+**Authentication:** Required (Patient only)
+
+**Request:**
+```http
+GET /api/qr
+Authorization: Bearer {access_token}
+```
+
+**Response (200 OK):**
+```json
+{
+  "qr_uuid": "767c8ead-683d-4175-b6e5-53cd2a89eb06",
+  "qr_url": "https://vitalgo.com/qr/767c8ead-683d-4175-b6e5-53cd2a89eb06",
+  "created_at": "2025-09-20T17:31:06Z",
+  "expires_at": null
+}
+```
+
+**Frontend Usage:**
+```typescript
+import { qrApi } from '../slices/qr/services/qrApi';
+
+// Get patient's QR code
+const qr = await qrApi.getPatientQR();
+console.log(qr.qrUrl); // "https://vitalgo.com/qr/767c8ead-..."
+```
+
+**Behavior:**
+- If patient doesn't have a QR code, one is created automatically
+- Returns active QR code with UUID and full URL
+- QR URL format: `https://vitalgo.com/qr/{qr_uuid}`
+
+**Error Responses:**
+- `401 Unauthorized`: Invalid or missing authentication token
+- `403 Forbidden`: User is not a patient
+- `404 Not Found`: Patient record not found
+- `500 Internal Server Error`: Server-side error
+
+**Database Fields Used:**
+From `emergency_qrs` table:
+- `qr_uuid` - Unique QR identifier (embedded in URL)
+- `generated_at` - When QR was created
+- `expires_at` - Optional expiration date
+- `is_active` - Whether QR is currently valid
+- `patient_id` - Links to patient record
+
+**Frontend Service:**
+- File: `frontend/src/slices/qr/services/qrApi.ts`
+- Uses unified `apiClient` for authentication
+- Transforms `snake_case` to `camelCase`
+
+**Frontend Hook:**
+- File: `frontend/src/slices/qr/hooks/usePatientQR.ts`
+- Pattern: `useState + useCallback + useEffect` (no SWR)
+- Returns: `{ qr, loading, error, refetch }`

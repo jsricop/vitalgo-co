@@ -1,0 +1,3 @@
+"""
+QR Infrastructure module
+"""

@@ -1210,3 +1210,82 @@ class PatientIllness:
     created_at: datetime
     updated_at: datetime
 ```
+### QR Slice Types (from /src/slices/qr/types/index.ts)
+```typescript
+interface QRCode {
+  qrUuid: string;
+  qrUrl: string;
+  createdAt: string;
+  expiresAt?: string;
+}
+
+interface QRApiResponse {
+  qr_uuid: string;
+  qr_url: string;
+  created_at: string;
+  expires_at?: string;
+}
+
+interface QRPageState {
+  qr: QRCode | null;
+  loading: boolean;
+  error: string | null;
+}
+
+interface UsePatientQRResult {
+  qr: QRCode | null;
+  loading: boolean;
+  error: string | null;
+  refetch: () => Promise<void>;
+}
+```
+
+## Backend Python Types - QR Slice
+
+### QR DTOs (from /slices/qr/application/dto/)
+```python
+from pydantic import BaseModel, field_serializer
+from typing import Optional
+from uuid import UUID
+from datetime import datetime
+
+class QRResponseDTO(BaseModel):
+    """Response DTO for patient QR code information"""
+    qr_uuid: str
+    qr_url: str
+    created_at: datetime
+    expires_at: Optional[datetime] = None
+
+    model_config = {"from_attributes": True}
+
+    @field_serializer('created_at', when_used='json')
+    def serialize_created_at(self, value: datetime, _info) -> str:
+        return value.isoformat() if value else None
+
+    @field_serializer('expires_at', when_used='json')
+    def serialize_expires_at(self, value: Optional[datetime], _info) -> Optional[str]:
+        return value.isoformat() if value else None
+```
+
+### QR Model (from /slices/qr/domain/models/qr_model.py)
+```python
+class QR(Base):
+    """QR code model for patient emergency access"""
+    __tablename__ = "emergency_qrs"
+
+    id: UUID
+    patient_id: UUID
+    qr_uuid: UUID  # Unique identifier used in QR URLs
+    generated_at: datetime
+    expires_at: Optional[datetime]
+    is_active: bool
+    access_count: int
+    last_accessed_at: Optional[datetime]
+    created_at: datetime
+    updated_at: datetime
+
+    @property
+    def qr_url(self) -> str:
+        """Get the QR access URL"""
+        return f"/qr/{self.qr_uuid}"
+```
