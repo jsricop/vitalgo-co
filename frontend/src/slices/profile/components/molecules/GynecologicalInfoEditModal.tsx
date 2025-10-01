@@ -183,7 +183,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
               </h3>
               <button
                 type="button"
-                className="ml-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-transparent text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-vitalgo-green"
+                className="ml-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-transparent text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 onClick={onClose}
                 data-testid="modal-close-button"
               >
@@ -220,7 +220,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                       ¿Estás embarazada?
                     </label>
                     <div className="flex flex-wrap gap-4">
-                      <label className="flex items-center">
+                      <label className="flex items-center p-2 hover:bg-purple-50 cursor-pointer transition-colors duration-150">
                         <input
                           type="radio"
                           name="is_pregnant"
@@ -229,11 +229,11 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                           onChange={() => {
                             handleFieldChange('is_pregnant', true);
                           }}
-                          className="h-4 w-4 text-vitalgo-green focus:ring-vitalgo-green border-gray-300"
+                          className="h-4 w-4 text-purple-500 focus:ring-purple-500 border-purple-300 accent-purple-500"
                         />
-                        <span className="ml-2 text-sm text-vitalgo-dark">Sí</span>
+                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">Sí</span>
                       </label>
-                      <label className="flex items-center">
+                      <label className="flex items-center p-2 hover:bg-purple-50 cursor-pointer transition-colors duration-150">
                         <input
                           type="radio"
                           name="is_pregnant"
@@ -243,11 +243,11 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                             handleFieldChange('is_pregnant', false);
                             handleFieldChange('pregnancy_weeks', null);
                           }}
-                          className="h-4 w-4 text-vitalgo-green focus:ring-vitalgo-green border-gray-300"
+                          className="h-4 w-4 text-purple-500 focus:ring-purple-500 border-purple-300 accent-purple-500"
                         />
-                        <span className="ml-2 text-sm text-vitalgo-dark">No</span>
+                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">No</span>
                       </label>
-                      <label className="flex items-center">
+                      <label className="flex items-center p-2 hover:bg-purple-50 cursor-pointer transition-colors duration-150">
                         <input
                           type="radio"
                           name="is_pregnant"
@@ -257,9 +257,9 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                             handleFieldChange('is_pregnant', null);
                             handleFieldChange('pregnancy_weeks', null);
                           }}
-                          className="h-4 w-4 text-vitalgo-green focus:ring-vitalgo-green border-gray-300"
+                          className="h-4 w-4 text-purple-500 focus:ring-purple-500 border-purple-300 accent-purple-500"
                         />
-                        <span className="ml-2 text-sm text-vitalgo-dark">Prefiero no responder</span>
+                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">Prefiero no responder</span>
                       </label>
                     </div>
                   </div>
@@ -275,7 +275,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                         max="42"
                         value={formData.pregnancy_weeks || ''}
                         onChange={(e) => handleFieldChange('pregnancy_weeks', e.target.value ? parseInt(e.target.value) : null)}
-                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-vitalgo-green ${
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 ${
                           errors.pregnancy_weeks ? 'border-red-500' : 'border-gray-300'
                         }`}
                         placeholder="Ej: 12"
@@ -299,7 +299,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                     type="date"
                     value={formData.last_menstruation_date || ''}
                     onChange={(e) => handleFieldChange('last_menstruation_date', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-vitalgo-green ${
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 ${
                       errors.last_menstruation_date ? 'border-red-500' : 'border-gray-300'
                     }`}
                   />
@@ -322,7 +322,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                       min="0"
                       value={formData.pregnancies_count || ''}
                       onChange={(e) => handleFieldChange('pregnancies_count', e.target.value ? parseInt(e.target.value) : null)}
-                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-vitalgo-green ${
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 ${
                         errors.pregnancies_count ? 'border-red-500' : 'border-gray-300'
                       }`}
                       placeholder="0"
@@ -341,7 +341,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                       min="0"
                       value={formData.births_count || ''}
                       onChange={(e) => handleFieldChange('births_count', e.target.value ? parseInt(e.target.value) : null)}
-                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-vitalgo-green ${
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 ${
                         errors.births_count ? 'border-red-500' : 'border-gray-300'
                       }`}
                       placeholder="0"
@@ -360,7 +360,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                       min="0"
                       value={formData.cesareans_count || ''}
                       onChange={(e) => handleFieldChange('cesareans_count', e.target.value ? parseInt(e.target.value) : null)}
-                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-vitalgo-green ${
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 ${
                         errors.cesareans_count ? 'border-red-500' : 'border-gray-300'
                       }`}
                       placeholder="0"
@@ -379,7 +379,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                       min="0"
                       value={formData.abortions_count || ''}
                       onChange={(e) => handleFieldChange('abortions_count', e.target.value ? parseInt(e.target.value) : null)}
-                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-vitalgo-green ${
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 ${
                         errors.abortions_count ? 'border-red-500' : 'border-gray-300'
                       }`}
                       placeholder="0"
@@ -401,7 +401,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                   <select
                     value={formData.contraceptive_method || ''}
                     onChange={(e) => handleFieldChange('contraceptive_method', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-vitalgo-green"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                   >
                     <option value="">Selecciona un método</option>
                     <option value="NINGUNO">Ninguno</option>
@@ -437,7 +437,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
               type="submit"
               onClick={handleSubmit}
               disabled={isFormLoading}
-              className="inline-flex w-full justify-center rounded-md bg-vitalgo-green px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green sm:ml-3 sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex w-full justify-center rounded-md bg-purple-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-500-light focus:outline-none focus:ring-2 focus:ring-purple-500 sm:ml-3 sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
               data-testid={`${testId}-submit-button`}
             >
               {isFormLoading ? (
