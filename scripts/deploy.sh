@@ -341,6 +341,7 @@ services:
       SECRET_KEY: ${SECRET_KEY}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       ALLOWED_ORIGINS: https://${DOMAIN_NAME},https://www.${DOMAIN_NAME}
+      FRONTEND_URL: ${FRONTEND_URL}
       SKIP_DB_INIT: $([ "$DEPLOYMENT_MODE" == "migration" ] && echo "false" || echo "true")
     ports:
       - "8000:8000"
