@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from shared.database.database import get_db
+from shared.config.settings import settings
 from slices.auth.infrastructure.api.auth_endpoints import get_current_user
 from slices.signup.domain.models.user_model import User
 from slices.signup.domain.models.patient_model import Patient
@@ -46,8 +47,8 @@ async def get_patient_qr(
     patient = await get_patient_from_user(current_user, db)
 
     # Every patient already has a qr_code UUID (auto-generated on creation)
-    # Build the QR URL using the patient's qr_code field
-    qr_url = f"/qr/{patient.qr_code}"
+    # Build the QR URL using the patient's qr_code field and frontend URL from settings
+    qr_url = f"{settings.FRONTEND_URL}/qr/{patient.qr_code}"
 
     return QRResponseDTO(
         qr_uuid=str(patient.qr_code),

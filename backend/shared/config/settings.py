@@ -34,6 +34,9 @@ class Settings(BaseSettings):
     # CORS
     CORS_ORIGINS: List[str] = ["http://localhost:3000", "https://localhost:3000"]
 
+    # Frontend URL for QR codes
+    FRONTEND_URL: str = "http://localhost:3000"
+
     # Email
     SMTP_HOST: Optional[str] = None
     SMTP_PORT: Optional[int] = None

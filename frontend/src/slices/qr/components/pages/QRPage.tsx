@@ -58,14 +58,6 @@ export function QRPage({ 'data-testid': testId }: QRPageProps) {
       <main className="flex-1 bg-gray-50 py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Mi Código QR</h1>
-            <p className="text-gray-600">
-              Tu código QR personal para acceso de emergencia médica
-            </p>
-          </div>
-
           {/* QR Card */}
           <QRCard
             qrData={qrData || undefined}
@@ -102,20 +94,6 @@ export function QRPage({ 'data-testid': testId }: QRPageProps) {
                 <h3 className="font-semibold text-gray-900 mb-2">Emergencias</h3>
                 <p className="text-sm text-gray-600">
                   Información vital: alergias, medicamentos, contactos de emergencia
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Security Note */}
-          <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <div className="flex items-start">
-              <div className="text-blue-500 text-xl mr-3">🔒</div>
-              <div>
-                <h3 className="font-semibold text-blue-900 mb-1">Información Segura</h3>
-                <p className="text-sm text-blue-700">
-                  Tu QR código solo muestra información médica esencial para emergencias.
-                  Los datos personales sensibles están protegidos.
                 </p>
               </div>
             </div>
