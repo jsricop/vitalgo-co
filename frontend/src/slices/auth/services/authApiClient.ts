@@ -193,12 +193,47 @@ class AuthApiClientImpl implements AuthApiClient {
 
       return loginResponse;
     } catch (error) {
-      // Re-throw LoginErrorResponse objects
+      // Enhanced error logging with duck typing (per DEV.md guidelines)
+      console.error('🔍 API CLIENT DEBUG: Caught error in login', {
+        errorType: typeof error,
+        errorConstructor: error?.constructor?.name,
+        isError: error instanceof Error,
+        hasSuccess: error && typeof error === 'object' && 'success' in error,
+        hasMessage: error && typeof error === 'object' && 'message' in error,
+        error: error,
+        errorKeys: error && typeof error === 'object' ? Object.keys(error) : []
+      });
+
+      // Persist error debug info
+      localStorage.setItem('debugLoginError', JSON.stringify({
+        timestamp: new Date().toISOString(),
+        errorType: typeof error,
+        errorConstructor: error?.constructor?.name,
+        isError: error instanceof Error,
+        hasSuccess: error && typeof error === 'object' && 'success' in error,
+        hasMessage: error && typeof error === 'object' && 'message' in error,
+        errorKeys: error && typeof error === 'object' ? Object.keys(error) : [],
+        // Safely serialize the error
+        errorString: error instanceof Error ? error.message : JSON.stringify(error, Object.getOwnPropertyNames(error))
+      }));
+
+      // Re-throw LoginErrorResponse objects (duck typing pattern)
       if (error && typeof error === 'object' && 'success' in error) {
+        console.log('🔍 API CLIENT DEBUG: Re-throwing LoginErrorResponse');
         throw error;
       }
 
-      // Handle network errors
+      // Extract message from Error objects
+      if (error instanceof Error) {
+        console.log('🔍 API CLIENT DEBUG: Converting Error to LoginErrorResponse');
+        throw {
+          success: false,
+          message: error.message || 'Error de conexión. Verifica tu internet.',
+        } as LoginErrorResponse;
+      }
+
+      // Handle unknown error types
+      console.log('🔍 API CLIENT DEBUG: Unknown error type, using default message');
       throw {
         success: false,
         message: 'Error de conexión. Verifica tu internet.',

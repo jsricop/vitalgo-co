@@ -4,6 +4,7 @@
  */
 
 import { apiClient } from '@/shared/services/apiClient';
+import { convertKeysToCamelCase } from '@/shared/utils/caseConversion';
 import type { EmergencyData } from '../types';
 
 export const emergencyAccessService = {
@@ -16,7 +17,8 @@ export const emergencyAccessService = {
    * @throws ApiError - If request fails (401 unauthorized, 403 forbidden, 404 not found)
    */
   async getEmergencyData(qrCode: string): Promise<EmergencyData> {
-    const response = await apiClient.get<EmergencyData>(`/api/emergency/${qrCode}`);
-    return response.data;
+    const response = await apiClient.get<EmergencyData>(`/emergency/${qrCode}`);
+    // Backend returns snake_case, convert to camelCase for frontend
+    return convertKeysToCamelCase<EmergencyData>(response.data);
   },
 };

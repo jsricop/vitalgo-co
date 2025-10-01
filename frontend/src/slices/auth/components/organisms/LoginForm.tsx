@@ -110,19 +110,26 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       });
       const redirectUrl = await login(formData);
 
+      // Check for returnUrl query parameter (takes precedence over backend redirectUrl)
+      const urlParams = new URLSearchParams(window.location.search);
+      const returnUrl = urlParams.get('returnUrl');
+
       console.log('🔍 LOGIN FORM: Login successful', {
         timestamp: new Date().toISOString(),
-        redirectUrl,
+        backendRedirectUrl: redirectUrl,
+        queryReturnUrl: returnUrl,
         hasOnSuccess: !!onSuccess
       });
 
       if (onSuccess) {
-        onSuccess(redirectUrl);
+        onSuccess(returnUrl || redirectUrl);
       } else {
-        const targetUrl = redirectUrl || '/dashboard';
+        // Prioritize: returnUrl (from query) > redirectUrl (from backend) > /dashboard (default)
+        const targetUrl = returnUrl || redirectUrl || '/dashboard';
         console.log('🔍 LOGIN FORM: Redirecting to:', {
           timestamp: new Date().toISOString(),
           targetUrl,
+          source: returnUrl ? 'query_param' : (redirectUrl ? 'backend' : 'default'),
           currentPath: window.location.pathname,
           redirectMethod: 'router.replace'
         });

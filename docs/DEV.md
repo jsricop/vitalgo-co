@@ -292,10 +292,22 @@ const response = await apiClient.get<Data>('/endpoint');
      # Use current_user.id instead of current_user["id"]
      ```
 
-3. **Field Mapping Issues**
+3. **Field Mapping Issues (RESOLVED - Automatic Conversion)**
    - **Issue**: Frontend expecting `originCountry` but backend returning `origin_country`
-   - **Fix**: Ensure API service transforms field names:
+   - **Solution**: Unified API Client now automatically converts snake_case → camelCase
+   - **Implementation**: `convertKeysToCamelCase()` utility in `shared/utils/caseConversion.ts`
+   - **Applies to**: All responses through `apiClient.get/post/put/patch/delete()`
+
+   ```typescript
+   // ✅ AUTOMATIC - No manual transformation needed
+   const response = await apiClient.get<EmergencyData>('/emergency/qr-code');
+   // Backend returns: { full_name: "...", medication_name: "..." }
+   // Frontend receives: { fullName: "...", medicationName: "..." }
+   ```
+
+   **Legacy Pattern** (for reference only - avoid in new code):
      ```typescript
+     // ❌ OLD - Manual transformation (deprecated)
      // GET transformation
      originCountry: data.origin_country,
      // PUT transformation

@@ -154,6 +154,7 @@ class ApiClientService {
     }
 
     const data = await response.json();
+
     return {
       data,
       status: response.status,
