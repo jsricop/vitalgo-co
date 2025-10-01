@@ -495,31 +495,91 @@ All VitalGo API endpoints return consistent, standardized error responses for im
 **Out:** `{success: boolean, message: string}`
 **Status:** 200 success, 401 unauthorized, 404 not found
 
-## Emergency QR Endpoints (/api/emergency)
+## Emergency Access Endpoints (/api/emergency)
 
-### POST /api/emergency/qr
-**Description:** Generate emergency QR code for patient
-**In:** `Authorization: Bearer {token}`
-**Out:** `{qr_uuid: string, qr_url: string, created_at: string, expires_at?: string}`
-**Status:** 201 created, 401 unauthorized
+### GET /api/emergency/{qr_code}
+**Description:** Get comprehensive patient emergency data by QR code (paramedic-only endpoint)
+**Authentication:** Required (Paramedic only)
+**In:** `Authorization: Bearer {token}`, `qr_code: UUID`
+**Out:** `EmergencyDataResponseDTO`
+**Status:** 200 success, 401 unauthorized, 403 forbidden (non-paramedic), 404 not found
 
-### GET /api/emergency/qr
-**Description:** Get patient's current QR code
-**In:** `Authorization: Bearer {token}`
-**Out:** `{qr_uuid: string, qr_url: string, created_at: string, expires_at?: string}`
-**Status:** 200 success, 404 not found, 401 unauthorized
+**EmergencyDataResponseDTO:**
+```json
+{
+  "full_name": "string",
+  "document_type": "string",
+  "document_number": "string",
+  "birth_date": "string",
+  "biological_sex": "string",
+  "blood_type": "string|null",
+  "eps": "string|null",
+  "occupation": "string|null",
+  "residence_address": "string|null",
+  "residence_country": "string|null",
+  "residence_city": "string|null",
+  "emergency_contact_name": "string|null",
+  "emergency_contact_relationship": "string|null",
+  "emergency_contact_phone": "string|null",
+  "emergency_contact_phone_alt": "string|null",
+  "medications": "EmergencyMedicationDTO[]",
+  "allergies": "EmergencyAllergyDTO[]",
+  "surgeries": "EmergencySurgeryDTO[]",
+  "illnesses": "EmergencyIllnessDTO[]",
+  "is_pregnant": "boolean|null",
+  "pregnancy_weeks": "number|null",
+  "last_menstruation_date": "string|null",
+  "pregnancies_count": "number|null",
+  "births_count": "number|null",
+  "cesareans_count": "number|null",
+  "abortions_count": "number|null",
+  "contraceptive_method": "string|null"
+}
+```
 
-### GET /api/emergency/{qr_uuid}
-**Description:** Get emergency data by QR UUID (public endpoint)
-**In:** `qr_uuid path parameter`
-**Out:** `EmergencyDataDto`
-**Status:** 200 success, 404 not found, 403 QR expired
+**EmergencyMedicationDTO:**
+```json
+{
+  "medication_name": "string",
+  "dosage": "string",
+  "frequency": "string",
+  "is_active": "boolean",
+  "notes": "string|null",
+  "prescribed_by": "string|null"
+}
+```
 
-### POST /api/emergency/{qr_uuid}/regenerate
-**Description:** Regenerate emergency QR code
-**In:** `Authorization: Bearer {token}`
-**Out:** `{qr_uuid: string, qr_url: string, created_at: string}`
-**Status:** 201 created, 401 unauthorized, 404 not found
+**EmergencyAllergyDTO:**
+```json
+{
+  "allergen": "string",
+  "severity_level": "string",
+  "reaction_description": "string|null",
+  "notes": "string|null"
+}
+```
+
+**EmergencySurgeryDTO:**
+```json
+{
+  "procedure_name": "string",
+  "surgery_date": "string",
+  "hospital_name": "string|null",
+  "complications": "string|null"
+}
+```
+
+**EmergencyIllnessDTO:**
+```json
+{
+  "illness_name": "string",
+  "diagnosis_date": "string",
+  "status": "string",
+  "is_chronic": "boolean",
+  "treatment_description": "string|null",
+  "cie10_code": "string|null"
+}
+```
 
 ## Data Transfer Objects (DTOs)
 

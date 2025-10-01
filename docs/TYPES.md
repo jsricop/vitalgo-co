@@ -1240,6 +1240,97 @@ interface UsePatientQRResult {
 }
 ```
 
+### Emergency Access Types (from /src/slices/emergency_access/types/index.ts)
+```typescript
+// Main emergency data interface
+interface EmergencyData {
+  fullName: string;
+  documentType: string;
+  documentNumber: string;
+  birthDate: string;
+  biologicalSex: string;
+  bloodType: string | null;
+  eps: string | null;
+  occupation: string | null;
+  residenceAddress: string | null;
+  residenceCountry: string | null;
+  residenceCity: string | null;
+  emergencyContactName: string | null;
+  emergencyContactRelationship: string | null;
+  emergencyContactPhone: string | null;
+  emergencyContactPhoneAlt: string | null;
+  medications: EmergencyMedication[];
+  allergies: EmergencyAllergy[];
+  surgeries: EmergencySurgery[];
+  illnesses: EmergencyIllness[];
+  isPregnant: boolean | null;
+  pregnancyWeeks: number | null;
+  lastMenstruationDate: string | null;
+  pregnanciesCount: number | null;
+  birthsCount: number | null;
+  cesareansCount: number | null;
+  abortionsCount: number | null;
+  contraceptiveMethod: string | null;
+}
+
+// Medical record interfaces
+interface EmergencyMedication {
+  medicationName: string;
+  dosage: string;
+  frequency: string;
+  isActive: boolean;
+  notes: string | null;
+  prescribedBy: string | null;
+}
+
+interface EmergencyAllergy {
+  allergen: string;
+  severityLevel: string;
+  reactionDescription: string | null;
+  notes: string | null;
+}
+
+interface EmergencySurgery {
+  procedureName: string;
+  surgeryDate: string;
+  hospitalName: string | null;
+  complications: string | null;
+}
+
+interface EmergencyIllness {
+  illnessName: string;
+  diagnosisDate: string;
+  status: string;
+  isChronic: boolean;
+  treatmentDescription: string | null;
+  cie10Code: string | null;
+}
+
+// Error handling
+interface EmergencyAccessError {
+  message: string;
+  status: number;
+  detail?: string;
+}
+
+// Hook result
+interface UseEmergencyDataResult {
+  data: EmergencyData | null;
+  loading: boolean;
+  error: EmergencyAccessError | null;
+  refetch: () => Promise<void>;
+}
+
+// Component props
+interface EmergencyAccessPageProps {
+  qrCode: string;
+}
+
+interface QRLandingPageProps {
+  qrCode: string;
+}
+```
+
 ## Backend Python Types - QR Slice
 
 ### QR DTOs (from /slices/qr/application/dto/)

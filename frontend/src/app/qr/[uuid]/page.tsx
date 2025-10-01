@@ -1,19 +1,19 @@
 /**
- * Emergency QR Access Page - Public route for emergency medical access
+ * QR Code Landing Route
+ * Public route that QR codes point to: /qr/[uuid]
+ * Handles smart authentication routing for emergency access
  */
-import { EmergencyAccessPage } from '@/slices/qr/components/pages/EmergencyAccessPage';
 
-interface EmergencyQRPageProps {
-  params: {
+import { QRLandingPage } from '@/slices/emergency_access/components/organisms/QRLandingPage';
+
+interface QRCodePageProps {
+  params: Promise<{
     uuid: string;
-  };
+  }>;
 }
 
-export default function EmergencyQRPageRoute({ params }: EmergencyQRPageProps) {
-  return (
-    <EmergencyAccessPage
-      qrUuid={params.uuid}
-      data-testid="emergency-qr-page"
-    />
-  );
+export default async function QRCodePage({ params }: QRCodePageProps) {
+  const { uuid } = await params;
+
+  return <QRLandingPage qrCode={uuid} />;
 }

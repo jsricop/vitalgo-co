@@ -94,3 +94,9 @@ class SQLAlchemyAuthRepository(AuthRepository):
             return False
 
         return True
+
+    async def get_patient_by_user_id(self, user_id: UUID) -> Optional[Patient]:
+        """Get patient data by user ID (only for patient user type)"""
+        return self.db_session.query(Patient).filter(
+            Patient.user_id == user_id
+        ).first()
