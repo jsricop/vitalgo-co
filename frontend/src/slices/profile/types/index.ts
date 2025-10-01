@@ -61,5 +61,10 @@ export interface TabContentProps {
 export interface TabNavigationProps {
   activeTab: ProfileTab;
   onTabChange: (tab: ProfileTab) => void;
+  biologicalSex?: string | null;
   'data-testid'?: string;
 }
+
+// Re-export types from other modules
+export * from './personalInfo';
+export * from './gynecologicalInfo';

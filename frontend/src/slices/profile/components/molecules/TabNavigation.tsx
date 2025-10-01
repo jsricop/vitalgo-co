@@ -12,14 +12,18 @@ const TAB_CONFIGS: TabConfig[] = [
   { id: 'gynecological', label: 'Información ginecológica', testId: 'profile-tab-gynecological' },
 ];
 
-export function TabNavigation({ activeTab, onTabChange, 'data-testid': testId }: TabNavigationProps) {
+export function TabNavigation({ activeTab, onTabChange, biologicalSex, 'data-testid': testId }: TabNavigationProps) {
+  // Filter out gynecological tab for non-female patients
+  const availableTabs = TAB_CONFIGS.filter(tab =>
+    tab.id !== 'gynecological' || biologicalSex === 'F'
+  );
   return (
     <div
       className="bg-white rounded-t-xl border-x border-t border-gray-200"
       data-testid={testId}
     >
       <div className="flex overflow-x-auto scrollbar-hide border-b border-gray-200">
-        {TAB_CONFIGS.map((tab) => (
+        {availableTabs.map((tab) => (
           <TabButton
             key={tab.id}
             label={tab.label}

@@ -161,7 +161,7 @@ interface PersonalPatientInfo {
   emergency_contact_relationship?: string | null;
   emergency_contact_phone?: string | null;
   emergency_contact_phone_alt?: string | null;
-  // Reproductive health fields (TODO: Future implementation)
+  // Gynecological Information Fields (RF003) - ✅ IMPLEMENTED
   is_pregnant?: boolean | null;
   pregnancy_weeks?: number | null;
   last_menstruation_date?: string | null;
@@ -197,15 +197,15 @@ interface PersonalPatientUpdate {
   emergency_contact_relationship?: string;
   emergency_contact_phone?: string;
   emergency_contact_phone_alt?: string;
-  // Reproductive health fields (TODO: Future implementation)
-  is_pregnant?: boolean;
-  pregnancy_weeks?: number;
-  last_menstruation_date?: string;
-  pregnancies_count?: number;
-  births_count?: number;
-  cesareans_count?: number;
-  abortions_count?: number;
-  contraceptive_method?: string;
+  // Gynecological Information Fields (RF003) - ✅ IMPLEMENTED
+  is_pregnant?: boolean | null;
+  pregnancy_weeks?: number | null;
+  last_menstruation_date?: string | null;
+  pregnancies_count?: number | null;
+  births_count?: number | null;
+  cesareans_count?: number | null;
+  abortions_count?: number | null;
+  contraceptive_method?: string | null;
 }
 
 // Hook result interfaces
@@ -236,6 +236,55 @@ interface TabNavigationProps {
   onTabChange: (tab: ProfileTab) => void;
   'data-testid'?: string;
 }
+
+// Gynecological Information Types (RF003) - ✅ IMPLEMENTED
+interface GynecologicalInfo {
+  is_pregnant?: boolean | null;
+  pregnancy_weeks?: number | null;
+  last_menstruation_date?: string | null;
+  pregnancies_count?: number | null;
+  births_count?: number | null;
+  cesareans_count?: number | null;
+  abortions_count?: number | null;
+  contraceptive_method?: string | null;
+}
+
+interface GynecologicalInfoUpdate extends GynecologicalInfo {}
+
+interface GynecologicalInfoFormData {
+  is_pregnant: boolean | null;
+  pregnancy_weeks: number | null;
+  last_menstruation_date: string | null;
+  pregnancies_count: number | null;
+  births_count: number | null;
+  cesareans_count: number | null;
+  abortions_count: number | null;
+  contraceptive_method: string | null;
+}
+
+// Contraceptive method options
+const CONTRACEPTIVE_METHODS = [
+  { value: 'NINGUNO', label: 'Ninguno' },
+  { value: 'ANTICONCEPTIVOS_ORALES', label: 'Anticonceptivos orales' },
+  { value: 'DIU', label: 'DIU (Dispositivo intrauterino)' },
+  { value: 'IMPLANTE', label: 'Implante' },
+  { value: 'INYECCION', label: 'Inyección' },
+  { value: 'PRESERVATIVO', label: 'Preservativo' },
+  { value: 'METODO_NATURAL', label: 'Método natural' },
+  { value: 'PARCHE', label: 'Parche' },
+  { value: 'ANILLO_VAGINAL', label: 'Anillo vaginal' },
+  { value: 'ESTERILIZACION', label: 'Esterilización' },
+  { value: 'OTRO', label: 'Otro' },
+] as const;
+
+type ContraceptiveMethod = typeof CONTRACEPTIVE_METHODS[number]['value'];
+
+// Pregnancy status options
+const PREGNANCY_STATUS_OPTIONS = [
+  { value: null, label: 'No especificado' },
+  { value: false, label: 'No embarazada' },
+  { value: true, label: 'Embarazada' },
+] as const;
 ```
 
 ### Dashboard Types (from /src/slices/dashboard/types/index.ts)

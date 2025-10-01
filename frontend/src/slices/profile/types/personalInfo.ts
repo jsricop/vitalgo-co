@@ -28,6 +28,16 @@ export interface PersonalPatientInfo {
   emergency_contact_relationship?: string;
   emergency_contact_phone?: string;
   emergency_contact_phone_alt?: string;
+
+  // Gynecological Information Fields (RF003)
+  is_pregnant?: boolean | null;
+  pregnancy_weeks?: number | null;
+  last_menstruation_date?: string | null;
+  pregnancies_count?: number | null;
+  births_count?: number | null;
+  cesareans_count?: number | null;
+  abortions_count?: number | null;
+  contraceptive_method?: string | null;
 }
 
 export interface PersonalPatientUpdate {
@@ -56,6 +66,16 @@ export interface PersonalPatientUpdate {
   emergency_contact_relationship?: string;
   emergency_contact_phone?: string;
   emergency_contact_phone_alt?: string;
+
+  // Gynecological Information Fields (RF003)
+  is_pregnant?: boolean | null;
+  pregnancy_weeks?: number | null;
+  last_menstruation_date?: string | null;
+  pregnancies_count?: number | null;
+  births_count?: number | null;
+  cesareans_count?: number | null;
+  abortions_count?: number | null;
+  contraceptive_method?: string | null;
 }
 
 export interface UsePersonalPatientInfoResult {

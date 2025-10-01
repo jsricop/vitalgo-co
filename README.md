@@ -15,9 +15,14 @@ VitalGo es una plataforma de expedientes médicos digitales que permite a pacien
 ```
 vitalgo-co/
 ├── README.md                    # Documentación principal del proyecto
-├── docs/                        # Documentación técnica
-│   ├── DEV.md                  # Guía de desarrollo y patrones
-│   └── BRAND.md                # Manual de marca y estilos UI
+├── docs/                        # Documentación técnica completa
+│   ├── DEV.md                  # Guía de desarrollo, patrones y casos de estudio
+│   ├── APIS.md                 # Documentación completa de APIs y endpoints
+│   ├── TYPES.md                # Referencia de tipos TypeScript y interfaces
+│   ├── DB.md                   # Esquema de base de datos y campos
+│   ├── BRAND.md                # Manual de marca y estilos UI
+│   ├── TEST_DATA.md            # Datos de prueba y configuración
+│   └── UNIFIED_AUTH_MIGRATION.md # Guía de migración de autenticación
 ├── scripts/                     # Scripts de automatización
 │   ├── smart-commit.sh         # Commit inteligente con revisión de seguridad
 │   ├── deploy.sh               # Despliegue a producción
@@ -35,6 +40,12 @@ vitalgo-co/
 │       ├── surgeries/          # Gestión de cirugías
 │       └── emergency/          # Acceso de emergencia
 ├── frontend/                    # Next.js 15 frontend
+│   └── src/slices/             # Arquitectura de slicing vertical
+│       ├── auth/               # Autenticación y sesiones
+│       ├── signup/             # Registro de pacientes
+│       ├── dashboard/          # Panel principal
+│       ├── profile/            # Gestión de perfil completo
+│       └── shared/             # Componentes y utilidades compartidas
 └── docker-compose.local.yml    # Configuración Docker local
 ```
 

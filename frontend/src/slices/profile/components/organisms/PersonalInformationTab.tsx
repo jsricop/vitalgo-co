@@ -31,6 +31,9 @@ export function PersonalInformationTab({ 'data-testid': testId }: TabContentProp
     const result = await updatePersonalInfo(data);
     if (result.success) {
       setIsModalOpen(false);
+      // Emit event to notify other components about the profile update
+      window.dispatchEvent(new CustomEvent('profileUpdated'));
+      console.log('🔔 PersonalInformationTab: Profile updated event dispatched');
     }
     return result;
   };

@@ -42,6 +42,15 @@ class PersonalProfileAPIService {
         emergency_contact_relationship: data.emergency_contact_relationship,
         emergency_contact_phone: data.emergency_contact_phone,
         emergency_contact_phone_alt: data.emergency_contact_phone_alt,
+        // Gynecological information fields
+        is_pregnant: data.is_pregnant,
+        pregnancy_weeks: data.pregnancy_weeks,
+        last_menstruation_date: data.last_menstruation_date,
+        pregnancies_count: data.pregnancies_count,
+        births_count: data.births_count,
+        cesareans_count: data.cesareans_count,
+        abortions_count: data.abortions_count,
+        contraceptive_method: data.contraceptive_method,
       };
 
       console.log('✅ Personal patient info loaded successfully:', personalInfo);
@@ -89,6 +98,15 @@ class PersonalProfileAPIService {
         emergency_contact_relationship: data.emergency_contact_relationship,
         emergency_contact_phone: data.emergency_contact_phone,
         emergency_contact_phone_alt: data.emergency_contact_phone_alt,
+        // Gynecological information fields
+        is_pregnant: data.is_pregnant,
+        pregnancy_weeks: data.pregnancy_weeks,
+        last_menstruation_date: data.last_menstruation_date,
+        pregnancies_count: data.pregnancies_count,
+        births_count: data.births_count,
+        cesareans_count: data.cesareans_count,
+        abortions_count: data.abortions_count,
+        contraceptive_method: data.contraceptive_method,
       };
 
       const response = await apiClient.put<{ success: boolean; message: string }>('/profile/complete', apiRequest);

@@ -58,6 +58,16 @@ class ExtendedPatientProfileDTO(BaseModel):
     emergency_contact_phone: Optional[str] = Field(None, description="Emergency contact phone")
     emergency_contact_phone_alt: Optional[str] = Field(None, description="Emergency contact alternative phone")
 
+    # RF002 Gynecological Information Fields - for female patients only
+    is_pregnant: Optional[bool] = Field(None, description="Is currently pregnant")
+    pregnancy_weeks: Optional[int] = Field(None, ge=1, le=42, description="Pregnancy weeks if pregnant")
+    last_menstruation_date: Optional[date] = Field(None, description="Last menstruation date")
+    pregnancies_count: Optional[int] = Field(None, ge=0, description="Number of pregnancies")
+    births_count: Optional[int] = Field(None, ge=0, description="Number of births")
+    cesareans_count: Optional[int] = Field(None, ge=0, description="Number of cesarean sections")
+    abortions_count: Optional[int] = Field(None, ge=0, description="Number of abortions")
+    contraceptive_method: Optional[str] = Field(None, max_length=100, description="Contraceptive method")
+
     class Config:
         str_strip_whitespace = True
         validate_assignment = True
@@ -138,15 +148,14 @@ class SurgeryDTO(BaseModel):
 
 class GynecologicalHistoryDTO(BaseModel):
     """DTO for gynecological history data (only for female patients)"""
-    is_pregnant: bool = Field(default=False, description="Is currently pregnant")
+    is_pregnant: Optional[bool] = Field(None, description="Is currently pregnant")
     pregnancy_weeks: Optional[int] = Field(None, ge=1, le=42, description="Pregnancy weeks if pregnant")
     last_menstruation_date: Optional[date] = Field(None, description="Last menstruation date")
     pregnancies_count: Optional[int] = Field(None, ge=0, description="Number of pregnancies")
     births_count: Optional[int] = Field(None, ge=0, description="Number of births")
-    csections_count: Optional[int] = Field(None, ge=0, description="Number of cesarean sections")
+    cesareans_count: Optional[int] = Field(None, ge=0, description="Number of cesarean sections")
     abortions_count: Optional[int] = Field(None, ge=0, description="Number of abortions")
-    contraceptive_method: Optional[str] = Field(None, description="Contraceptive method")
-    contraceptive_method_other: Optional[str] = Field(None, max_length=100, description="Other contraceptive method")
+    contraceptive_method: Optional[str] = Field(None, max_length=100, description="Contraceptive method")
 
     class Config:
         str_strip_whitespace = True

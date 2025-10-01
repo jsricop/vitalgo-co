@@ -112,6 +112,16 @@ class CompleteProfileUseCase:
             emergency_contact_relationship=patient.emergency_contact_relationship,
             emergency_contact_phone=patient.emergency_contact_phone,
             emergency_contact_phone_alt=patient.emergency_contact_phone_alt,
+
+            # Gynecological information fields - now reading from database
+            is_pregnant=patient.is_pregnant,
+            pregnancy_weeks=patient.pregnancy_weeks,
+            last_menstruation_date=patient.last_menstruation_date,
+            pregnancies_count=patient.pregnancies_count,
+            births_count=patient.births_count,
+            cesareans_count=patient.cesareans_count,
+            abortions_count=patient.abortions_count,
+            contraceptive_method=patient.contraceptive_method,
         )
 
     def update_extended_profile(self, user_id: str, profile_data: PatientProfileUpdateDTO) -> Dict[str, Any]:
@@ -183,6 +193,24 @@ class CompleteProfileUseCase:
                 patient.emergency_contact_phone = profile_data.emergency_contact_phone
             if profile_data.emergency_contact_phone_alt is not None:
                 patient.emergency_contact_phone_alt = profile_data.emergency_contact_phone_alt
+
+            # Update gynecological information fields (only for female patients)
+            if profile_data.is_pregnant is not None:
+                patient.is_pregnant = profile_data.is_pregnant
+            if profile_data.pregnancy_weeks is not None:
+                patient.pregnancy_weeks = profile_data.pregnancy_weeks
+            if profile_data.last_menstruation_date is not None:
+                patient.last_menstruation_date = profile_data.last_menstruation_date
+            if profile_data.pregnancies_count is not None:
+                patient.pregnancies_count = profile_data.pregnancies_count
+            if profile_data.births_count is not None:
+                patient.births_count = profile_data.births_count
+            if profile_data.cesareans_count is not None:
+                patient.cesareans_count = profile_data.cesareans_count
+            if profile_data.abortions_count is not None:
+                patient.abortions_count = profile_data.abortions_count
+            if profile_data.contraceptive_method is not None:
+                patient.contraceptive_method = profile_data.contraceptive_method
 
             self.db.commit()
 

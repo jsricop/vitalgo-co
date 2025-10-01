@@ -4,7 +4,7 @@
  */
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AuthGuard } from '../../../shared/components/guards/AuthGuard';
 import { PatientNavbar } from '../../../shared/components/organisms/PatientNavbar';
 import { TabNavigation } from '../components/molecules/TabNavigation';
@@ -13,6 +13,7 @@ import { PersonalInformationTab } from '../components/organisms/PersonalInformat
 import { MedicalInformationTab } from '../components/organisms/MedicalInformationTab';
 import { GynecologicalInformationTab } from '../components/organisms/GynecologicalInformationTab';
 import { ProfileTab } from '../types';
+import { usePersonalPatientInfo } from '../hooks/usePersonalPatientInfo';
 
 interface ProfilePageProps {
   'data-testid'?: string;
@@ -22,6 +23,22 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   'data-testid': testId
 }) => {
   const [activeTab, setActiveTab] = useState<ProfileTab>('basic');
+  const { personalInfo, refetch: refetchPersonalInfo } = usePersonalPatientInfo();
+
+  // Listen for profile updates and refresh data
+  useEffect(() => {
+    const handleProfileUpdate = () => {
+      console.log('🔄 ProfilePage: Profile updated, refreshing data...');
+      refetchPersonalInfo();
+    };
+
+    // Listen for custom event
+    window.addEventListener('profileUpdated', handleProfileUpdate);
+
+    return () => {
+      window.removeEventListener('profileUpdated', handleProfileUpdate);
+    };
+  }, [refetchPersonalInfo]);
 
   const handleTabChange = (tab: ProfileTab) => {
     setActiveTab(tab);
@@ -77,6 +94,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           <TabNavigation
             activeTab={activeTab}
             onTabChange={handleTabChange}
+            biologicalSex={personalInfo?.biological_sex}
             data-testid="profile-tab-navigation"
           />
 

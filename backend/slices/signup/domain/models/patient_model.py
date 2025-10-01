@@ -69,6 +69,16 @@ class Patient(Base):
     emergency_contact_phone = Column(String(20), nullable=True)
     emergency_contact_phone_alt = Column(String(20), nullable=True)
 
+    # RF002 Gynecological Information Fields - for female patients only
+    is_pregnant = Column(Boolean, nullable=True)
+    pregnancy_weeks = Column(Integer, nullable=True)  # 1-42 weeks
+    last_menstruation_date = Column(Date, nullable=True)
+    pregnancies_count = Column(Integer, nullable=True)  # 0 or greater
+    births_count = Column(Integer, nullable=True)  # 0 or greater
+    cesareans_count = Column(Integer, nullable=True)  # 0 or greater
+    abortions_count = Column(Integer, nullable=True)  # 0 or greater
+    contraceptive_method = Column(String(100), nullable=True)
+
     # Relationships
     user = relationship("User", backref="patient")
     document_type = relationship("DocumentType", backref="patients")

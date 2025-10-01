@@ -307,7 +307,8 @@ All VitalGo API endpoints return consistent, standardized error responses for im
 - ✅ **Implemented**: Demographic fields (biological_sex, gender, birth location, residence location)
 - ✅ **Implemented**: Medical fields (eps, occupation, blood_type, emergency_contact_*)
 - ✅ **Implemented**: Extended insurance fields (additional_insurance, complementary_plan)
-- **Note**: All RF002 fields are now implemented and functional
+- ✅ **Implemented**: Gynecological fields (is_pregnant, pregnancy_weeks, menstrual history, reproductive history)
+- **Note**: All RF002 and RF003 fields are now implemented and functional
 
 **ExtendedPatientProfileDTO Personal Information Fields:**
 ```json
@@ -334,7 +335,15 @@ All VitalGo API endpoints return consistent, standardized error responses for im
   "emergency_contact_name": "string|null",
   "emergency_contact_relationship": "string|null",
   "emergency_contact_phone": "string|null",
-  "emergency_contact_phone_alt": "string|null"
+  "emergency_contact_phone_alt": "string|null",
+  "is_pregnant": "boolean|null",
+  "pregnancy_weeks": "number|null",
+  "last_menstruation_date": "string|null",
+  "pregnancies_count": "number|null",
+  "births_count": "number|null",
+  "cesareans_count": "number|null",
+  "abortions_count": "number|null",
+  "contraceptive_method": "string|null"
 }
 ```
 
@@ -348,7 +357,8 @@ All VitalGo API endpoints return consistent, standardized error responses for im
 - ✅ **Implemented**: Demographic fields (biological_sex, gender, birth location, residence location)
 - ✅ **Implemented**: Medical fields (eps, occupation, blood_type, emergency_contact_*)
 - ✅ **Implemented**: Extended insurance fields (additional_insurance, complementary_plan)
-- **Note**: All RF002 fields are now implemented and functional
+- ✅ **Implemented**: Gynecological fields (is_pregnant, pregnancy_weeks, menstrual history, reproductive history)
+- **Note**: All RF002 and RF003 fields are now implemented and functional
 
 **CompleteProfileRequestDTO Personal Information Fields:**
 ```json
@@ -375,7 +385,15 @@ All VitalGo API endpoints return consistent, standardized error responses for im
   "emergency_contact_name": "string",
   "emergency_contact_relationship": "string",
   "emergency_contact_phone": "string",
-  "emergency_contact_phone_alt": "string"
+  "emergency_contact_phone_alt": "string",
+  "is_pregnant": "boolean",
+  "pregnancy_weeks": "number",
+  "last_menstruation_date": "string",
+  "pregnancies_count": "number",
+  "births_count": "number",
+  "cesareans_count": "number",
+  "abortions_count": "number",
+  "contraceptive_method": "string"
 }
 ```
 
