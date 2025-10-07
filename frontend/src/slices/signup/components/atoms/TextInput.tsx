@@ -15,6 +15,8 @@ interface TextInputProps {
   validation?: FieldValidationState;
   required?: boolean;
   maxLength?: number;
+  type?: 'text' | 'email' | 'tel';
+  autocomplete?: string;
   'data-testid'?: string;
 }
 
@@ -29,6 +31,8 @@ export const TextInput: React.FC<TextInputProps> = ({
   validation,
   required = false,
   maxLength,
+  type = 'text',
+  autocomplete,
   'data-testid': testId
 }) => {
   const getInputClasses = () => {
@@ -58,12 +62,13 @@ export const TextInput: React.FC<TextInputProps> = ({
         <input
           id={id}
           name={name}
-          type="text"
+          type={type}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
           onBlur={onBlur}
           maxLength={maxLength}
+          autoComplete={autocomplete}
           className={getInputClasses()}
           data-testid={testId}
           required={required}

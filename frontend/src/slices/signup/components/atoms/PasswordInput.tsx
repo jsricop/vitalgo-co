@@ -14,6 +14,7 @@ interface PasswordInputProps {
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   required?: boolean;
   showStrengthIndicator?: boolean;
+  autocomplete?: string;
   'data-testid'?: string;
 }
 
@@ -27,6 +28,7 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
   onBlur,
   required = false,
   showStrengthIndicator = false,
+  autocomplete,
   'data-testid': testId
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -66,6 +68,7 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
+          autoComplete={autocomplete}
           className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
           data-testid={testId}
           required={required}

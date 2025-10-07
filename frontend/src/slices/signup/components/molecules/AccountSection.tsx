@@ -40,6 +40,7 @@ export const AccountSection: React.FC<AccountSectionProps> = ({
         <TextInput
           id="email"
           name="email"
+          type="email"
           label="Correo electrónico"
           placeholder="Ej: juan.perez@email.com"
           value={email}
@@ -48,6 +49,7 @@ export const AccountSection: React.FC<AccountSectionProps> = ({
           validation={validationStates.email}
           required
           maxLength={255}
+          autocomplete="email"
           data-testid="email-input"
         />
 
@@ -61,6 +63,7 @@ export const AccountSection: React.FC<AccountSectionProps> = ({
           onBlur={() => onFieldBlur('password')}
           showStrengthIndicator
           required
+          autocomplete="new-password"
           data-testid="password-input"
         />
 
@@ -73,6 +76,7 @@ export const AccountSection: React.FC<AccountSectionProps> = ({
           onChange={(e) => onInputChange('confirmPassword', e.target.value)}
           onBlur={() => onFieldBlur('confirmPassword')}
           required
+          autocomplete="new-password"
           data-testid="confirmPassword-input"
         />
 

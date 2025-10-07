@@ -90,82 +90,87 @@ class SurgeriesAPIService {
    * Get a specific surgery by ID
    */
   async getSurgeryById(id: number): Promise<Surgery> {
-    console.log('📡 SURGERIES API: Fetching surgery by ID:', id);
+    try {
+      console.log('📡 SURGERIES API: Fetching surgery by ID:', id);
 
-    const response = await fetch(`${API_BASE_URL}/api/surgeries/${id}`, {
-      method: 'GET',
-      headers: await this.getAuthHeaders(),
-    });
+      const response = await apiClient.get<SurgeryApiResponse>(`/surgeries/${id}`);
+      const surgery = this.transformFromApiResponse(response.data);
 
-    const apiSurgery: SurgeryApiResponse = await this.handleResponse(response);
-    const surgery = this.transformFromApiResponse(apiSurgery);
-
-    console.log('✅ SURGERIES API: Successfully fetched surgery:', surgery);
-    return surgery;
+      console.log('✅ SURGERIES API: Successfully fetched surgery:', surgery);
+      return surgery;
+    } catch (error) {
+      console.error('❌ SURGERIES API: Error fetching surgery:', error);
+      // Re-throw as standard Error for consistent error handling
+      if (error && typeof error === 'object' && 'message' in error && typeof (error as any).status === 'number') {
+        throw new Error((error as any).message);
+      }
+      throw error;
+    }
   }
 
   /**
    * Create a new surgery
    */
   async createSurgery(data: SurgeryFormData): Promise<Surgery> {
-    console.log('📡 SURGERIES API: Creating new surgery:', data);
+    try {
+      console.log('📡 SURGERIES API: Creating new surgery:', data);
 
-    const apiData = this.transformToApiRequest(data);
+      const apiData = this.transformToApiRequest(data);
+      const response = await apiClient.post<SurgeryApiResponse>('/surgeries/', apiData);
+      const surgery = this.transformFromApiResponse(response.data);
 
-    const response = await fetch(`${API_BASE_URL}/api/surgeries/`, {
-      method: 'POST',
-      headers: await this.getAuthHeaders(),
-      body: JSON.stringify(apiData),
-    });
-
-    const apiSurgery: SurgeryApiResponse = await this.handleResponse(response);
-    const surgery = this.transformFromApiResponse(apiSurgery);
-
-    console.log('✅ SURGERIES API: Successfully created surgery:', surgery);
-    return surgery;
+      console.log('✅ SURGERIES API: Successfully created surgery:', surgery);
+      return surgery;
+    } catch (error) {
+      console.error('❌ SURGERIES API: Error creating surgery:', error);
+      // Re-throw as standard Error for consistent error handling
+      if (error && typeof error === 'object' && 'message' in error && typeof (error as any).status === 'number') {
+        throw new Error((error as any).message);
+      }
+      throw error;
+    }
   }
 
   /**
    * Update an existing surgery
    */
   async updateSurgery(id: number, data: SurgeryFormData): Promise<Surgery> {
-    console.log('📡 SURGERIES API: Updating surgery:', { id, data });
+    try {
+      console.log('📡 SURGERIES API: Updating surgery:', { id, data });
 
-    const apiData = this.transformToApiRequest(data);
+      const apiData = this.transformToApiRequest(data);
+      const response = await apiClient.put<SurgeryApiResponse>(`/surgeries/${id}`, apiData);
+      const surgery = this.transformFromApiResponse(response.data);
 
-    const response = await fetch(`${API_BASE_URL}/api/surgeries/${id}`, {
-      method: 'PUT',
-      headers: await this.getAuthHeaders(),
-      body: JSON.stringify(apiData),
-    });
-
-    const apiSurgery: SurgeryApiResponse = await this.handleResponse(response);
-    const surgery = this.transformFromApiResponse(apiSurgery);
-
-    console.log('✅ SURGERIES API: Successfully updated surgery:', surgery);
-    return surgery;
+      console.log('✅ SURGERIES API: Successfully updated surgery:', surgery);
+      return surgery;
+    } catch (error) {
+      console.error('❌ SURGERIES API: Error updating surgery:', error);
+      // Re-throw as standard Error for consistent error handling
+      if (error && typeof error === 'object' && 'message' in error && typeof (error as any).status === 'number') {
+        throw new Error((error as any).message);
+      }
+      throw error;
+    }
   }
 
   /**
    * Delete a surgery
    */
   async deleteSurgery(id: number): Promise<void> {
-    console.log('📡 SURGERIES API: Deleting surgery:', id);
+    try {
+      console.log('📡 SURGERIES API: Deleting surgery:', id);
 
-    const response = await fetch(`${API_BASE_URL}/api/surgeries/${id}`, {
-      method: 'DELETE',
-      headers: await this.getAuthHeaders(),
-    });
-
-    // Handle 204 No Content response for successful deletion
-    if (response.status === 204) {
+      await apiClient.delete(`/surgeries/${id}`);
       console.log('✅ SURGERIES API: Successfully deleted surgery:', id);
-      return;
+    } catch (error) {
+      console.error('❌ SURGERIES API: Error deleting surgery:', error);
+      // Re-throw as standard Error for consistent error handling
+      if (error && typeof error === 'object' && 'message' in error && typeof (error as any).status === 'number') {
+        throw new Error((error as any).message);
+      }
+      throw error;
     }
-
-    // If not 204, handle as normal response (should be error)
-    await this.handleResponse(response);
-    console.log('✅ SURGERIES API: Successfully deleted surgery:', id);
   }
 }
 

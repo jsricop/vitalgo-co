@@ -31,11 +31,17 @@ export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) 
   };
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+    // Handle date parsing to avoid timezone issues
+    // If the date string doesn't include a time (T), append T00:00:00 to interpret as local time
+    const date = dateString.includes('T')
+      ? new Date(dateString)
+      : new Date(dateString + 'T00:00:00');
+
     return date.toLocaleDateString('es-CO', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
+      timeZone: 'America/Bogota'
     });
   };
 

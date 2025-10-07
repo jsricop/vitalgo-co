@@ -153,6 +153,16 @@ class ApiClientService {
       throw apiError;
     }
 
+    // Handle 204 No Content (DELETE operations return empty body)
+    if (response.status === 204) {
+      console.log('✅ UNIFIED API: 204 No Content - DELETE operation successful');
+      return {
+        data: null as T,
+        status: response.status,
+        statusText: response.statusText
+      };
+    }
+
     const data = await response.json();
 
     return {

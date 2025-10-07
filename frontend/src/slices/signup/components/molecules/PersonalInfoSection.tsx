@@ -77,6 +77,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           validation={validationStates.firstName}
           required
           maxLength={50}
+          autocomplete="given-name"
           data-testid="firstName-input"
         />
 
@@ -91,6 +92,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           validation={validationStates.lastName}
           required
           maxLength={50}
+          autocomplete="family-name"
           data-testid="lastName-input"
         />
 
@@ -117,6 +119,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           validation={validationStates.documentNumber}
           required
           maxLength={20}
+          autocomplete="off"
           data-testid="documentNumber-input"
         />
 
@@ -155,6 +158,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             onBlur={() => onFieldBlur('birthDate')}
             error={errors.birthDate}
             required
+            autocomplete="bday"
             data-testid="birthDate-input"
           />
         </div>

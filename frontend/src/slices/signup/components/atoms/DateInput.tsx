@@ -12,6 +12,7 @@ interface DateInputProps {
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   required?: boolean;
   error?: string;
+  autocomplete?: string;
   'data-testid'?: string;
 }
 
@@ -24,6 +25,7 @@ export const DateInput: React.FC<DateInputProps> = ({
   onBlur,
   required = false,
   error,
+  autocomplete,
   'data-testid': testId
 }) => {
   // Calculate max date (18 years ago) and min date (120 years ago)
@@ -51,6 +53,7 @@ export const DateInput: React.FC<DateInputProps> = ({
         onBlur={onBlur}
         min={formatDate(minDate)}
         max={formatDate(maxDate)}
+        autoComplete={autocomplete}
         className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
           error
             ? 'border-red-300 focus:ring-red-500'
