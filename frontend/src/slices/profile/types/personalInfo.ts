@@ -33,6 +33,7 @@ export interface PersonalPatientInfo {
   is_pregnant?: boolean | null;
   pregnancy_weeks?: number | null;
   last_menstruation_date?: string | null;
+  menstrual_status?: string | null;
   pregnancies_count?: number | null;
   births_count?: number | null;
   cesareans_count?: number | null;
@@ -71,6 +72,7 @@ export interface PersonalPatientUpdate {
   is_pregnant?: boolean | null;
   pregnancy_weeks?: number | null;
   last_menstruation_date?: string | null;
+  menstrual_status?: string | null;
   pregnancies_count?: number | null;
   births_count?: number | null;
   cesareans_count?: number | null;

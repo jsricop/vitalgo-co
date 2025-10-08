@@ -18,7 +18,7 @@ export function DashboardPreview() {
               height={32}
               className="h-8 w-8"
             />
-            <span className="font-bold text-vitalgo-dark">Dashboard Médico</span>
+            <span className="font-bold text-vitalgo-dark">Panel de Control Médico</span>
           </div>
           <Badge variant="success" className="bg-vitalgo-green text-white">
             En vivo

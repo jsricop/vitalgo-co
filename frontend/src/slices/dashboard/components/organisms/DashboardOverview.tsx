@@ -91,7 +91,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
       {/* Welcome Header */}
       <div className="bg-white rounded-lg p-6 border border-gray-200">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          Dashboard Médico
+          Panel de Control Médico
         </h1>
         <p className="text-gray-600">
           Gestiona tu información médica de forma segura y accesible

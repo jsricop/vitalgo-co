@@ -135,3 +135,6 @@ scripts/local-deploy-*.log
 docs/DB.md
 docs/APIS.md
 docs/TYPES.md
+backend/slices/backend/
+backend/slices/frontend/
+backend/slices/package*.json

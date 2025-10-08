@@ -37,7 +37,7 @@ export function PatientNavbar({
       href: "/profile"
     },
     {
-      label: "Dashboard",
+      label: "Panel de Control",
       href: "/dashboard"
     },
     {

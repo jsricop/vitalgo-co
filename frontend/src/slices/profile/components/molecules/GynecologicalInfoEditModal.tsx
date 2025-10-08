@@ -37,6 +37,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
         is_pregnant: initialData.is_pregnant ?? null,
         pregnancy_weeks: initialData.pregnancy_weeks ?? null,
         last_menstruation_date: initialData.last_menstruation_date || '',
+        menstrual_status: initialData.menstrual_status || null,
         pregnancies_count: initialData.pregnancies_count ?? null,
         births_count: initialData.births_count ?? null,
         cesareans_count: initialData.cesareans_count ?? null,
@@ -291,21 +292,75 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
               {/* Menstrual Information Section */}
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="text-lg font-medium text-vitalgo-dark mb-4">Información Menstrual</h4>
-                <div>
-                  <label className="block text-sm font-medium text-vitalgo-dark mb-2">
-                    Fecha de última menstruación
-                  </label>
-                  <input
-                    type="date"
-                    value={formData.last_menstruation_date || ''}
-                    onChange={(e) => handleFieldChange('last_menstruation_date', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 ${
-                      errors.last_menstruation_date ? 'border-red-500' : 'border-gray-300'
-                    }`}
-                  />
-                  {errors.last_menstruation_date && (
-                    <p className="mt-1 text-sm text-red-600">{errors.last_menstruation_date}</p>
-                  )}
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-vitalgo-dark mb-3">
+                      Estado menstrual
+                    </label>
+                    <div className="flex flex-wrap gap-4">
+                      <label className="flex items-center p-2 hover:bg-purple-50 cursor-pointer transition-colors duration-150">
+                        <input
+                          type="radio"
+                          name="menstrual_status"
+                          value="NOT_STARTED"
+                          checked={formData.menstrual_status === 'NOT_STARTED'}
+                          onChange={(e) => handleFieldChange('menstrual_status', e.target.value)}
+                          className="h-4 w-4 text-purple-500 focus:ring-purple-500 border-purple-300 accent-purple-500"
+                        />
+                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">No ha tenido menstruación</span>
+                      </label>
+                      <label className="flex items-center p-2 hover:bg-purple-50 cursor-pointer transition-colors duration-150">
+                        <input
+                          type="radio"
+                          name="menstrual_status"
+                          value="ACTIVE"
+                          checked={formData.menstrual_status === 'ACTIVE'}
+                          onChange={(e) => handleFieldChange('menstrual_status', e.target.value)}
+                          className="h-4 w-4 text-purple-500 focus:ring-purple-500 border-purple-300 accent-purple-500"
+                        />
+                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">Tiene menstruación</span>
+                      </label>
+                      <label className="flex items-center p-2 hover:bg-purple-50 cursor-pointer transition-colors duration-150">
+                        <input
+                          type="radio"
+                          name="menstrual_status"
+                          value="MENOPAUSE"
+                          checked={formData.menstrual_status === 'MENOPAUSE'}
+                          onChange={(e) => handleFieldChange('menstrual_status', e.target.value)}
+                          className="h-4 w-4 text-purple-500 focus:ring-purple-500 border-purple-300 accent-purple-500"
+                        />
+                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">En menopausia</span>
+                      </label>
+                      <label className="flex items-center p-2 hover:bg-purple-50 cursor-pointer transition-colors duration-150">
+                        <input
+                          type="radio"
+                          name="menstrual_status"
+                          value=""
+                          checked={formData.menstrual_status === null || formData.menstrual_status === ''}
+                          onChange={() => handleFieldChange('menstrual_status', null)}
+                          className="h-4 w-4 text-purple-500 focus:ring-purple-500 border-purple-300 accent-purple-500"
+                        />
+                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">Prefiero no responder</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-vitalgo-dark mb-2">
+                      Fecha de última menstruación
+                    </label>
+                    <input
+                      type="date"
+                      value={formData.last_menstruation_date || ''}
+                      onChange={(e) => handleFieldChange('last_menstruation_date', e.target.value)}
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 ${
+                        errors.last_menstruation_date ? 'border-red-500' : 'border-gray-300'
+                      }`}
+                    />
+                    {errors.last_menstruation_date && (
+                      <p className="mt-1 text-sm text-red-600">{errors.last_menstruation_date}</p>
+                    )}
+                  </div>
                 </div>
               </div>
 

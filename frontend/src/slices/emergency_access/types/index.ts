@@ -68,6 +68,7 @@ export interface EmergencyData {
   isPregnant?: boolean;
   pregnancyWeeks?: number;
   lastMenstruationDate?: string; // ISO date string
+  menstrualStatus?: string; // 'NOT_STARTED', 'ACTIVE', 'MENOPAUSE', or null
   pregnanciesCount?: number;
   birthsCount?: number;
   cesareansCount?: number;

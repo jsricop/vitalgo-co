@@ -89,7 +89,7 @@ export const QRLandingPage: React.FC<QRLandingPageProps> = ({ qrCode }) => {
                 onClick={() => router.push('/dashboard')}
                 className="w-full bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
               >
-                Ir al Dashboard
+                Ir al Panel de Control
               </button>
               <button
                 onClick={() => {

@@ -94,6 +94,16 @@ export function GynecologicalInformationTab({ 'data-testid': testId }: TabConten
     return isPregnant ? 'Sí' : 'No';
   };
 
+  const getMenstrualStatusLabel = (status: string | null | undefined) => {
+    if (!status) return 'No especificado';
+    const statusMap: Record<string, string> = {
+      'NOT_STARTED': 'No ha tenido menstruación',
+      'ACTIVE': 'Tiene menstruación',
+      'MENOPAUSE': 'En menopausia',
+    };
+    return statusMap[status] || status;
+  };
+
   if (loading) {
     return (
       <div className="bg-white rounded-b-xl border border-gray-200 p-6 mt-0 min-h-[400px]" data-testid={testId}>
@@ -179,6 +189,7 @@ export function GynecologicalInformationTab({ 'data-testid': testId }: TabConten
     is_pregnant: personalInfo?.is_pregnant ?? null,
     pregnancy_weeks: personalInfo?.pregnancy_weeks ?? null,
     last_menstruation_date: personalInfo?.last_menstruation_date ?? null,
+    menstrual_status: personalInfo?.menstrual_status ?? null,
     pregnancies_count: personalInfo?.pregnancies_count ?? null,
     births_count: personalInfo?.births_count ?? null,
     cesareans_count: personalInfo?.cesareans_count ?? null,
@@ -261,6 +272,10 @@ export function GynecologicalInformationTab({ 'data-testid': testId }: TabConten
                 <h4 className="text-sm font-semibold text-vitalgo-dark ml-2">Información Menstrual</h4>
               </div>
               <div className="space-y-2">
+                <div>
+                  <span className="text-xs text-vitalgo-dark-lighter block">Estado menstrual</span>
+                  <span className="text-sm font-medium text-vitalgo-dark">{getMenstrualStatusLabel(gynecologicalData.menstrual_status)}</span>
+                </div>
                 <div>
                   <span className="text-xs text-vitalgo-dark-lighter block">Última menstruación</span>
                   <span className="text-sm font-medium text-vitalgo-dark">{formatDate(gynecologicalData.last_menstruation_date)}</span>

@@ -31,7 +31,7 @@ export default function UnauthorizedPage() {
               onClick={() => router.push('/dashboard')}
               className="w-full bg-vitalgo-green text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold"
             >
-              Ir al Dashboard
+              Ir al Panel de Control
             </button>
             <button
               onClick={async () => {

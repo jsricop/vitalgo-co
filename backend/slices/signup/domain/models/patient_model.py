@@ -73,6 +73,7 @@ class Patient(Base):
     is_pregnant = Column(Boolean, nullable=True)
     pregnancy_weeks = Column(Integer, nullable=True)  # 1-42 weeks
     last_menstruation_date = Column(Date, nullable=True)
+    menstrual_status = Column(String(20), nullable=True)  # 'NOT_STARTED', 'ACTIVE', 'MENOPAUSE', or NULL
     pregnancies_count = Column(Integer, nullable=True)  # 0 or greater
     births_count = Column(Integer, nullable=True)  # 0 or greater
     cesareans_count = Column(Integer, nullable=True)  # 0 or greater

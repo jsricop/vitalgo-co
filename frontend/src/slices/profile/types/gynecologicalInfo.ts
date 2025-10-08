@@ -7,6 +7,7 @@ export interface GynecologicalInfo {
   is_pregnant?: boolean | null;
   pregnancy_weeks?: number | null;
   last_menstruation_date?: string | null;
+  menstrual_status?: string | null;
   pregnancies_count?: number | null;
   births_count?: number | null;
   cesareans_count?: number | null;
@@ -20,6 +21,7 @@ export interface GynecologicalInfoFormData {
   is_pregnant: boolean | null;
   pregnancy_weeks: number | null;
   last_menstruation_date: string | null;
+  menstrual_status: string | null;
   pregnancies_count: number | null;
   births_count: number | null;
   cesareans_count: number | null;
@@ -50,6 +52,16 @@ export const PREGNANCY_STATUS_OPTIONS = [
   { value: false, label: 'No embarazada' },
   { value: true, label: 'Embarazada' },
 ] as const;
+
+// Menstrual status options
+export const MENSTRUAL_STATUS_OPTIONS = [
+  { value: null, label: 'No especificado' },
+  { value: 'NOT_STARTED', label: 'No ha tenido menstruación' },
+  { value: 'ACTIVE', label: 'Tiene menstruación' },
+  { value: 'MENOPAUSE', label: 'En menopausia' },
+] as const;
+
+export type MenstrualStatus = typeof MENSTRUAL_STATUS_OPTIONS[number]['value'];
 
 // Form validation constraints
 export const GYNECOLOGICAL_VALIDATION = {

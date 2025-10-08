@@ -7,9 +7,9 @@ import { DashboardPage } from '../../slices/dashboard/components/pages/Dashboard
 
 // SEO Metadata for the dashboard page
 export const metadata: Metadata = {
-  title: 'Dashboard Médico | VitalGo',
+  title: 'Panel de Control Médico | VitalGo',
   description: 'Gestiona tu información médica de forma segura. Accede a tus medicamentos, alergias, cirugías y historial médico.',
-  keywords: ['dashboard médico', 'expediente digital', 'información médica', 'medicamentos', 'alergias'],
+  keywords: ['panel de control médico', 'expediente digital', 'información médica', 'medicamentos', 'alergias'],
   robots: 'noindex, nofollow', // Private page, should not be indexed
 };
 
