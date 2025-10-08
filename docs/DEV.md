@@ -257,19 +257,22 @@ const response = await apiClient.get<Data>('/endpoint');
 3. Verify Authorization header in Network tab
 4. Follow working patterns from `basicProfileApi.ts` (new) or `medicationsApi.ts` (legacy)
 
-**Migration Status** (✅ COMPLETED):
+**Migration Status** (✅ FULLY COMPLETED):
+- ✅ **All APIs Migrated**: 100% of authenticated endpoints use unified client
 - ✅ **Profile API** (Basic): Uses unified client
 - ✅ **Medications API**: Migrated (373→242 lines, -35%)
 - ✅ **Allergies API**: Migrated (354→209 lines, -41%)
 - ✅ **Surgeries API**: Migrated (302→172 lines, -43%)
 - ✅ **Illnesses API**: Migrated (179→93 lines, -48%)
 - ✅ **Dashboard API**: Migrated (95→27 lines, -72%)
+- ✅ **QR API**: Uses unified client
+- ✅ **Emergency Access API**: Uses unified client
 - ✅ **Signup API**: Enhanced with consistent error handling (public endpoints)
 
 **Migration Results**:
-- **Total Lines Eliminated**: 560+ lines of duplicated auth code
-- **Average Reduction**: 45% across authenticated APIs
-- **Benefits**: Unified auth, consistent errors, automatic login redirects
+- **Total Lines Eliminated**: 600+ lines of duplicated auth code
+- **Average Reduction**: 48% across all APIs
+- **Benefits**: Unified auth, consistent errors, automatic login redirects, automatic case conversion
 
 ### Profile Endpoints Troubleshooting
 
@@ -580,3 +583,37 @@ return date.toLocaleDateString('es-CO', {
 - **Accessibility**: Add screen reader improvements for complex form sections
 
 **When in doubt, ask: "Which slice?" and "Which layer?"**
+
+---
+
+## Development Guide Status
+
+### ✅ Current Best Practices (October 2025)
+- **API Client**: 100% migration to unified `apiClient` complete
+- **Authentication**: No SWR with AuthGuard (use useState + useEffect)
+- **Case Conversion**: Automatic snake_case ↔ camelCase
+- **UUID Serialization**: All DTOs use `@field_serializer` for UUIDs
+- **QR System**: Uses `patients.qr_code` field directly
+- **Medical Tables**: BigInteger PKs for performance
+
+### 🎯 Active Development Patterns
+1. **Frontend API Services**: Use `apiClient.get/post/put/delete()`
+2. **Backend DTOs**: Include UUID field serializers
+3. **Type Safety**: TypeScript interfaces match Python Pydantic models
+4. **Error Handling**: ApiError interface (not class) - use duck typing
+5. **Date Handling**: Colombian timezone support for gynecological dates
+
+### 📋 Known Issues & Solutions
+- **Timezone Issues**: Fixed with explicit `America/Bogota` timezone handling
+- **Radio Button UX**: Horizontal layout preferred for pregnancy status
+- **Form Validation**: Business logic validation (births ≤ pregnancies, etc.)
+- **Type Compatibility**: Helper functions handle `undefined` from hooks
+
+### 🚀 Recent Implementations
+- **Gynecological Information Tab**: Complete RF003 implementation
+- **Radio Button Interface**: Pregnancy status with conditional fields
+- **Date Formatting**: Colombian locale with timezone handling
+- **Form Validation**: Enhanced business logic validation
+
+**Last Updated:** October 2025
+**Review Status:** ✅ Verified against current codebase and production

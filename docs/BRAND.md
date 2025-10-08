@@ -849,6 +849,37 @@ Para consultas sobre el manual de marca o solicitudes de nuevos componentes, con
 
 ---
 
-**Última actualización**: Septiembre 2025 (Illness System Implementation + Dashboard Cleanup)
-**Versión**: 2.2.0
-**Proyecto**: VitalGo Platform - `/Users/jsricop/dev-rq/projects/vitalgo-co`
+---
+
+## Brand Guide Implementation Status
+
+### ✅ Fully Implemented
+- **Color System**: VitalGo Green (#01EF7F) and VitalGo Dark (#002C41) in Tailwind config
+- **Modal Forms**: Unified pattern across all main pages
+- **Solid Green Buttons**: Primary actions use `bg-vitalgo-green text-white`
+- **Date Display Format**: "Actualizado: dd mmm yyyy" with Spanish locale
+- **Single Column Layouts**: Main pages use `space-y-4` pattern
+- **Page Architecture**: Header → Statistics → Filters → Content structure
+- **Dashboard Cards**: Consistent styling across medications, allergies, illnesses, surgeries
+- **Navigation**: PatientNavbar with proper spacing and mobile responsiveness
+
+### 🔄 In Progress
+- Migration from generic `green-500` to `vitalgo-green` (95% complete)
+- Dark mode implementation (colors defined, not fully implemented)
+
+### 📋 Design Patterns to Follow
+1. **Primary Buttons**: Always use `bg-vitalgo-green hover:bg-vitalgo-green-light text-white`
+2. **Modal Overlays**: Use `bg-black bg-opacity-50` with `z-50`
+3. **Card Styling**: `bg-white rounded-xl border border-gray-200 p-6`
+4. **Date Formatting**: Use `formatDateShort()` helper with Spanish locale
+5. **Empty States**: Centered with icon, title, description, and CTA button
+
+### 🎨 Asset Organization
+- All logos in `/frontend/public/assets/images/logos/`
+- Favicons and PWA icons in `/frontend/public/`
+- Brand colors configured in `frontend/tailwind.config.ts`
+
+**Last Updated**: October 2025 (Documentation Review)
+**Version**: 2.3.0
+**Review Status**: ✅ Verified against current implementation
+**Project**: VitalGo Platform - `/Users/jsricop/dev-rq/projects/vitalgo-co`

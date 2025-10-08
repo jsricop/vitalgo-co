@@ -181,6 +181,12 @@ All VitalGo API endpoints return consistent, standardized error responses for im
 **Status:** 200 updated, 404 not found, 422 validation error (detailed), 401 unauthorized, 403 non-patient forbidden
 **Validation Error Format:** `{message: "Validation failed", errors: [{field: string, message: string, type: string}]}`
 
+### PATCH /api/medications/{medication_id}/toggle-status
+**Description:** Toggle medication active/inactive status
+**In:** `Authorization: Bearer {token}`
+**Out:** `PatientMedicationDTO`
+**Status:** 200 updated, 404 not found, 401 unauthorized, 403 non-patient forbidden
+
 ### DELETE /api/medications/{medication_id}
 **Description:** Delete medication record
 **In:** `Authorization: Bearer {token}`
@@ -435,41 +441,7 @@ All VitalGo API endpoints return consistent, standardized error responses for im
 **Out:** `{success: boolean, message: string}`
 **Status:** 200 updated, 400 validation error, 401 unauthorized, 404 not found
 
-### POST /api/profile/photo
-**Description:** Upload profile photo for current user
-**In:** `Authorization: Bearer {token}`, `multipart/form-data` with `photo` file field
-**File Requirements:**
-- **Formats:** .jpg, .jpeg, .png, .webp
-- **Max Size:** 5MB
-- **Field Name:** `photo`
-**Out:** `ProfilePhotoResponseDTO`
-**ProfilePhotoResponseDTO:** `{success: boolean, message: string, photo_url?: string}`
-**Status:** 200 uploaded, 400 validation error (no file/invalid format/too large), 401 unauthorized, 500 upload failed
-**Features:** Automatic file validation, unique filename generation, dual storage support (local/S3)
-
-### DELETE /api/profile/photo
-**Description:** Delete profile photo for current user
-**In:** `Authorization: Bearer {token}`
-**Out:** `ProfilePhotoResponseDTO`
-**ProfilePhotoResponseDTO:** `{success: boolean, message: string, photo_url: null}`
-**Status:** 200 deleted, 400 deletion failed, 401 unauthorized, 500 server error
-
-## Patient Endpoints (/api/patient) - New Architecture
-
-### GET /api/patient/basic
-**Description:** Get basic patient information (from signup) - Enhanced endpoint with unified client support
-**In:** `Authorization: Bearer {token}`
-**Out:** `BasicPatientInfoDTO`
-**BasicPatientInfoDTO:** `{first_name: string, last_name: string, document_type: string, document_number: string, phone_international: string, birth_date: string, origin_country: string, email: string, profile_photo_url?: string}`
-**Status:** 200 success, 401 unauthorized, 404 patient not found
-**Notes:** Replaces `/api/profile/basic` with improved validation and error handling
-
-### PUT /api/patient/basic
-**Description:** Update basic patient information - Enhanced with duplicate checking
-**In:** `Authorization: Bearer {token}`, `BasicPatientUpdateDTO`
-**BasicPatientUpdateDTO:** `{first_name?: string, last_name?: string, document_type?: string, document_number?: string, phone_international?: string, birth_date?: string, origin_country?: string, email?: string}`
-**Out:** `{success: boolean, message: string}`
-**Status:** 200 updated, 400 validation error or duplicate document/email, 401 unauthorized, 404 patient not found
+**Note:** Profile photo upload/delete endpoints are not currently implemented. Profile photos are stored in the `patients` table via the `profile_photo_url` field which can be set during profile updates.
 
 ### PUT /api/profile/medications/{medication_id}
 **Description:** Update existing medication
@@ -833,3 +805,33 @@ From `emergency_qrs` table:
 - File: `frontend/src/slices/qr/hooks/usePatientQR.ts`
 - Pattern: `useState + useCallback + useEffect` (no SWR)
 - Returns: `{ qr, loading, error, refetch }`
+
+---
+
+## API Implementation Status
+
+### ✅ Fully Implemented
+- Authentication (`/api/auth/*`)
+- Signup & Validation (`/api/signup/*`)
+- Dashboard (`/api/dashboard/`)
+- Medications (`/api/medications/*`) - with toggle-status endpoint
+- Allergies (`/api/allergies/*`)
+- Surgeries (`/api/surgeries/*`)
+- Illnesses (`/api/illnesses/*`)
+- Profile (`/api/profile/*`) - basic info, extended info, completeness
+- QR Code (`/api/qr/`) - simple patient QR display
+- Emergency Access (`/api/emergency/{qr_code}`) - paramedic access
+
+### ⚠️ Partially Documented (Needs Review)
+- None - all endpoints match implementation
+
+### ❌ Not Implemented
+- Profile photo upload/delete (documented but not implemented)
+- Patient-specific endpoints (`/api/patient/*`) - deprecated in favor of `/api/profile/*`
+
+### 🔄 Deprecated/Removed
+- Old `/api/v1/emergency` endpoints - replaced by `/api/emergency`
+- Complex QR router with emergency_qrs table - replaced by simple router using patients.qr_code
+
+**Last Updated:** October 2025
+**Review Status:** ✅ Verified against production codebase

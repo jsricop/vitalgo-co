@@ -1374,8 +1374,13 @@ class QRResponseDTO(BaseModel):
 
 ### QR Model (from /slices/qr/domain/models/qr_model.py)
 ```python
+# NOTE: The emergency_qrs table exists but is not currently used
+# QR codes are now stored directly in the patients.qr_code field (UUID)
+# The simple QR router (qr_simple_router.py) uses patients.qr_code directly
+# See: backend/slices/qr/infrastructure/api/qr_simple_router.py
+
 class QR(Base):
-    """QR code model for patient emergency access"""
+    """QR code model for patient emergency access (DEPRECATED - not actively used)"""
     __tablename__ = "emergency_qrs"
 
     id: UUID
@@ -1394,3 +1399,35 @@ class QR(Base):
         """Get the QR access URL"""
         return f"/qr/{self.qr_uuid}"
 ```
+
+---
+
+## Type System Implementation Status
+
+### ✅ Fully Implemented & Documented
+- **Auth Types** (`auth/types/index.ts`) - User, LoginForm, LoginResponse, AuthState
+- **Signup Types** (`signup/types/index.ts`) - PatientRegistrationForm, DocumentType
+- **Profile Types** (`profile/types/*`) - BasicPatientInfo, PersonalPatientInfo, GynecologicalInfo
+- **Dashboard Types** (`dashboard/types/index.ts`) - DashboardData, DashboardStats
+- **Medications Types** (`medications/types/index.ts`) - Medication, MedicationFormData
+- **Allergies Types** (`allergies/types/index.ts`) - Allergy, AllergyFormData
+- **Surgeries Types** (`surgeries/types/index.ts`) - Surgery, SurgeryFormData
+- **Illnesses Types** (`illnesses/types/index.ts`) - PatientIllnessDTO, IllnessFormData
+- **QR Types** (`qr/types/index.ts`) - QRCode, QRApiResponse
+- **Emergency Access Types** (`emergency_access/types/index.ts`) - EmergencyData, Emergency medical records
+
+### 🔄 Implementation Notes
+- **QR System**: Uses `patients.qr_code` field directly, not `emergency_qrs` table
+- **Profile Photos**: `profile_photo_url` field exists in patients table but no upload API yet
+- **Case Conversion**: Automatic `snake_case` ↔ `camelCase` via unified API client
+- **UUID Serialization**: Backend DTOs use `@field_serializer` for UUID → string conversion
+
+### 📋 Type Consistency Rules
+1. **Backend**: Always `snake_case` (Python/SQL convention)
+2. **Frontend**: Always `camelCase` (TypeScript/JavaScript convention)
+3. **API Responses**: Backend sends `snake_case`, frontend auto-converts to `camelCase`
+4. **API Requests**: Frontend sends `camelCase`, backend auto-converts to `snake_case`
+5. **DTOs**: All DTOs with UUID fields must include field serializers
+
+**Last Updated:** October 2025
+**Review Status:** ✅ Verified against codebase
