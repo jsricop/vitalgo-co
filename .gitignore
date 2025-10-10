@@ -71,6 +71,7 @@ secrets/
 .aws/
 .terraform/
 *.plan
+*.tfplan
 *.backup
 
 # Test outputs
@@ -138,3 +139,15 @@ docs/TYPES.md
 backend/slices/backend/
 backend/slices/frontend/
 backend/slices/package*.json
+.github-token-info.md
+
+# Production incident reports with sensitive data - NEVER COMMIT
+LOGIN_500_ERROR_FIX_REPORT.md
+CLEANUP_VIRGINIA_INFRASTRUCTURE.md
+*_REPORT.md
+*_FIX_*.md
+*CLEANUP*.md
+*MIGRATION_SUCCESS*.txt
+*DATA_SYNC*.txt
+*VERIFICATION*.txt
+*FINAL_DATA*.txt
