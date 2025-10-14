@@ -3,7 +3,7 @@
 variable "aws_region" {
   description = "AWS region for resources"
   type        = string
-  default     = "us-east-1"
+  default     = "us-east-2"  # Changed from us-east-1 to us-east-2 (Ohio) for free credits
 }
 
 variable "key_pair_name" {
@@ -14,7 +14,7 @@ variable "key_pair_name" {
 variable "db_name" {
   description = "Database name"
   type        = string
-  default     = "vitalgo_prod"
+  default     = "postgres"  # Using 'postgres' to match current production configuration
 }
 
 variable "db_username" {
