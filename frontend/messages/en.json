@@ -1,0 +1,1053 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "required": "Required",
+    "optional": "Optional",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "finish": "Finish",
+    "continue": "Continue",
+    "and": "and",
+    "termsAndConditions": "Terms and Conditions",
+    "privacyPolicy": "Privacy Policy",
+    "allRightsReserved": "All rights reserved.",
+    "support": "Support"
+  },
+  "nav": {
+    "home": "Home",
+    "login": "Log In",
+    "signup": "Sign Up",
+    "dashboard": "Dashboard",
+    "profile": "My Profile",
+    "qr": "My QR",
+    "medications": "Medications",
+    "allergies": "Allergies",
+    "illnesses": "Illnesses",
+    "surgeries": "Surgeries",
+    "logout": "Log Out",
+    "loading": "Loading...",
+    "loadingUser": "Loading user...",
+    "language": "Language"
+  },
+  "auth": {
+    "loginTitle": "Log In",
+    "loginSubtitle": "Access your VitalGo account",
+    "signupTitle": "Create Account",
+    "signupSubtitle": "Sign up to get started",
+    "email": "Email",
+    "emailPlaceholder": "your@email.com",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPassword": "Confirm Password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "rememberMe": "Keep me logged in",
+    "forgotPassword": "Forgot your password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "loginButton": "Log In",
+    "loggingIn": "Logging in...",
+    "signupButton": "Sign Up",
+    "signUpHere": "Sign up here",
+    "logoutButton": "Log Out",
+    "backToHome": "Back to home",
+    "emailValid": "✓ Valid email",
+    "legalAcceptance": "By logging in, you accept our",
+    "validation": {
+      "enterValidEmail": "Enter a valid email",
+      "fillAllFields": "Please fill in all fields",
+      "attemptsRemaining": "Remaining attempts",
+      "retryAfterMinutes": "Try again in {minutes} minutes",
+      "connectionError": "Connection error. Check your internet."
+    }
+  },
+  "signup": {
+    "title": "Create Your VitalGo Account",
+    "subtitle": "Start managing your health digitally",
+    "personalInfoTitle": "Personal Information",
+    "accountInfoTitle": "Account Information",
+    "legalSectionTitle": "Legal Acceptance",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "documentType": "Document Type",
+    "documentNumber": "Document Number",
+    "birthDate": "Birth Date",
+    "originCountry": "Country of Origin",
+    "phone": "Phone Number",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "firstNamePlaceholder": "Enter your first name",
+    "lastNamePlaceholder": "Enter your last name",
+    "documentTypePlaceholder": "Select document type",
+    "documentNumberPlaceholder": "Enter document number",
+    "birthDatePlaceholder": "MM/DD/YYYY",
+    "originCountryPlaceholder": "Select your country",
+    "phonePlaceholder": "+57 300 123 4567",
+    "emailPlaceholder": "your@email.com",
+    "passwordPlaceholder": "Minimum 8 characters",
+    "confirmPasswordPlaceholder": "Re-enter your password",
+    "validation": {
+      "firstNameRequired": "First name is required",
+      "firstNameInvalid": "First name must contain only letters",
+      "firstNameMinLength": "First name must be at least 2 characters",
+      "lastNameRequired": "Last name is required",
+      "lastNameInvalid": "Last name must contain only letters",
+      "lastNameMinLength": "Last name must be at least 2 characters",
+      "documentRequired": "Document number is required",
+      "documentInvalid": "Invalid document number format",
+      "documentTypeRequired": "Document type is required",
+      "phoneRequired": "Phone number is required",
+      "phoneInvalid": "Invalid phone number format",
+      "phoneInvalidColombia": "Colombian phone must be 10 digits",
+      "phoneInvalidUSA": "US phone must be 10 digits",
+      "phoneInvalidMexico": "Mexican phone must be 10 digits",
+      "phoneInvalidSpain": "Spanish phone must be 9 digits",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email format",
+      "emailTaken": "This email is already registered",
+      "passwordRequired": "Password is required",
+      "passwordWeak": "Password must be at least 8 characters and include uppercase, lowercase, and numbers",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "passwordUppercase": "Password must include at least one uppercase letter",
+      "passwordLowercase": "Password must include at least one lowercase letter",
+      "passwordNumber": "Password must include at least one number",
+      "passwordsMismatch": "Passwords do not match",
+      "confirmPasswordRequired": "Please confirm your password",
+      "birthDateRequired": "Birth date is required",
+      "birthDateInvalid": "Invalid birth date",
+      "ageRestriction": "You must be at least 18 years old to register",
+      "ageTooOld": "Please enter a valid birth date",
+      "countryRequired": "Country of origin is required",
+      "termsRequired": "You must accept the Terms and Conditions",
+      "privacyRequired": "You must accept the Privacy Policy"
+    },
+    "legal": {
+      "acceptTermsText": "I accept the",
+      "termsLink": "Terms and Conditions",
+      "acceptPrivacyText": "I accept the",
+      "privacyLink": "Privacy Policy",
+      "fullText": "By creating an account, you accept our {terms} and {privacy}"
+    },
+    "alreadyHaveAccount": "Already have an account?",
+    "loginLink": "Log in here",
+    "createAccountButton": "Create Account",
+    "creatingAccount": "Creating account...",
+    "errors": {
+      "registrationFailed": "Registration failed. Please try again.",
+      "connectionError": "Connection error. Check your internet connection.",
+      "completeAllFields": "Please complete all required fields",
+      "serverError": "Server error. Please try again later.",
+      "unknownError": "An unknown error occurred"
+    },
+    "success": {
+      "accountCreated": "Account created successfully!",
+      "welcomeMessage": "Welcome to VitalGo, {name}!",
+      "redirecting": "Redirecting to your dashboard...",
+      "verificationEmailSent": "Verification email sent to {email}"
+    },
+    "documentTypes": {
+      "cc": "Citizenship Card (CC)",
+      "ti": "Identity Card (TI)",
+      "ce": "Foreign ID (CE)",
+      "passport": "Passport",
+      "pep": "Special Permit (PEP)",
+      "other": "Other"
+    },
+    "countries": {
+      "colombia": "Colombia",
+      "usa": "United States",
+      "mexico": "Mexico",
+      "spain": "Spain",
+      "argentina": "Argentina",
+      "chile": "Chile",
+      "peru": "Peru",
+      "venezuela": "Venezuela",
+      "other": "Other"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome",
+    "welcomeBack": "Welcome back, {name}",
+    "subtitle": "Here's your health overview",
+    "summary": "Summary",
+    "recentActivity": "Recent Activity",
+    "quickActions": "Quick Actions",
+    "viewAll": "View All",
+    "sections": {
+      "medications": "Medications",
+      "allergies": "Allergies",
+      "illnesses": "Illnesses",
+      "surgeries": "Surgeries",
+      "appointments": "Appointments",
+      "documents": "Documents"
+    },
+    "quickActions": {
+      "addMedication": "Add Medication",
+      "addAllergy": "Add Allergy",
+      "updateProfile": "Update Profile",
+      "downloadQR": "Download QR Code",
+      "viewHistory": "View Medical History",
+      "scheduleAppointment": "Schedule Appointment"
+    },
+    "medicalOverview": {
+      "title": "Medical Data Overview",
+      "activeMedications": "Active Medications",
+      "knownAllergies": "Known Allergies",
+      "chronicIllnesses": "Chronic Illnesses",
+      "pastSurgeries": "Past Surgeries",
+      "lastUpdate": "Last updated: {date}",
+      "viewDetails": "View Details"
+    },
+    "emptyStates": {
+      "noMedications": "No medications registered yet",
+      "noAllergies": "No allergies registered yet",
+      "noIllnesses": "No illnesses registered yet",
+      "noSurgeries": "No surgeries registered yet",
+      "noActivity": "No recent activity",
+      "addFirst": "Add your first {item}",
+      "getStarted": "Get started by adding your medical information"
+    },
+    "stats": {
+      "profileComplete": "Profile {percentage}% complete",
+      "completeProfile": "Complete your profile",
+      "qrDownloads": "QR Downloads",
+      "lastLogin": "Last login: {date}",
+      "medications": "Active Medications",
+      "allergies": "Active Allergies",
+      "surgeries": "Surgeries",
+      "illnesses": "Active Illnesses"
+    },
+    "errors": {
+      "loadingError": "Error loading dashboard",
+      "reloadPage": "Reload Page",
+      "retryLoading": "Retry"
+    },
+    "description": "View and manage your medical information",
+    "pageTitle": "Medical Dashboard | VitalGo",
+    "pageDescription": "Manage your medical information securely. Access your medications, allergies, surgeries and medical history.",
+    "pageKeywords": "medical dashboard, digital records, medical information, medications, allergies"
+  },
+  "profile": {
+    "title": "My Profile",
+    "basicInfo": "Basic Information",
+    "medicalInfo": "Medical Information",
+    "emergencyContact": "Emergency Contact",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "documentType": "Document Type",
+    "documentNumber": "Document Number",
+    "birthDate": "Birth Date",
+    "phone": "Phone",
+    "bloodType": "Blood Type",
+    "updateSuccess": "Profile updated successfully",
+    "updateError": "Error updating profile",
+    "basic": {
+      "title": "Basic Information",
+      "subtitle": "Your personal and contact information",
+      "edit": "Edit Information",
+      "loading": "Loading profile...",
+      "error": "Error loading profile",
+      "retry": "Retry",
+      "notFound": "Profile not found",
+      "sections": {
+        "personalInfo": "Personal Information",
+        "identification": "Identification",
+        "contact": "Contact Information"
+      },
+      "fields": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "birthDate": "Birth Date",
+        "originCountry": "Country of Origin",
+        "documentType": "Document Type",
+        "documentNumber": "Document Number",
+        "phone": "Phone Number",
+        "email": "Email",
+        "age": "Age",
+        "gender": "Gender"
+      },
+      "verifiedProfile": "Verified Profile",
+      "lastUpdate": "Last updated: {date}",
+      "keepUpdated": "Keep your information up to date for better service"
+    },
+    "personal": {
+      "title": "Personal Information",
+      "subtitle": "Additional personal details",
+      "maritalStatus": "Marital Status",
+      "occupation": "Occupation",
+      "address": "Address",
+      "city": "City",
+      "state": "State/Province",
+      "postalCode": "Postal Code",
+      "insuranceProvider": "Insurance Provider",
+      "insuranceNumber": "Insurance Number",
+      "maritalStatuses": {
+        "single": "Single",
+        "married": "Married",
+        "divorced": "Divorced",
+        "widowed": "Widowed",
+        "other": "Other"
+      }
+    },
+    "medical": {
+      "title": "Medical Information",
+      "subtitle": "Your medical data and history",
+      "bloodType": "Blood Type",
+      "height": "Height",
+      "weight": "Weight",
+      "bmi": "BMI",
+      "organDonor": "Organ Donor",
+      "smokingStatus": "Smoking Status",
+      "alcoholConsumption": "Alcohol Consumption",
+      "physicalActivity": "Physical Activity",
+      "familyHistory": "Family Medical History",
+      "smokingStatuses": {
+        "never": "Never",
+        "former": "Former smoker",
+        "current": "Current smoker"
+      },
+      "activityLevels": {
+        "sedentary": "Sedentary",
+        "light": "Light activity",
+        "moderate": "Moderate activity",
+        "active": "Very active"
+      }
+    },
+    "gynecological": {
+      "title": "Gynecological Information",
+      "subtitle": "Women's health information",
+      "lastMenstrualPeriod": "Last Menstrual Period",
+      "menstrualCycleLength": "Cycle Length (days)",
+      "pregnancies": "Number of Pregnancies",
+      "births": "Number of Births",
+      "cesareans": "Number of Cesareans",
+      "abortions": "Number of Abortions",
+      "contraceptiveMethod": "Contraceptive Method",
+      "lastPapSmear": "Last Pap Smear",
+      "lastMammogram": "Last Mammogram",
+      "breastfeedingStatus": "Breastfeeding Status",
+      "contraceptiveMethods": {
+        "none": "None",
+        "pills": "Birth control pills",
+        "iud": "IUD",
+        "implant": "Implant",
+        "injection": "Injection",
+        "condom": "Condom",
+        "other": "Other"
+      }
+    },
+    "actions": {
+      "save": "Save Changes",
+      "saving": "Saving...",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "delete": "Delete",
+      "update": "Update",
+      "updating": "Updating..."
+    }
+  },
+  "medications": {
+    "title": "Medications",
+    "subtitle": "Manage your current and past medications",
+    "description": "Keep track of all your medications, dosages, and schedules",
+    "medicationCount": "{count, plural, =0 {No medications registered} =1 {1 medication registered} other {# medications registered}}",
+    "viewAll": "View all medications ({count})",
+    "loading": "Loading medications...",
+    "addMedication": "Add Medication",
+    "editMedication": "Edit Medication",
+    "deleteMedication": "Delete Medication",
+    "viewMedication": "View Medication Details",
+    "medicationName": "Medication Name",
+    "dosage": "Dosage",
+    "frequency": "Frequency",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "prescribingDoctor": "Prescribing Doctor",
+    "isActive": "Currently Taking",
+    "notes": "Additional Notes",
+    "prescribedBy": "Prescribed By",
+    "medicationNamePlaceholder": "e.g., Ibuprofen",
+    "dosagePlaceholder": "e.g., 400mg",
+    "frequencyPlaceholder": "e.g., Every 8 hours",
+    "startDatePlaceholder": "Select start date",
+    "endDatePlaceholder": "Select end date (optional)",
+    "prescribingDoctorPlaceholder": "Doctor's name",
+    "notesPlaceholder": "Any additional information about this medication",
+    "validation": {
+      "nameRequired": "Medication name is required",
+      "nameMinLength": "Medication name must be at least 2 characters",
+      "dosageRequired": "Dosage is required",
+      "frequencyRequired": "Frequency is required",
+      "startDateRequired": "Start date is required",
+      "startDateInvalid": "Invalid start date",
+      "endDateInvalid": "Invalid end date",
+      "endDateBeforeStart": "End date must be after start date",
+      "doctorNameInvalid": "Doctor name must contain only letters"
+    },
+    "actions": {
+      "add": "Add Medication",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save Medication",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "deleting": "Deleting...",
+      "activate": "Activate",
+      "deactivate": "Deactivate"
+    },
+    "confirmations": {
+      "deleteTitle": "Delete medication?",
+      "deleteMessage": "Are you sure you want to delete {name}? This action cannot be undone.",
+      "deleteConfirm": "Delete",
+      "deleteCancel": "Cancel"
+    },
+    "emptyState": {
+      "title": "No medications registered",
+      "description": "Start by adding your current medications to keep track of your treatment",
+      "action": "Add Your First Medication",
+      "addFirst": "Add first medication"
+    },
+    "filters": {
+      "all": "All Medications",
+      "active": "Active",
+      "inactive": "Inactive",
+      "search": "Search medications..."
+    },
+    "confirmations": {
+      "deleteTitle": "Delete Medication",
+      "deleteMessage": "Are you sure you want to delete this medication? This action cannot be undone.",
+      "deleteConfirm": "Delete",
+      "deleteCancel": "Cancel"
+    },
+    "success": {
+      "added": "Medication added successfully",
+      "updated": "Medication updated successfully",
+      "deleted": "Medication deleted successfully"
+    },
+    "errors": {
+      "addFailed": "Failed to add medication",
+      "updateFailed": "Failed to update medication",
+      "deleteFailed": "Failed to delete medication",
+      "loadFailed": "Failed to load medications"
+    },
+    "status": {
+      "active": "Active",
+      "completed": "Completed",
+      "paused": "Paused"
+    }
+  },
+  "allergies": {
+    "title": "Allergies",
+    "subtitle": "Manage your allergy information",
+    "description": "Keep a record of all your allergies for safer medical care",
+    "allergyCount": "{count, plural, =0 {No allergies registered} =1 {1 allergy registered} other {# allergies registered}}",
+    "viewAll": "View all allergies ({count})",
+    "loading": "Loading allergies...",
+    "addAllergy": "Add Allergy",
+    "editAllergy": "Edit Allergy",
+    "deleteAllergy": "Delete Allergy",
+    "viewAllergy": "View Allergy Details",
+    "allergyName": "Allergy Name",
+    "allergyType": "Allergy Type",
+    "severity": "Severity",
+    "reaction": "Reaction",
+    "diagnosedDate": "Diagnosed Date",
+    "diagnosedBy": "Diagnosed By",
+    "notes": "Additional Notes",
+    "allergyNamePlaceholder": "e.g., Penicillin, Peanuts",
+    "allergyTypePlaceholder": "Select allergy type",
+    "severityPlaceholder": "Select severity level",
+    "reactionPlaceholder": "Describe the reaction",
+    "diagnosedDatePlaceholder": "Select date",
+    "diagnosedByPlaceholder": "Doctor's name",
+    "notesPlaceholder": "Any additional information about this allergy",
+    "types": {
+      "medication": "Medication",
+      "food": "Food",
+      "environmental": "Environmental",
+      "insect": "Insect",
+      "other": "Other"
+    },
+    "severityLevels": {
+      "mild": "Mild",
+      "moderate": "Moderate",
+      "severe": "Severe",
+      "lifeThreatening": "Life-Threatening"
+    },
+    "validation": {
+      "nameRequired": "Allergy name is required",
+      "nameMinLength": "Allergy name must be at least 2 characters",
+      "typeRequired": "Allergy type is required",
+      "severityRequired": "Severity level is required",
+      "reactionRequired": "Reaction description is required",
+      "reactionMinLength": "Reaction description must be at least 5 characters",
+      "diagnosedDateInvalid": "Invalid diagnosed date"
+    },
+    "actions": {
+      "add": "Add Allergy",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save Allergy",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "deleting": "Deleting..."
+    },
+    "confirmations": {
+      "deleteTitle": "Delete allergy?",
+      "deleteMessage": "Are you sure you want to delete the allergy to {name}? This action cannot be undone.",
+      "deleteConfirm": "Delete",
+      "deleteCancel": "Cancel"
+    },
+    "emptyState": {
+      "title": "No allergies registered",
+      "description": "Add your allergies to ensure healthcare providers can give you safe treatment",
+      "action": "Add Your First Allergy",
+      "addFirst": "Add first allergy"
+    },
+    "filters": {
+      "all": "All Allergies",
+      "medication": "Medication",
+      "food": "Food",
+      "environmental": "Environmental",
+      "search": "Search allergies..."
+    },
+    "confirmations": {
+      "deleteTitle": "Delete Allergy",
+      "deleteMessage": "Are you sure you want to delete this allergy? This action cannot be undone.",
+      "deleteConfirm": "Delete",
+      "deleteCancel": "Cancel"
+    },
+    "success": {
+      "added": "Allergy added successfully",
+      "updated": "Allergy updated successfully",
+      "deleted": "Allergy deleted successfully"
+    },
+    "errors": {
+      "addFailed": "Failed to add allergy",
+      "updateFailed": "Failed to update allergy",
+      "deleteFailed": "Failed to delete allergy",
+      "loadFailed": "Failed to load allergies"
+    }
+  },
+  "surgeries": {
+    "title": "Surgeries",
+    "subtitle": "Manage your surgical history",
+    "description": "Keep a complete record of all your surgeries and procedures",
+    "surgeryCount": "{count, plural, =0 {No surgeries registered} =1 {1 surgery registered} other {# surgeries registered}}",
+    "viewAll": "View all surgeries ({count})",
+    "loading": "Loading surgeries...",
+    "addSurgery": "Add Surgery",
+    "editSurgery": "Edit Surgery",
+    "deleteSurgery": "Delete Surgery",
+    "viewSurgery": "View Surgery Details",
+    "surgeryName": "Surgery Name",
+    "surgeryType": "Surgery Type",
+    "surgeryDate": "Surgery Date",
+    "hospital": "Hospital/Facility",
+    "surgeon": "Surgeon",
+    "complications": "Complications",
+    "outcome": "Outcome",
+    "notes": "Additional Notes",
+    "surgeryNamePlaceholder": "e.g., Appendectomy",
+    "surgeryTypePlaceholder": "Select surgery type",
+    "surgeryDatePlaceholder": "Select surgery date",
+    "hospitalPlaceholder": "Hospital or medical facility name",
+    "surgeonPlaceholder": "Surgeon's name",
+    "complicationsPlaceholder": "Describe any complications (if any)",
+    "outcomePlaceholder": "Describe the outcome",
+    "notesPlaceholder": "Any additional information about this surgery",
+    "types": {
+      "emergency": "Emergency",
+      "elective": "Elective",
+      "diagnostic": "Diagnostic",
+      "cosmetic": "Cosmetic",
+      "other": "Other"
+    },
+    "outcomes": {
+      "successful": "Successful",
+      "complications": "Complications",
+      "partial": "Partial Success",
+      "failed": "Failed"
+    },
+    "validation": {
+      "nameRequired": "Surgery name is required",
+      "nameMinLength": "Surgery name must be at least 2 characters",
+      "typeRequired": "Surgery type is required",
+      "dateRequired": "Surgery date is required",
+      "dateInvalid": "Invalid surgery date",
+      "dateFuture": "Surgery date cannot be in the future",
+      "hospitalRequired": "Hospital/Facility is required",
+      "surgeonRequired": "Surgeon name is required"
+    },
+    "actions": {
+      "add": "Add Surgery",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save Surgery",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "deleting": "Deleting..."
+    },
+    "confirmations": {
+      "deleteTitle": "Delete Surgery",
+      "deleteMessage": "Are you sure you want to delete the surgery {name}? This action cannot be undone.",
+      "deleteConfirm": "Delete",
+      "deleteCancel": "Cancel"
+    },
+    "emptyState": {
+      "title": "No surgeries registered",
+      "description": "Add your surgical history to provide complete medical information to healthcare providers",
+      "action": "Add Your First Surgery",
+      "addFirst": "Add first surgery"
+    },
+    "filters": {
+      "all": "All Surgeries",
+      "emergency": "Emergency",
+      "elective": "Elective",
+      "search": "Search surgeries..."
+    },
+    "confirmations": {
+      "deleteTitle": "Delete Surgery",
+      "deleteMessage": "Are you sure you want to delete this surgery record? This action cannot be undone.",
+      "deleteConfirm": "Delete",
+      "deleteCancel": "Cancel"
+    },
+    "success": {
+      "added": "Surgery added successfully",
+      "updated": "Surgery updated successfully",
+      "deleted": "Surgery deleted successfully"
+    },
+    "errors": {
+      "addFailed": "Failed to add surgery",
+      "updateFailed": "Failed to update surgery",
+      "deleteFailed": "Failed to delete surgery",
+      "loadFailed": "Failed to load surgeries"
+    }
+  },
+  "illnesses": {
+    "title": "Illnesses",
+    "subtitle": "Manage your medical conditions",
+    "description": "Keep track of your current and past medical conditions",
+    "illnessCount": "{count, plural, =0 {No illnesses registered} =1 {1 illness registered} other {# illnesses registered}}",
+    "viewAll": "View all illnesses ({count})",
+    "loading": "Loading illnesses...",
+    "confirmDelete": "Are you sure you want to delete this illness?",
+    "addIllness": "Add Illness",
+    "editIllness": "Edit Illness",
+    "deleteIllness": "Delete Illness",
+    "viewIllness": "View Illness Details",
+    "illnessName": "Illness Name",
+    "illnessType": "Type",
+    "diagnosisDate": "Diagnosis Date",
+    "diagnosedBy": "Diagnosed By",
+    "status": "Status",
+    "severity": "Severity",
+    "treatment": "Current Treatment",
+    "notes": "Additional Notes",
+    "illnessNamePlaceholder": "e.g., Diabetes Type 2",
+    "illnessTypePlaceholder": "Select illness type",
+    "diagnosisDatePlaceholder": "Select diagnosis date",
+    "diagnosedByPlaceholder": "Doctor's name",
+    "statusPlaceholder": "Select status",
+    "severityPlaceholder": "Select severity",
+    "treatmentPlaceholder": "Describe current treatment",
+    "notesPlaceholder": "Any additional information about this condition",
+    "types": {
+      "chronic": "Chronic",
+      "acute": "Acute",
+      "genetic": "Genetic",
+      "infectious": "Infectious",
+      "autoimmune": "Autoimmune",
+      "other": "Other"
+    },
+    "statuses": {
+      "active": "Active",
+      "controlled": "Controlled",
+      "inRemission": "In Remission",
+      "cured": "Cured",
+      "monitoring": "Under Monitoring"
+    },
+    "severityLevels": {
+      "mild": "Mild",
+      "moderate": "Moderate",
+      "severe": "Severe",
+      "critical": "Critical"
+    },
+    "validation": {
+      "nameRequired": "Illness name is required",
+      "nameMinLength": "Illness name must be at least 2 characters",
+      "typeRequired": "Illness type is required",
+      "dateRequired": "Diagnosis date is required",
+      "dateInvalid": "Invalid diagnosis date",
+      "dateFuture": "Diagnosis date cannot be in the future",
+      "statusRequired": "Status is required",
+      "severityRequired": "Severity is required"
+    },
+    "actions": {
+      "add": "Add Illness",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save Illness",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "deleting": "Deleting...",
+      "cured": "Cured",
+      "activate": "Activate"
+    },
+    "emptyState": {
+      "title": "No illnesses registered",
+      "description": "Add your medical conditions to help healthcare providers give you better care",
+      "action": "Add Your First Illness",
+      "addFirst": "Add first illness"
+    },
+    "filters": {
+      "all": "All Illnesses",
+      "active": "Active",
+      "controlled": "Controlled",
+      "chronic": "Chronic",
+      "search": "Search illnesses..."
+    },
+    "confirmations": {
+      "deleteTitle": "Delete Illness",
+      "deleteMessage": "Are you sure you want to delete this illness record? This action cannot be undone.",
+      "deleteConfirm": "Delete",
+      "deleteCancel": "Cancel"
+    },
+    "success": {
+      "added": "Illness added successfully",
+      "updated": "Illness updated successfully",
+      "deleted": "Illness deleted successfully"
+    },
+    "errors": {
+      "addFailed": "Failed to add illness",
+      "updateFailed": "Failed to update illness",
+      "deleteFailed": "Failed to delete illness",
+      "loadFailed": "Failed to load illnesses"
+    }
+  },
+  "qr": {
+    "title": "My QR Code",
+    "subtitle": "Share your emergency medical information",
+    "description": "This QR code contains your emergency medical information",
+    "pageTitle": "Emergency QR Code",
+    "pageSubtitle": "Your medical information in emergencies",
+    "download": "Download QR",
+    "downloading": "Downloading...",
+    "print": "Print QR",
+    "printing": "Preparing to print...",
+    "share": "Share QR",
+    "sharing": "Sharing...",
+    "whatIsThis": "What is this?",
+    "howItWorks": "How it works",
+    "benefits": "Benefits",
+    "instructions": {
+      "title": "Instructions",
+      "step1": "Download or print your QR code",
+      "step2": "Keep it in your wallet, phone case, or visible location",
+      "step3": "In case of emergency, medical personnel can scan it",
+      "step4": "They will instantly access your critical medical information"
+    },
+    "contains": {
+      "title": "This QR code contains:",
+      "personalInfo": "Personal identification",
+      "allergies": "Allergies and reactions",
+      "medications": "Current medications",
+      "conditions": "Medical conditions",
+      "bloodType": "Blood type",
+      "emergencyContact": "Emergency contact"
+    },
+    "security": {
+      "title": "Security & Privacy",
+      "encrypted": "Encrypted information",
+      "noPersonalData": "Only emergency medical data",
+      "accessLog": "Access is logged",
+      "controlAccess": "You control access"
+    },
+    "tips": {
+      "title": "Tips",
+      "keepUpdated": "Keep your medical information updated",
+      "multipleLocations": "Keep copies in multiple locations",
+      "informFamily": "Inform family members about your QR",
+      "regularCheck": "Check your QR code works regularly"
+    },
+    "formats": {
+      "title": "Download Format",
+      "png": "PNG Image",
+      "pdf": "PDF Document",
+      "svg": "SVG Vector"
+    },
+    "size": {
+      "title": "QR Code Size",
+      "small": "Small (200x200)",
+      "medium": "Medium (400x400)",
+      "large": "Large (600x600)"
+    },
+    "actions": {
+      "regenerate": "Regenerate QR",
+      "regenerating": "Regenerating...",
+      "viewData": "View Data",
+      "customize": "Customize"
+    },
+    "success": {
+      "downloaded": "QR code downloaded successfully",
+      "shared": "QR code shared successfully",
+      "regenerated": "QR code regenerated successfully"
+    },
+    "errors": {
+      "downloadFailed": "Failed to download QR code",
+      "shareFailed": "Failed to share QR code",
+      "generateFailed": "Failed to generate QR code",
+      "loadFailed": "Failed to load QR code"
+    }
+  },
+  "emergency": {
+    "title": "Emergency Access",
+    "subtitle": "Medical information for emergency responders",
+    "accessTitle": "Emergency Medical Information",
+    "accessSubtitle": "Accessed via QR code",
+    "patientInfo": "Patient Information",
+    "criticalInfo": "Critical Information",
+    "allergies": "Allergies",
+    "medications": "Current Medications",
+    "conditions": "Medical Conditions",
+    "bloodType": "Blood Type",
+    "emergencyContact": "Emergency Contact",
+    "noAllergies": "No known allergies",
+    "noMedications": "No current medications",
+    "noConditions": "No known conditions",
+    "bloodTypeUnknown": "Blood type not specified",
+    "noEmergencyContact": "No emergency contact registered",
+    "lastUpdated": "Last updated: {date}",
+    "disclaimer": {
+      "title": "Important Notice",
+      "text": "This information is provided for emergency medical purposes only. Always verify critical information when possible."
+    },
+    "accessLog": {
+      "title": "Access Log",
+      "accessedBy": "Accessed by: {name}",
+      "accessTime": "Access time: {time}",
+      "location": "Location: {location}",
+      "viewLog": "View Full Access Log"
+    },
+    "actions": {
+      "print": "Print Information",
+      "export": "Export Data",
+      "close": "Close"
+    },
+    "verification": {
+      "title": "Verify Access",
+      "enterCode": "Enter access code",
+      "verify": "Verify",
+      "invalidCode": "Invalid access code",
+      "accessDenied": "Access denied"
+    }
+  },
+  "forms": {
+    "common": {
+      "required": "Required field",
+      "optional": "Optional",
+      "requiredFields": "Required fields",
+      "optionalFields": "Optional fields",
+      "allFieldsRequired": "All fields are required unless marked as optional"
+    },
+    "fieldTypes": {
+      "text": "Text",
+      "number": "Number",
+      "email": "Email",
+      "password": "Password",
+      "date": "Date",
+      "select": "Select option",
+      "multiselect": "Select multiple",
+      "checkbox": "Checkbox",
+      "radio": "Radio button",
+      "textarea": "Text area",
+      "file": "File upload"
+    },
+    "labels": {
+      "search": "Search",
+      "filter": "Filter",
+      "sort": "Sort by",
+      "from": "From",
+      "to": "To",
+      "selectAll": "Select all",
+      "deselectAll": "Deselect all",
+      "selected": "selected",
+      "noResults": "No results found",
+      "loading": "Loading...",
+      "selectOption": "Select an option",
+      "selectDate": "Select a date",
+      "uploadFile": "Upload file",
+      "dragDropFile": "Drag and drop file here"
+    },
+    "validation": {
+      "required": "This field is required",
+      "invalid": "Invalid value",
+      "email": "Invalid email format",
+      "minLength": "Minimum {min} characters",
+      "maxLength": "Maximum {max} characters",
+      "min": "Minimum value: {min}",
+      "max": "Maximum value: {max}",
+      "pattern": "Invalid format",
+      "date": "Invalid date",
+      "dateFuture": "Date cannot be in the future",
+      "datePast": "Date cannot be in the past",
+      "fileSize": "File size exceeds {max}MB",
+      "fileType": "Invalid file type",
+      "phone": "Invalid phone number",
+      "url": "Invalid URL",
+      "number": "Must be a number",
+      "integer": "Must be a whole number",
+      "decimal": "Invalid decimal number",
+      "positive": "Must be a positive number",
+      "negative": "Must be a negative number"
+    },
+    "actions": {
+      "submit": "Submit",
+      "submitting": "Submitting...",
+      "save": "Save",
+      "saving": "Saving...",
+      "cancel": "Cancel",
+      "reset": "Reset",
+      "clear": "Clear",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "edit": "Edit",
+      "update": "Update",
+      "updating": "Updating...",
+      "create": "Create",
+      "creating": "Creating...",
+      "add": "Add",
+      "remove": "Remove",
+      "upload": "Upload",
+      "uploading": "Uploading...",
+      "download": "Download",
+      "downloading": "Downloading..."
+    },
+    "messages": {
+      "unsavedChanges": "You have unsaved changes. Are you sure you want to leave?",
+      "confirmDelete": "Are you sure you want to delete this?",
+      "confirmCancel": "Are you sure you want to cancel?",
+      "success": "Operation completed successfully",
+      "error": "An error occurred",
+      "noChanges": "No changes detected",
+      "saveFirst": "Please save your changes first",
+      "fillRequired": "Please fill in all required fields",
+      "invalidForm": "Please fix the errors in the form"
+    }
+  },
+  "language": {
+    "selector": "Language",
+    "spanish": "Español",
+    "english": "English",
+    "changeLanguage": "Change Language"
+  },
+  "errors": {
+    "generic": "An error has occurred",
+    "networkError": "Connection error",
+    "unauthorized": "Unauthorized",
+    "notFound": "Not found",
+    "serverError": "Server error",
+    "validationError": "Validation error"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Invalid email",
+    "minLength": "Minimum {min} characters",
+    "maxLength": "Maximum {max} characters",
+    "invalidFormat": "Invalid format"
+  },
+  "home": {
+    "nav": {
+      "login": "Log In"
+    },
+    "hero": {
+      "badge": "Colombia's Digital Health Leader",
+      "title": "Your health.",
+      "titleHighlight": "Simplified.",
+      "description": "Your complete and secure digital medical record. Instant access to your medical history, exams, diagnoses, and treatments from any authorized health center. Faster consultations that save you up to 70% of waiting time.",
+      "patientButton": "I'm a Patient",
+      "professionalButton": "I'm a Health Professional",
+      "loginButton": "Already have an account - Log In",
+      "stats": {
+        "patients": "Patients Trust Us",
+        "healthCenters": "Connected Health Centers",
+        "timeSaved": "Less Waiting Time",
+        "availability": "Always Available"
+      }
+    },
+    "features": {
+      "badge": "Features",
+      "title": "Everything you need to take care of your health",
+      "description": "Simple and powerful tools to give you complete control of your medical information",
+      "feature1": {
+        "title": "Your History Always With You",
+        "description": "All your medical information organized in one place. Access your data from any device whenever you need it.",
+        "badge": "Popular"
+      },
+      "feature2": {
+        "title": "QR for Emergencies",
+        "description": "A QR code that can save your life. Paramedics instantly access your allergies and critical medical conditions.",
+        "badge": "Vital"
+      },
+      "feature3": {
+        "title": "Faster Consultations",
+        "description": "The doctor already has your history before seeing you. More efficient consultations that save you up to 70% of waiting time."
+      },
+      "feature4": {
+        "title": "Maximum Security",
+        "description": "Your medical data protected with the highest security standards. Only you decide who can see it."
+      },
+      "feature5": {
+        "title": "Ideal for Professionals",
+        "description": "If you're a doctor or paramedic, quickly access your patients' information to provide better care."
+      },
+      "feature6": {
+        "title": "Multi-Platform Access",
+        "description": "Available on computers, tablets, and mobile devices. Your secure medical record from any authorized device."
+      }
+    },
+    "testimonials": {
+      "badge": "Testimonials",
+      "title": "Real stories from people like you",
+      "description": "Discover how VitalGo is improving the lives of patients and health professionals in Colombia",
+      "testimonial1": {
+        "name": "Dr. María González",
+        "role": "Internal Medicine Physician - Hospital San Ignacio",
+        "content": "VitalGo changed the way I handle emergencies. Now I have patient information instantly, without waiting or paperwork."
+      },
+      "testimonial2": {
+        "name": "Carlos Rodríguez",
+        "role": "Diabetic Patient",
+        "content": "I spent years carrying folders with my test results. Now everything is on my phone and my family can access it if something happens to me."
+      },
+      "testimonial3": {
+        "name": "Ana Patricia Silva",
+        "role": "Paramedic - Colombian Red Cross",
+        "content": "In emergencies every second counts. With VitalGo I can see the patient's allergies and conditions before arriving at the hospital."
+      }
+    },
+    "cta": {
+      "title": "Your health deserves to be in good hands",
+      "description": "Join thousands of people who already have their secure and always accessible digital medical record. Quick registration with medical identity verification.",
+      "patientButton": "Sign Up as Patient",
+      "professionalButton": "Sign Up as Professional",
+      "note": "Medical data protection • Identity verification • Authorized access only"
+    }
+  }
+}

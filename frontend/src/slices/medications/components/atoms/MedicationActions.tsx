@@ -5,6 +5,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Medication } from '../../types';
 
 interface MedicationActionsProps {
@@ -32,6 +33,7 @@ export const MedicationActions: React.FC<MedicationActionsProps> = ({
   className = '',
   'data-testid': testId
 }) => {
+  const t = useTranslations('medications');
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -139,7 +141,7 @@ export const MedicationActions: React.FC<MedicationActionsProps> = ({
                   <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
-                  Editar
+                  {t('actions.edit')}
                 </button>
               )}
 
@@ -156,7 +158,7 @@ export const MedicationActions: React.FC<MedicationActionsProps> = ({
                   <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  {medication.isActive ? 'Desactivar' : 'Activar'}
+                  {medication.isActive ? t('actions.deactivate') : t('actions.activate')}
                 </button>
               )}
 
@@ -173,7 +175,7 @@ export const MedicationActions: React.FC<MedicationActionsProps> = ({
                   <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
-                  Eliminar
+                  {t('actions.delete')}
                 </button>
               )}
             </div>
@@ -192,8 +194,8 @@ export const MedicationActions: React.FC<MedicationActionsProps> = ({
               onClick={handleEdit}
               disabled={isLoading}
               className="p-1.5 text-vitalgo-dark hover:text-vitalgo-green hover:bg-vitalgo-green/10 rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-vitalgo-green/50 disabled:opacity-50"
-              aria-label={`Editar ${medication.medicationName}`}
-              title="Editar medicamento"
+              aria-label={`${t('actions.edit')} ${medication.medicationName}`}
+              title={t('actions.edit')}
               data-testid={`${testId}-edit`}
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -211,8 +213,8 @@ export const MedicationActions: React.FC<MedicationActionsProps> = ({
                   ? 'text-vitalgo-green hover:text-green-700 hover:bg-green-50 focus:ring-green-500'
                   : 'text-gray-400 hover:text-vitalgo-green hover:bg-vitalgo-green/10 focus:ring-vitalgo-green/50'
               }`}
-              aria-label={`${medication.isActive ? 'Desactivar' : 'Activar'} ${medication.medicationName}`}
-              title={medication.isActive ? 'Desactivar medicamento' : 'Activar medicamento'}
+              aria-label={`${medication.isActive ? t('actions.deactivate') : t('actions.activate')} ${medication.medicationName}`}
+              title={medication.isActive ? t('actions.deactivate') : t('actions.activate')}
               data-testid={`${testId}-toggle`}
             >
               {medication.isActive ? (
@@ -232,8 +234,8 @@ export const MedicationActions: React.FC<MedicationActionsProps> = ({
               onClick={handleDeleteClick}
               disabled={isLoading}
               className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-red-500/50 disabled:opacity-50"
-              aria-label={`Eliminar ${medication.medicationName}`}
-              title="Eliminar medicamento"
+              aria-label={`${t('actions.delete')} ${medication.medicationName}`}
+              title={t('actions.delete')}
               data-testid={`${testId}-delete`}
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -255,14 +257,13 @@ export const MedicationActions: React.FC<MedicationActionsProps> = ({
                 </div>
                 <div className="ml-3">
                   <h3 className="text-lg font-semibold text-vitalgo-dark">
-                    ¿Eliminar medicamento?
+                    {t('confirmations.deleteTitle')}
                   </h3>
                 </div>
               </div>
 
               <p className="text-vitalgo-dark-light mb-6">
-                ¿Estás seguro de que deseas eliminar <strong>{medication.medicationName}</strong>?
-                Esta acción no se puede deshacer.
+                {t('confirmations.deleteMessage', { name: medication.medicationName })}
               </p>
 
               <div className="flex justify-end space-x-3">
@@ -271,14 +272,14 @@ export const MedicationActions: React.FC<MedicationActionsProps> = ({
                   className="px-4 py-2 text-sm font-medium text-vitalgo-dark bg-white border border-vitalgo-dark-lighter rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-vitalgo-green"
                   data-testid={`${testId}-cancel-delete`}
                 >
-                  Cancelar
+                  {t('confirmations.deleteCancel')}
                 </button>
                 <button
                   onClick={handleConfirmDelete}
                   className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
                   data-testid={`${testId}-confirm-delete`}
                 >
-                  Eliminar
+                  {t('confirmations.deleteConfirm')}
                 </button>
               </div>
             </div>
@@ -298,13 +299,13 @@ export const MedicationActions: React.FC<MedicationActionsProps> = ({
             onClick={handleEdit}
             disabled={isLoading}
             className={editButtonClasses}
-            aria-label={`Editar ${medication.medicationName}`}
+            aria-label={`${t('actions.edit')} ${medication.medicationName}`}
             data-testid={`${testId}-edit`}
           >
             <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
-            Editar
+            {t('actions.edit')}
           </button>
         )}
 
@@ -313,13 +314,13 @@ export const MedicationActions: React.FC<MedicationActionsProps> = ({
             onClick={handleToggleActive}
             disabled={isLoading}
             className={toggleButtonClasses}
-            aria-label={`${medication.isActive ? 'Desactivar' : 'Activar'} ${medication.medicationName}`}
+            aria-label={`${medication.isActive ? t('actions.deactivate') : t('actions.activate')} ${medication.medicationName}`}
             data-testid={`${testId}-toggle`}
           >
             <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            {medication.isActive ? 'Desactivar' : 'Activar'}
+            {medication.isActive ? t('actions.deactivate') : t('actions.activate')}
           </button>
         )}
 
@@ -328,13 +329,13 @@ export const MedicationActions: React.FC<MedicationActionsProps> = ({
             onClick={handleDeleteClick}
             disabled={isLoading}
             className={deleteButtonClasses}
-            aria-label={`Eliminar ${medication.medicationName}`}
+            aria-label={`${t('actions.delete')} ${medication.medicationName}`}
             data-testid={`${testId}-delete`}
           >
             <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
-            Eliminar
+            {t('actions.delete')}
           </button>
         )}
       </div>
@@ -351,14 +352,13 @@ export const MedicationActions: React.FC<MedicationActionsProps> = ({
               </div>
               <div className="ml-3">
                 <h3 className="text-lg font-semibold text-vitalgo-dark">
-                  ¿Eliminar medicamento?
+                  {t('confirmations.deleteTitle')}
                 </h3>
               </div>
             </div>
 
             <p className="text-vitalgo-dark-light mb-6">
-              ¿Estás seguro de que deseas eliminar <strong>{medication.medicationName}</strong>?
-              Esta acción no se puede deshacer.
+              {t('confirmations.deleteMessage', { name: medication.medicationName })}
             </p>
 
             <div className="flex justify-end space-x-3">
@@ -367,14 +367,14 @@ export const MedicationActions: React.FC<MedicationActionsProps> = ({
                 className="px-4 py-2 text-sm font-medium text-vitalgo-dark bg-white border border-vitalgo-dark-lighter rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-vitalgo-green"
                 data-testid={`${testId}-cancel-delete`}
               >
-                Cancelar
+                {t('confirmations.deleteCancel')}
               </button>
               <button
                 onClick={handleConfirmDelete}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
                 data-testid={`${testId}-confirm-delete`}
               >
-                Eliminar
+                {t('confirmations.deleteConfirm')}
               </button>
             </div>
           </div>

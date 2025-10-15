@@ -5,6 +5,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Allergy } from '../../types';
 
 interface AllergyActionsProps {
@@ -28,6 +29,7 @@ export const AllergyActions: React.FC<AllergyActionsProps> = ({
   className = '',
   'data-testid': testId
 }) => {
+  const t = useTranslations('allergies');
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -121,7 +123,7 @@ export const AllergyActions: React.FC<AllergyActionsProps> = ({
                   <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
-                  Editar
+                  {t('actions.edit')}
                 </button>
               )}
 
@@ -138,7 +140,7 @@ export const AllergyActions: React.FC<AllergyActionsProps> = ({
                   <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
-                  Eliminar
+                  {t('actions.delete')}
                 </button>
               )}
             </div>
@@ -157,8 +159,8 @@ export const AllergyActions: React.FC<AllergyActionsProps> = ({
               onClick={handleEdit}
               disabled={isLoading}
               className="p-1.5 text-vitalgo-dark hover:text-vitalgo-green hover:bg-vitalgo-green/10 rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-vitalgo-green/50 disabled:opacity-50"
-              aria-label={`Editar ${allergy.allergen}`}
-              title="Editar alergia"
+              aria-label={`${t('actions.edit')} ${allergy.allergen}`}
+              title={t('actions.edit')}
               data-testid={`${testId}-edit`}
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -172,8 +174,8 @@ export const AllergyActions: React.FC<AllergyActionsProps> = ({
               onClick={handleDeleteClick}
               disabled={isLoading}
               className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-red-500/50 disabled:opacity-50"
-              aria-label={`Eliminar ${allergy.allergen}`}
-              title="Eliminar alergia"
+              aria-label={`${t('actions.delete')} ${allergy.allergen}`}
+              title={t('actions.delete')}
               data-testid={`${testId}-delete`}
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -195,14 +197,13 @@ export const AllergyActions: React.FC<AllergyActionsProps> = ({
                 </div>
                 <div className="ml-3">
                   <h3 className="text-lg font-semibold text-vitalgo-dark">
-                    ¿Eliminar alergia?
+                    {t('confirmations.deleteTitle')}
                   </h3>
                 </div>
               </div>
 
               <p className="text-vitalgo-dark-light mb-6">
-                ¿Estás seguro de que deseas eliminar la alergia a <strong>{allergy.allergen}</strong>?
-                Esta acción no se puede deshacer.
+                {t('confirmations.deleteMessage', { name: allergy.allergen })}
               </p>
 
               <div className="flex justify-end space-x-3">
@@ -211,14 +212,14 @@ export const AllergyActions: React.FC<AllergyActionsProps> = ({
                   className="px-4 py-2 text-sm font-medium text-vitalgo-dark bg-white border border-vitalgo-dark-lighter rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-vitalgo-green"
                   data-testid={`${testId}-cancel-delete`}
                 >
-                  Cancelar
+                  {t('confirmations.deleteCancel')}
                 </button>
                 <button
                   onClick={handleConfirmDelete}
                   className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
                   data-testid={`${testId}-confirm-delete`}
                 >
-                  Eliminar
+                  {t('confirmations.deleteConfirm')}
                 </button>
               </div>
             </div>
@@ -238,13 +239,13 @@ export const AllergyActions: React.FC<AllergyActionsProps> = ({
             onClick={handleEdit}
             disabled={isLoading}
             className={editButtonClasses}
-            aria-label={`Editar ${allergy.allergen}`}
+            aria-label={`${t('actions.edit')} ${allergy.allergen}`}
             data-testid={`${testId}-edit`}
           >
             <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
-            Editar
+            {t('actions.edit')}
           </button>
         )}
 
@@ -253,13 +254,13 @@ export const AllergyActions: React.FC<AllergyActionsProps> = ({
             onClick={handleDeleteClick}
             disabled={isLoading}
             className={deleteButtonClasses}
-            aria-label={`Eliminar ${allergy.allergen}`}
+            aria-label={`${t('actions.delete')} ${allergy.allergen}`}
             data-testid={`${testId}-delete`}
           >
             <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
-            Eliminar
+            {t('actions.delete')}
           </button>
         )}
       </div>
@@ -276,14 +277,13 @@ export const AllergyActions: React.FC<AllergyActionsProps> = ({
               </div>
               <div className="ml-3">
                 <h3 className="text-lg font-semibold text-vitalgo-dark">
-                  ¿Eliminar alergia?
+                  {t('confirmations.deleteTitle')}
                 </h3>
               </div>
             </div>
 
             <p className="text-vitalgo-dark-light mb-6">
-              ¿Estás seguro de que deseas eliminar la alergia a <strong>{allergy.allergen}</strong>?
-              Esta acción no se puede deshacer.
+              {t('confirmations.deleteMessage', { name: allergy.allergen })}
             </p>
 
             <div className="flex justify-end space-x-3">
@@ -292,14 +292,14 @@ export const AllergyActions: React.FC<AllergyActionsProps> = ({
                 className="px-4 py-2 text-sm font-medium text-vitalgo-dark bg-white border border-vitalgo-dark-lighter rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-vitalgo-green"
                 data-testid={`${testId}-cancel-delete`}
               >
-                Cancelar
+                {t('confirmations.deleteCancel')}
               </button>
               <button
                 onClick={handleConfirmDelete}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
                 data-testid={`${testId}-confirm-delete`}
               >
-                Eliminar
+                {t('confirmations.deleteConfirm')}
               </button>
             </div>
           </div>
