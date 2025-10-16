@@ -1,6 +1,7 @@
 "use client"
 
 import { BrandHeader } from "../molecules/BrandHeader"
+import { LanguageSelectorCompact } from "../molecules/LanguageSelector"
 
 interface PublicNavbarProps {
   showBackButton?: boolean
@@ -31,6 +32,9 @@ export function PublicNavbar({
             onBackClick={onBackClick}
             useHistoryBack={useHistoryBack}
           />
+          <div className="flex items-center">
+            <LanguageSelectorCompact />
+          </div>
         </div>
       </div>
     </nav>

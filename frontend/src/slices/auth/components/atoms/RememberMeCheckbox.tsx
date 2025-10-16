@@ -3,6 +3,7 @@
  * Checkbox for login persistence with VitalGo styling
  */
 import React from 'react';
+import { useTranslations } from 'next-intl';
 
 interface RememberMeCheckboxProps {
   id: string;
@@ -21,6 +22,8 @@ export const RememberMeCheckbox: React.FC<RememberMeCheckboxProps> = ({
   disabled = false,
   'data-testid': testId
 }) => {
+  const t = useTranslations('auth');
+
   return (
     <div className="flex items-center">
       <div className="relative">
@@ -49,7 +52,7 @@ export const RememberMeCheckbox: React.FC<RememberMeCheckboxProps> = ({
         htmlFor={id}
         className={`ml-2 text-sm text-gray-700 select-none ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
       >
-        Mantener sesión iniciada
+        {t('rememberMe')}
       </label>
     </div>
   );

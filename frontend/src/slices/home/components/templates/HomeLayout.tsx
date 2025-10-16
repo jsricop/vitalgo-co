@@ -1,4 +1,5 @@
 import { ReactNode } from 'react'
+import { TransparentNavbar } from '../organisms/TransparentNavbar'
 
 interface HomeLayoutProps {
   children: ReactNode
@@ -10,7 +11,10 @@ export function HomeLayout({ children }: HomeLayoutProps) {
       className="min-h-screen bg-white"
       data-testid="home-layout"
     >
-      {children}
+      <TransparentNavbar />
+      <div className="pt-20">
+        {children}
+      </div>
     </div>
   )
 }

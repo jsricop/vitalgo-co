@@ -15,6 +15,11 @@ from .basic_patient_dto import (
     BasicPatientInfoDTO,
     BasicPatientUpdateDTO
 )
+from .language_dto import (
+    LanguagePreferenceDTO,
+    LanguagePreferenceResponseDTO,
+    LanguageCode
+)
 
 __all__ = [
     'ProfileCompletenessResponse',
@@ -26,5 +31,8 @@ __all__ = [
     'SurgeryDTO',
     'GynecologicalHistoryDTO',
     'BasicPatientInfoDTO',
-    'BasicPatientUpdateDTO'
+    'BasicPatientUpdateDTO',
+    'LanguagePreferenceDTO',
+    'LanguagePreferenceResponseDTO',
+    'LanguageCode'
 ]

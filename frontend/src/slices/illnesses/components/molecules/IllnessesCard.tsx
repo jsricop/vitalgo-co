@@ -6,6 +6,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { IllnessesCardProps, PatientIllnessDTO, IllnessFormData } from '../../types';
 import { useIllnesses } from '../../hooks/useIllnesses';
 import { useIllnessActions } from '../../hooks/useIllnessActions';
@@ -20,6 +21,9 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
   className = '',
   'data-testid': testId = 'illnesses-card'
 }) => {
+  const t = useTranslations('illnesses');
+  const tCommon = useTranslations('common');
+
   // State management
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingIllness, setEditingIllness] = useState<PatientIllnessDTO | null>(null);
@@ -74,7 +78,7 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
   };
 
   const handleDeleteIllness = async (id: number) => {
-    if (!confirm('¿Estás seguro de que deseas eliminar esta enfermedad?')) {
+    if (!confirm(t('confirmDelete'))) {
       return;
     }
 
@@ -130,10 +134,10 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
           <IllnessIcon size="lg" color="primary" />
           <div>
             <h2 className="text-lg font-semibold text-vitalgo-dark">
-              Enfermedades
+              {t('title')}
             </h2>
             <p className="text-sm text-vitalgo-dark-light">
-              {illnesses.length} {illnesses.length === 1 ? 'enfermedad registrada' : 'enfermedades registradas'}
+              {t('illnessCount', { count: illnesses.length })}
             </p>
           </div>
         </div>
@@ -146,7 +150,7 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
-            Agregar
+            {t('actions.add')}
           </button>
         )}
       </div>
@@ -157,19 +161,19 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
         {isLoading && illnesses.length === 0 && (
           <div className="flex items-center justify-center py-8">
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-vitalgo-green"></div>
-            <span className="ml-2 text-sm text-gray-600">Cargando enfermedades...</span>
+            <span className="ml-2 text-sm text-gray-600">{t('loading')}</span>
           </div>
         )}
 
         {/* Error State */}
         {error && (
           <div className="text-center py-8">
-            <div className="text-red-600 text-sm mb-2">Error al cargar las enfermedades</div>
+            <div className="text-red-600 text-sm mb-2">{t('errors.loadFailed')}</div>
             <button
               onClick={() => refetch()}
               className="text-xs text-vitalgo-green hover:text-vitalgo-green-dark"
             >
-              Intentar de nuevo
+              {tCommon('retry')}
             </button>
           </div>
         )}
@@ -206,10 +210,10 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
               <IllnessIcon size="xl" color="primary" data-testid={`${testId}-empty-icon`} />
             </div>
             <h3 className="text-lg font-medium text-vitalgo-dark mb-2">
-              No hay enfermedades registradas
+              {t('emptyState.title')}
             </h3>
             <p className="text-vitalgo-dark-light mb-4">
-              Comienza agregando tu primera enfermedad para llevar un mejor control de tu historial médico.
+              {t('emptyState.description')}
             </p>
             {showAddButton && (
               <button
@@ -221,7 +225,7 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
                 <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                Agregar primera enfermedad
+                {t('emptyState.addFirst')}
               </button>
             )}
           </div>
@@ -250,7 +254,7 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
               className="w-full text-center text-sm text-vitalgo-green hover:text-vitalgo-green-dark font-medium"
               data-testid={`${testId}-show-more`}
             >
-              Ver todas las enfermedades ({sortedIllnesses.length})
+              {t('viewAll', { count: sortedIllnesses.length })}
             </button>
           </div>
         )}

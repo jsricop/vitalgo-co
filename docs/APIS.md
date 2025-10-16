@@ -443,6 +443,22 @@ All VitalGo API endpoints return consistent, standardized error responses for im
 
 **Note:** Profile photo upload/delete endpoints are not currently implemented. Profile photos are stored in the `patients` table via the `profile_photo_url` field which can be set during profile updates.
 
+### GET /api/profile/language
+**Description:** Get user's current preferred language (i18n support)
+**In:** `Authorization: Bearer {token}`
+**Out:** `{preferred_language: string}`
+**Status:** 200 success, 401 unauthorized, 404 user not found
+**Notes:** Returns ISO 639-1 language code ('es' or 'en')
+
+### PUT /api/profile/language
+**Description:** Update user's preferred language preference (i18n support)
+**In:** `Authorization: Bearer {token}`, `LanguagePreferenceDTO`
+**LanguagePreferenceDTO:** `{preferred_language: "es" | "en"}`
+**Out:** `LanguagePreferenceResponseDTO`
+**LanguagePreferenceResponseDTO:** `{preferred_language: string, message: string}`
+**Status:** 200 updated, 400 validation error, 401 unauthorized
+**Notes:** Supports ISO 639-1 language codes: 'es' (Spanish), 'en' (English). Persists preference to database for cross-device sync.
+
 ### PUT /api/profile/medications/{medication_id}
 **Description:** Update existing medication
 **In:** `Authorization: Bearer {token}`, `MedicationDTO`

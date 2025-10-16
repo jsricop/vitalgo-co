@@ -4,6 +4,7 @@
  * Shows legal acceptance text with clickable links to terms and privacy modals
  */
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { LegalModal, LegalDocumentType } from '../../../legal/components/molecules/LegalModal';
 
 interface LoginLegalTextProps {
@@ -13,6 +14,8 @@ interface LoginLegalTextProps {
 export const LoginLegalText: React.FC<LoginLegalTextProps> = ({
   'data-testid': testId
 }) => {
+  const tAuth = useTranslations('auth');
+  const tCommon = useTranslations('common');
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
 
@@ -30,23 +33,23 @@ export const LoginLegalText: React.FC<LoginLegalTextProps> = ({
     <>
       <div className="text-center mt-4" data-testid={testId}>
         <p className="text-xs text-gray-500">
-          Al iniciar sesión, aceptas nuestros{' '}
+          {tAuth('legalAcceptance')}{' '}
           <button
             type="button"
             onClick={handleTermsClick}
             className="text-vitalgo-green hover:text-vitalgo-green/80 underline focus:outline-none focus:ring-2 focus:ring-vitalgo-green/20 rounded-sm"
             data-testid={`${testId}-terms-link`}
           >
-            Términos y Condiciones
+            {tCommon('termsAndConditions')}
           </button>
-          {' '}y{' '}
+          {' '}{tCommon('and')}{' '}
           <button
             type="button"
             onClick={handlePrivacyClick}
             className="text-vitalgo-green hover:text-vitalgo-green/80 underline focus:outline-none focus:ring-2 focus:ring-vitalgo-green/20 rounded-sm"
             data-testid={`${testId}-privacy-link`}
           >
-            Política de Privacidad
+            {tCommon('privacyPolicy')}
           </button>
         </p>
       </div>

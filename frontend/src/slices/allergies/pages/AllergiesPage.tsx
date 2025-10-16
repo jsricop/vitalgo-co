@@ -5,6 +5,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { AuthGuard } from '../../../shared/components/guards/AuthGuard';
 import { PatientNavbar } from '../../../shared/components/organisms/PatientNavbar';
 import { AllergyForm } from '../components/molecules/AllergyForm';
@@ -30,6 +31,9 @@ const allergyToFormData = (allergy: Allergy) => ({
 export default function AllergiesPage({
   'data-testid': testId = 'allergies-page'
 }: AllergiesPageProps) {
+  const t = useTranslations('allergies');
+  const tCommon = useTranslations('common');
+
   const [showForm, setShowForm] = useState(false);
   const [editingAllergy, setEditingAllergy] = useState<Allergy | null>(null);
   const [filterSeverity, setFilterSeverity] = useState<'all' | SeverityLevel>('all');
@@ -127,10 +131,10 @@ export default function AllergiesPage({
                 />
                 <div>
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    Alergias
+                    {t('title')}
                   </h1>
                   <p className="text-gray-600">
-                    Gestiona todas tus alergias de forma segura. Mantén un registro completo de alergias por nivel de severidad.
+                    {t('subtitle')}
                   </p>
                 </div>
               </div>
@@ -144,7 +148,7 @@ export default function AllergiesPage({
                 <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                Agregar Alergia
+                {t('addButton')}
               </button>
             </div>
 
@@ -152,23 +156,23 @@ export default function AllergiesPage({
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-6 pt-6 border-t border-gray-200">
               <div className="text-center">
                 <div className="text-2xl font-bold text-vitalgo-green">{severityCounts.total}</div>
-                <div className="text-sm text-gray-600">Total</div>
+                <div className="text-sm text-gray-600">{t('stats.total')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-red-600">{severityCounts.critica}</div>
-                <div className="text-sm text-gray-600">Críticas</div>
+                <div className="text-sm text-gray-600">{t('stats.critical')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-orange-600">{severityCounts.severa}</div>
-                <div className="text-sm text-gray-600">Severas</div>
+                <div className="text-sm text-gray-600">{t('stats.severe')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-yellow-600">{severityCounts.moderada}</div>
-                <div className="text-sm text-gray-600">Moderadas</div>
+                <div className="text-sm text-gray-600">{t('stats.moderate')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600">{severityCounts.leve}</div>
-                <div className="text-sm text-gray-600">Leves</div>
+                <div className="text-sm text-gray-600">{t('stats.mild')}</div>
               </div>
             </div>
           </div>
@@ -176,7 +180,7 @@ export default function AllergiesPage({
           {/* Filter Controls */}
           <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6">
             <div className="flex flex-wrap items-center gap-4">
-              <span className="text-sm font-medium text-gray-700">Filtrar por severidad:</span>
+              <span className="text-sm font-medium text-gray-700">{t('filters.label')}</span>
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setFilterSeverity('all')}
@@ -186,7 +190,7 @@ export default function AllergiesPage({
                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
                   }`}
                 >
-                  Todas ({severityCounts.total})
+                  {t('filters.all', { count: severityCounts.total })}
                 </button>
                 <button
                   onClick={() => setFilterSeverity('critica')}
@@ -196,7 +200,7 @@ export default function AllergiesPage({
                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
                   }`}
                 >
-                  Críticas ({severityCounts.critica})
+                  {t('filters.critical', { count: severityCounts.critica })}
                 </button>
                 <button
                   onClick={() => setFilterSeverity('severa')}
@@ -206,7 +210,7 @@ export default function AllergiesPage({
                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
                   }`}
                 >
-                  Severas ({severityCounts.severa})
+                  {t('filters.severe', { count: severityCounts.severa })}
                 </button>
                 <button
                   onClick={() => setFilterSeverity('moderada')}
@@ -216,7 +220,7 @@ export default function AllergiesPage({
                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
                   }`}
                 >
-                  Moderadas ({severityCounts.moderada})
+                  {t('filters.moderate', { count: severityCounts.moderada })}
                 </button>
                 <button
                   onClick={() => setFilterSeverity('leve')}
@@ -226,7 +230,7 @@ export default function AllergiesPage({
                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
                   }`}
                 >
-                  Leves ({severityCounts.leve})
+                  {t('filters.mild', { count: severityCounts.leve })}
                 </button>
               </div>
             </div>
@@ -242,7 +246,7 @@ export default function AllergiesPage({
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  <span>Cargando alergias...</span>
+                  <span>{t('loading')}</span>
                 </div>
               </div>
             ) : error ? (
@@ -252,7 +256,7 @@ export default function AllergiesPage({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Error al cargar alergias
+                  {t('error.title')}
                 </h3>
                 <p className="text-sm text-gray-600 mb-4">
                   {error}
@@ -262,7 +266,7 @@ export default function AllergiesPage({
                   className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150"
                   data-testid={`${testId}-retry-button`}
                 >
-                  Intentar de nuevo
+                  {tCommon('actions.retry')}
                 </button>
               </div>
             ) : sortedAllergies.length === 0 ? (
@@ -271,14 +275,14 @@ export default function AllergiesPage({
                 <AllergyIcon size="xl" color="default" className="mx-auto mb-6 opacity-50" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   {filterSeverity === 'all'
-                    ? 'Sin alergias registradas'
-                    : `Sin alergias ${filterSeverity === 'leve' ? 'leves' : filterSeverity === 'moderada' ? 'moderadas' : filterSeverity === 'severa' ? 'severas' : 'críticas'}`
+                    ? t('empty.all.title')
+                    : t('empty.filtered.title', { severity: filterSeverity })
                   }
                 </h3>
                 <p className="text-sm text-gray-600 mb-6">
                   {filterSeverity === 'all'
-                    ? 'Agrega información sobre tus alergias para un mejor seguimiento médico'
-                    : `No tienes alergias registradas con severidad ${filterSeverity}`
+                    ? t('empty.all.description')
+                    : t('empty.filtered.description', { severity: filterSeverity })
                   }
                 </p>
                 <button
@@ -289,7 +293,7 @@ export default function AllergiesPage({
                   <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
-                  Agregar primera alergia
+                  {t('empty.all.action')}
                 </button>
               </div>
             ) : (
@@ -311,8 +315,11 @@ export default function AllergiesPage({
                 {/* Results Summary */}
                 <div className="mt-6 pt-6 border-t border-gray-200 text-center">
                   <p className="text-sm text-gray-600">
-                    Mostrando {sortedAllergies.length} de {allergies.length} alergia{allergies.length !== 1 ? 's' : ''}
-                    {filterSeverity !== 'all' && ` con severidad ${filterSeverity}`}
+                    {t('results.showing', {
+                      shown: sortedAllergies.length,
+                      total: allergies.length
+                    })}
+                    {filterSeverity !== 'all' && ` ${t('results.withFilter', { severity: filterSeverity })}`}
                   </p>
                 </div>
               </div>
@@ -326,18 +333,18 @@ export default function AllergiesPage({
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-6">
                 <p className="text-gray-500 text-sm">
-                  © 2024 VitalGo. Todos los derechos reservados.
+                  {tCommon('footer.copyright')}
                 </p>
               </div>
               <div className="flex items-center space-x-6">
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-                  Privacidad
+                  {tCommon('footer.privacy')}
                 </a>
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-                  Términos
+                  {tCommon('footer.terms')}
                 </a>
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-                  Soporte
+                  {tCommon('footer.support')}
                 </a>
               </div>
             </div>

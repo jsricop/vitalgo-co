@@ -3,6 +3,7 @@
  * Specialized email input for authentication with validation
  */
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { FieldValidationState } from '../../../signup/types';
 
 interface LoginEmailInputProps {
@@ -26,6 +27,8 @@ export const LoginEmailInput: React.FC<LoginEmailInputProps> = ({
   disabled = false,
   'data-testid': testId
 }) => {
+  const t = useTranslations('auth');
+
   const getInputClasses = () => {
     let classes = "w-full pl-12 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors bg-white";
 
@@ -47,7 +50,7 @@ export const LoginEmailInput: React.FC<LoginEmailInputProps> = ({
   return (
     <div className="space-y-2">
       <label htmlFor={id} className="block text-sm font-medium text-gray-700">
-        Correo electrónico
+        {t('email')}
         <span className="text-red-500 ml-1">*</span>
       </label>
 
@@ -56,7 +59,7 @@ export const LoginEmailInput: React.FC<LoginEmailInputProps> = ({
           id={id}
           name={name}
           type="email"
-          placeholder="tu@email.com"
+          placeholder={t('emailPlaceholder')}
           value={value}
           onChange={onChange}
           onBlur={onBlur}
@@ -108,7 +111,7 @@ export const LoginEmailInput: React.FC<LoginEmailInputProps> = ({
       {/* Success message */}
       {validation?.isValid === true && !validation.error && (
         <p className="text-sm text-vitalgo-green">
-          ✓ Email válido
+          {t('emailValid')}
         </p>
       )}
     </div>

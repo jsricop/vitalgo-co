@@ -1,9 +1,10 @@
+'use client';
 /**
  * Login Page template component
  * Complete login page with minimal layout and VitalGo branding
  */
 import React from 'react';
-import { Metadata } from 'next';
+import { useTranslations } from 'next-intl';
 import { MinimalNavbar } from '../../../../shared/components/organisms/MinimalNavbar';
 import { MinimalFooter } from '../../../../shared/components/organisms/MinimalFooter';
 import { LoginForm } from '../organisms/LoginForm';
@@ -17,11 +18,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   onSuccess,
   onError
 }) => {
+  const t = useTranslations('auth');
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Minimal Navigation */}
       <MinimalNavbar
-        backText="Volver al inicio"
+        backText={t('backToHome')}
         backUrl="/"
         showLogo={true}
       />
@@ -44,12 +47,4 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       <MinimalFooter />
     </div>
   );
-};
-
-// Metadata for SEO (for use in page.tsx)
-export const loginPageMetadata: Metadata = {
-  title: 'Iniciar Sesión | VitalGo',
-  description: 'Accede a tu cuenta de VitalGo para gestionar tu información médica de forma segura.',
-  keywords: 'VitalGo, login, iniciar sesión, acceso, cuenta médica',
-  robots: 'noindex, nofollow', // Don't index login pages
 };

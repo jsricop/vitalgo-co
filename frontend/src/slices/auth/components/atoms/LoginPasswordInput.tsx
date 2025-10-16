@@ -4,6 +4,7 @@
  * Specialized password input for authentication without strength indicator
  */
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface LoginPasswordInputProps {
   id: string;
@@ -27,6 +28,7 @@ export const LoginPasswordInput: React.FC<LoginPasswordInputProps> = ({
   'data-testid': testId
 }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const t = useTranslations('auth');
 
   const getInputClasses = () => {
     let classes = "w-full px-4 py-3 pl-12 pr-12 border rounded-lg focus:outline-none focus:ring-2 transition-colors bg-white";
@@ -45,7 +47,7 @@ export const LoginPasswordInput: React.FC<LoginPasswordInputProps> = ({
   return (
     <div className="space-y-2">
       <label htmlFor={id} className="block text-sm font-medium text-gray-700">
-        Contraseña
+        {t('password')}
         <span className="text-red-500 ml-1">*</span>
       </label>
 
@@ -61,7 +63,7 @@ export const LoginPasswordInput: React.FC<LoginPasswordInputProps> = ({
           id={id}
           name={name}
           type={showPassword ? 'text' : 'password'}
-          placeholder="Ingresa tu contraseña"
+          placeholder={t('passwordPlaceholder')}
           value={value}
           onChange={onChange}
           onBlur={onBlur}
@@ -79,7 +81,7 @@ export const LoginPasswordInput: React.FC<LoginPasswordInputProps> = ({
           disabled={disabled}
           className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-600 disabled:cursor-not-allowed"
           data-testid={`${testId}-toggle`}
-          aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+          aria-label={showPassword ? t('hidePassword') : t('showPassword')}
         >
           {showPassword ? (
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -13,6 +13,7 @@
 - `last_login`: DateTime(timezone, nullable) - Last successful login time
 - `failed_login_attempts`: Integer - Failed login counter (default: 0)
 - `locked_until`: DateTime(timezone, nullable) - Account lockout expiration time
+- `preferred_language`: String(5, indexed) - User's preferred language for i18n (ISO 639-1: 'es', 'en') (default: 'es')
 
 ### patients
 - `id`: UUID (PK) - Unique patient identifier

@@ -1,5 +1,6 @@
 "use client"
 
+import { useTranslations } from 'next-intl'
 import { FooterLink } from "../atoms/FooterLink"
 import { CopyrightText } from "../atoms/CopyrightText"
 
@@ -8,6 +9,8 @@ interface MinimalFooterProps {
 }
 
 export function MinimalFooter({ className = "" }: MinimalFooterProps) {
+  const t = useTranslations('common')
+
   return (
     <footer className={`bg-white border-t border-gray-200 ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -18,10 +21,10 @@ export function MinimalFooter({ className = "" }: MinimalFooterProps) {
           {/* Right: Essential Legal Links */}
           <div className="flex gap-4">
             <FooterLink href="/politica-de-privacidad">
-              Política de Privacidad
+              {t('privacyPolicy')}
             </FooterLink>
             <FooterLink href="/terminos-y-condiciones">
-              Términos y Condiciones
+              {t('termsAndConditions')}
             </FooterLink>
           </div>
         </div>

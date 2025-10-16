@@ -1,28 +1,33 @@
+"use client"
+
+import { useTranslations } from 'next-intl'
 import { Badge } from '../atoms/Badge'
 import { TestimonialCard } from '../molecules/TestimonialCard'
 
-const testimonials = [
-  {
-    name: "Dr. María González",
-    role: "Médica Internista - Hospital San Ignacio",
-    content: "VitalGo cambió mi forma de atender urgencias. Ahora tengo la información del paciente al instante, sin esperas ni papeles.",
-    rating: 5
-  },
-  {
-    name: "Carlos Rodríguez",
-    role: "Paciente Diabético",
-    content: "Llevaba años cargando carpetas con mis exámenes. Ahora todo está en mi teléfono y mi familia puede acceder si me pasa algo.",
-    rating: 5
-  },
-  {
-    name: "Ana Patricia Silva",
-    role: "Paramédica - Cruz Roja Colombia",
-    content: "En emergencias cada segundo cuenta. Con VitalGo veo las alergias y condiciones del paciente antes de llegar al hospital.",
-    rating: 5
-  }
-]
-
 export function TestimonialsSection() {
+  const t = useTranslations('home')
+
+  const testimonials = [
+    {
+      name: t('testimonials.testimonial1.name'),
+      role: t('testimonials.testimonial1.role'),
+      content: t('testimonials.testimonial1.content'),
+      rating: 5
+    },
+    {
+      name: t('testimonials.testimonial2.name'),
+      role: t('testimonials.testimonial2.role'),
+      content: t('testimonials.testimonial2.content'),
+      rating: 5
+    },
+    {
+      name: t('testimonials.testimonial3.name'),
+      role: t('testimonials.testimonial3.role'),
+      content: t('testimonials.testimonial3.content'),
+      rating: 5
+    }
+  ]
+
   return (
     <section
       className="py-16 lg:py-24 bg-gray-50/50"
@@ -34,19 +39,19 @@ export function TestimonialsSection() {
             className="mb-4 bg-vitalgo-green/10 text-vitalgo-green"
             data-testid="home-testimonials-badge"
           >
-            Testimonios
+            {t('testimonials.badge')}
           </Badge>
           <h2
             className="text-3xl lg:text-4xl font-light text-gray-900 mb-4"
             data-testid="home-testimonials-title"
           >
-            Historias reales de personas como tú
+            {t('testimonials.title')}
           </h2>
           <p
             className="text-xl text-gray-600 max-w-3xl mx-auto"
             data-testid="home-testimonials-description"
           >
-            Descubre cómo VitalGo está mejorando la vida de pacientes y profesionales de la salud en Colombia
+            {t('testimonials.description')}
           </p>
         </div>
 

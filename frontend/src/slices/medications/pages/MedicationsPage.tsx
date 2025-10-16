@@ -5,6 +5,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { AuthGuard } from '../../../shared/components/guards/AuthGuard';
 import { PatientNavbar } from '../../../shared/components/organisms/PatientNavbar';
 import { MedicationForm } from '../components/molecules/MedicationForm';
@@ -22,6 +23,9 @@ interface MedicationsPageProps {
 export default function MedicationsPage({
   'data-testid': testId = 'medications-page'
 }: MedicationsPageProps) {
+  const t = useTranslations('medications');
+  const tCommon = useTranslations('common');
+
   const [showForm, setShowForm] = useState(false);
   const [editingMedication, setEditingMedication] = useState<Medication | null>(null);
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
@@ -124,10 +128,10 @@ export default function MedicationsPage({
                 />
                 <div>
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    Medicamentos
+                    {t('title')}
                   </h1>
                   <p className="text-gray-600">
-                    Gestiona todos tus medicamentos de forma segura. Mantén un registro completo de medicamentos activos e inactivos.
+                    {t('subtitle')}
                   </p>
                 </div>
               </div>
@@ -141,7 +145,7 @@ export default function MedicationsPage({
                 <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                Agregar Medicamento
+                {t('addButton')}
               </button>
             </div>
 
@@ -149,15 +153,15 @@ export default function MedicationsPage({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200">
               <div className="text-center">
                 <div className="text-2xl font-bold text-vitalgo-green">{statusCounts.total}</div>
-                <div className="text-sm text-gray-600">Total</div>
+                <div className="text-sm text-gray-600">{t('stats.total')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600">{statusCounts.active}</div>
-                <div className="text-sm text-gray-600">Activos</div>
+                <div className="text-sm text-gray-600">{t('stats.active')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-gray-600">{statusCounts.inactive}</div>
-                <div className="text-sm text-gray-600">Inactivos</div>
+                <div className="text-sm text-gray-600">{t('stats.inactive')}</div>
               </div>
             </div>
           </div>
@@ -165,7 +169,7 @@ export default function MedicationsPage({
           {/* Filter Controls */}
           <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6">
             <div className="flex items-center space-x-4">
-              <span className="text-sm font-medium text-gray-700">Filtrar por estado:</span>
+              <span className="text-sm font-medium text-gray-700">{t('filters.label')}</span>
               <div className="flex space-x-2">
                 <button
                   onClick={() => setFilterStatus('all')}
@@ -175,7 +179,7 @@ export default function MedicationsPage({
                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
                   }`}
                 >
-                  Todos ({statusCounts.total})
+                  {t('filters.all', { count: statusCounts.total })}
                 </button>
                 <button
                   onClick={() => setFilterStatus('active')}
@@ -185,7 +189,7 @@ export default function MedicationsPage({
                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
                   }`}
                 >
-                  Activos ({statusCounts.active})
+                  {t('filters.active', { count: statusCounts.active })}
                 </button>
                 <button
                   onClick={() => setFilterStatus('inactive')}
@@ -195,7 +199,7 @@ export default function MedicationsPage({
                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
                   }`}
                 >
-                  Inactivos ({statusCounts.inactive})
+                  {t('filters.inactive', { count: statusCounts.inactive })}
                 </button>
               </div>
             </div>
@@ -211,14 +215,14 @@ export default function MedicationsPage({
                   </svg>
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  Error al cargar medicamentos
+                  {t('error.title')}
                 </h3>
                 <p className="text-gray-600 mb-4">{error}</p>
                 <button
                   onClick={refetch}
                   className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150"
                 >
-                  Intentar de nuevo
+                  {tCommon('actions.retry')}
                 </button>
               </div>
             ) : loading ? (
@@ -254,14 +258,14 @@ export default function MedicationsPage({
                   />
                 </div>
                 <h3 className="text-xl font-medium text-gray-900 mb-2">
-                  {filterStatus === 'all' ? 'No hay medicamentos registrados' :
-                   filterStatus === 'active' ? 'No hay medicamentos activos' :
-                   'No hay medicamentos inactivos'}
+                  {filterStatus === 'all' ? t('empty.all.title') :
+                   filterStatus === 'active' ? t('empty.active.title') :
+                   t('empty.inactive.title')}
                 </h3>
                 <p className="text-gray-600 mb-6">
                   {filterStatus === 'all'
-                    ? 'Comienza agregando tu primer medicamento para llevar un mejor control de tu tratamiento.'
-                    : 'Cambia el filtro para ver otros medicamentos o agrega uno nuevo.'
+                    ? t('empty.all.description')
+                    : t('empty.filtered.description')
                   }
                 </p>
                 {filterStatus === 'all' && (
@@ -274,7 +278,7 @@ export default function MedicationsPage({
                     <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
-                    Agregar primer medicamento
+                    {t('empty.all.action')}
                   </button>
                 )}
               </div>
@@ -288,18 +292,18 @@ export default function MedicationsPage({
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-6">
                 <p className="text-gray-500 text-sm">
-                  © 2024 VitalGo. Todos los derechos reservados.
+                  {tCommon('footer.copyright')}
                 </p>
               </div>
               <div className="flex items-center space-x-6">
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-                  Privacidad
+                  {tCommon('footer.privacy')}
                 </a>
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-                  Términos
+                  {tCommon('footer.terms')}
                 </a>
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-                  Soporte
+                  {tCommon('footer.support')}
                 </a>
               </div>
             </div>

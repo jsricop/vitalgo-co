@@ -5,6 +5,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { DashboardOverview } from '../organisms/DashboardOverview';
 import { AuthGuard } from '../../../../shared/components/guards/AuthGuard';
 import { PatientNavbar } from '../../../../shared/components/organisms/PatientNavbar';
@@ -16,6 +17,7 @@ interface DashboardPageProps {
 export const DashboardPage: React.FC<DashboardPageProps> = ({
   'data-testid': testId
 }) => {
+  const t = useTranslations('common');
   return (
     <AuthGuard requiredUserType="patient">
       <div className="min-h-screen bg-gray-50" data-testid={testId}>
@@ -33,18 +35,18 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-6">
                 <p className="text-gray-500 text-sm">
-                  © 2024 VitalGo. Todos los derechos reservados.
+                  © 2024 VitalGo. {t('allRightsReserved')}
                 </p>
               </div>
               <div className="flex items-center space-x-6">
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-                  Privacidad
+                  {t('privacyPolicy')}
                 </a>
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-                  Términos
+                  {t('termsAndConditions')}
                 </a>
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-                  Soporte
+                  {t('support')}
                 </a>
               </div>
             </div>

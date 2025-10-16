@@ -5,12 +5,17 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 import { TabContentProps } from '../../types';
 import { useBasicPatientInfo } from '../../hooks/useBasicPatientInfo';
 import { BasicInfoEditModal } from '../molecules/BasicInfoEditModal';
 import { getCountryByCode } from '../../../signup/data/countries';
 
 export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) {
+  const t = useTranslations('profile.basic');
+  const tCommon = useTranslations('common');
+  const locale = useLocale();
   const { basicInfo, loading, error, updateBasicInfo, refetch } = useBasicPatientInfo();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -37,7 +42,7 @@ export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) 
       ? new Date(dateString)
       : new Date(dateString + 'T00:00:00');
 
-    return date.toLocaleDateString('es-CO', {
+    return date.toLocaleDateString(locale, {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -47,10 +52,10 @@ export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) 
 
   const getDocumentTypeLabel = (code: string) => {
     const types: Record<string, string> = {
-      'CC': 'Cédula de Ciudadanía',
-      'TI': 'Tarjeta de Identidad',
-      'CE': 'Cédula de Extranjería',
-      'PAS': 'Pasaporte'
+      'CC': t('documentTypes.cc'),
+      'TI': t('documentTypes.ti'),
+      'CE': t('documentTypes.ce'),
+      'PAS': t('documentTypes.passport')
     };
     return types[code] || code;
   };
@@ -58,28 +63,28 @@ export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) 
   const getCountryDisplay = (countryCode: string) => {
     // Country mapping with flag emojis
     const countries: Record<string, { name: string; flag: string }> = {
-      'CO': { name: 'Colombia', flag: '🇨🇴' },
-      'US': { name: 'Estados Unidos', flag: '🇺🇸' },
-      'CA': { name: 'Canadá', flag: '🇨🇦' },
-      'MX': { name: 'México', flag: '🇲🇽' },
-      'AR': { name: 'Argentina', flag: '🇦🇷' },
-      'BR': { name: 'Brasil', flag: '🇧🇷' },
-      'CL': { name: 'Chile', flag: '🇨🇱' },
-      'PE': { name: 'Perú', flag: '🇵🇪' },
-      'EC': { name: 'Ecuador', flag: '🇪🇨' },
-      'VE': { name: 'Venezuela', flag: '🇻🇪' },
-      'UY': { name: 'Uruguay', flag: '🇺🇾' },
-      'PY': { name: 'Paraguay', flag: '🇵🇾' },
-      'BO': { name: 'Bolivia', flag: '🇧🇴' },
-      'CR': { name: 'Costa Rica', flag: '🇨🇷' },
-      'PA': { name: 'Panamá', flag: '🇵🇦' },
-      'GT': { name: 'Guatemala', flag: '🇬🇹' },
-      'HN': { name: 'Honduras', flag: '🇭🇳' },
-      'SV': { name: 'El Salvador', flag: '🇸🇻' },
-      'NI': { name: 'Nicaragua', flag: '🇳🇮' },
-      'CU': { name: 'Cuba', flag: '🇨🇺' },
-      'DO': { name: 'República Dominicana', flag: '🇩🇴' },
-      'ES': { name: 'España', flag: '🇪🇸' }
+      'CO': { name: t('countries.colombia'), flag: '🇨🇴' },
+      'US': { name: t('countries.usa'), flag: '🇺🇸' },
+      'CA': { name: t('countries.canada'), flag: '🇨🇦' },
+      'MX': { name: t('countries.mexico'), flag: '🇲🇽' },
+      'AR': { name: t('countries.argentina'), flag: '🇦🇷' },
+      'BR': { name: t('countries.brazil'), flag: '🇧🇷' },
+      'CL': { name: t('countries.chile'), flag: '🇨🇱' },
+      'PE': { name: t('countries.peru'), flag: '🇵🇪' },
+      'EC': { name: t('countries.ecuador'), flag: '🇪🇨' },
+      'VE': { name: t('countries.venezuela'), flag: '🇻🇪' },
+      'UY': { name: t('countries.uruguay'), flag: '🇺🇾' },
+      'PY': { name: t('countries.paraguay'), flag: '🇵🇾' },
+      'BO': { name: t('countries.bolivia'), flag: '🇧🇴' },
+      'CR': { name: t('countries.costaRica'), flag: '🇨🇷' },
+      'PA': { name: t('countries.panama'), flag: '🇵🇦' },
+      'GT': { name: t('countries.guatemala'), flag: '🇬🇹' },
+      'HN': { name: t('countries.honduras'), flag: '🇭🇳' },
+      'SV': { name: t('countries.elSalvador'), flag: '🇸🇻' },
+      'NI': { name: t('countries.nicaragua'), flag: '🇳🇮' },
+      'CU': { name: t('countries.cuba'), flag: '🇨🇺' },
+      'DO': { name: t('countries.dominicanRepublic'), flag: '🇩🇴' },
+      'ES': { name: t('countries.spain'), flag: '🇪🇸' }
     };
     const country = countries[countryCode] || { name: countryCode, flag: '🏳️' };
     return `${country.flag} ${country.name}`;
@@ -91,15 +96,15 @@ export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) 
         <div className="space-y-6">
           <div className="border-b border-gray-200 pb-4">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              Información Básica
+              {t('title')}
             </h3>
             <p className="text-gray-600">
-              Información personal registrada durante el proceso de creación de cuenta.
+              {t('subtitle')}
             </p>
           </div>
           <div className="flex items-center justify-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-vitalgo-green"></div>
-            <span className="ml-3 text-gray-600">Cargando información...</span>
+            <span className="ml-3 text-gray-600">{t('loading')}</span>
           </div>
         </div>
       </div>
@@ -112,10 +117,10 @@ export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) 
         <div className="space-y-6">
           <div className="border-b border-gray-200 pb-4">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              Información Básica
+              {t('title')}
             </h3>
             <p className="text-gray-600">
-              Información personal registrada durante el proceso de creación de cuenta.
+              {t('subtitle')}
             </p>
           </div>
           <div className="flex items-center justify-center py-12">
@@ -130,7 +135,7 @@ export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) 
                 onClick={refetch}
                 className="px-4 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150"
               >
-                Reintentar
+                {tCommon('retry')}
               </button>
             </div>
           </div>
@@ -145,10 +150,10 @@ export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) 
         <div className="space-y-6">
           <div className="border-b border-gray-200 pb-4">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              Información Básica
+              {t('title')}
             </h3>
             <p className="text-gray-600">
-              Información personal registrada durante el proceso de creación de cuenta.
+              {t('subtitle')}
             </p>
           </div>
           <div className="flex items-center justify-center py-12">
@@ -158,7 +163,7 @@ export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) 
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                 </svg>
               </div>
-              <p className="text-sm text-gray-600">No se encontró información del perfil</p>
+              <p className="text-sm text-gray-600">{t('notFound')}</p>
             </div>
           </div>
         </div>
@@ -173,10 +178,10 @@ export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) 
         <div className="flex items-start justify-between mb-8">
           <div>
             <h3 className="text-xl font-semibold text-vitalgo-dark mb-2">
-              Perfil Personal
+              {t('personalProfile')}
             </h3>
             <p className="text-vitalgo-dark-light">
-              Tu información básica y datos de contacto
+              {t('contactInfo')}
             </p>
           </div>
           <button
@@ -187,7 +192,7 @@ export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) 
             <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
-            Editar
+            {tCommon('edit')}
           </button>
         </div>
 
@@ -203,7 +208,7 @@ export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) 
                 {basicInfo.firstName} {basicInfo.lastName}
               </h2>
               <p className="text-lg text-vitalgo-dark-light mt-1">
-                Paciente VitalGO
+                {t('patientLabel')}
               </p>
               <div className="flex items-center mt-2 text-sm text-vitalgo-dark-lighter">
                 <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -224,15 +229,15 @@ export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) 
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
-                <h4 className="text-sm font-semibold text-vitalgo-dark ml-2">Información Personal</h4>
+                <h4 className="text-sm font-semibold text-vitalgo-dark ml-2">{t('sections.personalInfo')}</h4>
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs text-vitalgo-dark-lighter">Fecha de nacimiento</span>
+                  <span className="text-xs text-vitalgo-dark-lighter">{t('fields.birthDate')}</span>
                   <span className="text-sm font-medium text-vitalgo-dark">{formatDate(basicInfo.birthDate)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-xs text-vitalgo-dark-lighter">País de origen</span>
+                  <span className="text-xs text-vitalgo-dark-lighter">{t('fields.originCountry')}</span>
                   <span className="text-sm font-medium text-vitalgo-dark">{getCountryDisplay(basicInfo.originCountry)}</span>
                 </div>
               </div>
@@ -246,15 +251,15 @@ export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) 
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
                   </svg>
                 </div>
-                <h4 className="text-sm font-semibold text-vitalgo-dark ml-2">Identificación</h4>
+                <h4 className="text-sm font-semibold text-vitalgo-dark ml-2">{t('sections.identification')}</h4>
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs text-vitalgo-dark-lighter">Tipo</span>
+                  <span className="text-xs text-vitalgo-dark-lighter">{t('fields.documentType')}</span>
                   <span className="text-sm font-medium text-vitalgo-dark">{basicInfo.documentType}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-xs text-vitalgo-dark-lighter">Número</span>
+                  <span className="text-xs text-vitalgo-dark-lighter">{t('fields.documentNumber')}</span>
                   <span className="text-sm font-medium text-vitalgo-dark">{basicInfo.documentNumber}</span>
                 </div>
               </div>
@@ -268,11 +273,11 @@ export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) 
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
                 </div>
-                <h4 className="text-sm font-semibold text-vitalgo-dark ml-2">Contacto</h4>
+                <h4 className="text-sm font-semibold text-vitalgo-dark ml-2">{t('sections.contact')}</h4>
               </div>
               <div className="space-y-2">
                 <div>
-                  <span className="text-xs text-vitalgo-dark-lighter block">Teléfono</span>
+                  <span className="text-xs text-vitalgo-dark-lighter block">{t('fields.phone')}</span>
                   <div className="flex items-center space-x-2 mt-1">
                     {basicInfo.countryCode && (
                       <span
@@ -296,10 +301,10 @@ export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) 
           <div className="flex items-center justify-between pt-4 border-t border-gray-100">
             <div className="flex items-center">
               <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-              <span className="text-sm text-vitalgo-dark-lighter">Perfil verificado</span>
+              <span className="text-sm text-vitalgo-dark-lighter">{t('verifiedProfile')}</span>
             </div>
             <div className="text-xs text-vitalgo-dark-lighter">
-              Última actualización: Hoy
+              {t('lastUpdate', { date: t('today') })}
             </div>
           </div>
         </div>
@@ -307,7 +312,7 @@ export function BasicInformationTab({ 'data-testid': testId }: TabContentProps) 
         {/* Action Footer */}
         <div className="mt-6 text-center">
           <p className="text-xs text-vitalgo-dark-lighter">
-            💡 Mantén tu información actualizada para recibir el mejor cuidado médico
+            {t('keepUpdated')}
           </p>
         </div>
       </div>

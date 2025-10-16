@@ -5,6 +5,7 @@
  */
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { LoginCredentialsForm } from '../molecules/LoginCredentialsForm';
 import { LoginOptionsForm } from '../molecules/LoginOptionsForm';
 import { LoginButton } from '../atoms/LoginButton';
@@ -25,6 +26,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 }) => {
   const router = useRouter();
   const { login, isLoading, error } = useAuth();
+  const t = useTranslations('auth');
 
   // Form state
   const [formData, setFormData] = useState<LoginFormType>({
@@ -58,7 +60,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       setEmailValidation({
         isValidating: false,
         isValid: validateEmail(value),
-        error: validateEmail(value) ? null : 'Ingresa un email válido'
+        error: validateEmail(value) ? null : t('validation.enterValidEmail')
       });
     } else {
       setEmailValidation({
@@ -89,7 +91,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
     // Validate form
     if (!formData.email || !formData.password) {
-      setGeneralError('Por favor completa todos los campos');
+      setGeneralError(t('validation.fillAllFields'));
       return;
     }
 
@@ -97,7 +99,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       setEmailValidation(prev => ({
         ...prev,
         isValid: false,
-        error: 'Ingresa un email válido'
+        error: t('validation.enterValidEmail')
       }));
       return;
     }
@@ -145,12 +147,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
         if (loginError.attemptsRemaining !== undefined && loginError.attemptsRemaining !== null) {
           setGeneralError(
-            `${loginError.message}. Intentos restantes: ${loginError.attemptsRemaining}`
+            `${loginError.message}. ${t('validation.attemptsRemaining')}: ${loginError.attemptsRemaining}`
           );
         } else if (loginError.retryAfter) {
           const minutes = Math.ceil(loginError.retryAfter / 60);
           setGeneralError(
-            `${loginError.message} Intenta en ${minutes} minutos.`
+            `${loginError.message} ${t('validation.retryAfterMinutes').replace('{minutes}', minutes.toString())}`
           );
         } else {
           setGeneralError(loginError.message);
@@ -158,7 +160,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       } else if (error instanceof Error) {
         setGeneralError(error.message);
       } else {
-        setGeneralError('Error de conexión. Verifica tu internet.');
+        setGeneralError(t('validation.connectionError'));
       }
 
       if (onError && error instanceof Error) {
@@ -182,10 +184,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         {/* Header */}
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Iniciar sesión
+            {t('loginTitle')}
           </h2>
           <p className="text-sm text-gray-600">
-            Accede a tu cuenta de VitalGo
+            {t('loginSubtitle')}
           </p>
         </div>
 
@@ -238,12 +240,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         {/* Sign up link */}
         <div className="text-center">
           <p className="text-sm text-gray-600">
-            ¿No tienes cuenta?{' '}
+            {t('noAccount')}{' '}
             <a
               href="/signup/paciente"
               className="text-vitalgo-green hover:text-vitalgo-green/80 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-vitalgo-green/20 rounded-sm"
             >
-              Regístrate aquí
+              {t('signUpHere')}
             </a>
           </p>
         </div>

@@ -25,6 +25,7 @@ class User(Base):
     last_login = Column(DateTime(timezone=True), nullable=True)
     failed_login_attempts = Column(Integer, default=0, nullable=False)
     locked_until = Column(DateTime(timezone=True), nullable=True)
+    preferred_language = Column(String(5), default="es", nullable=False)
 
     # Relationships for auth system
     login_attempts = relationship("LoginAttempt", back_populates="user", lazy="dynamic")

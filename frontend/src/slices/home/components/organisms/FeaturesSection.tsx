@@ -1,43 +1,48 @@
+"use client"
+
 import { FileText, QrCode, Clock, Shield, Stethoscope, Smartphone } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { Badge } from '../atoms/Badge'
 import { FeatureCard } from '../molecules/FeatureCard'
 
-const features = [
-  {
-    icon: <FileText className="h-6 w-6 text-vitalgo-green" />,
-    title: "Tu Historial Siempre Contigo",
-    description: "Toda tu información médica organizada en un solo lugar. Consulta tus datos desde cualquier dispositivo cuando los necesites.",
-    badge: "Popular"
-  },
-  {
-    icon: <QrCode className="h-6 w-6 text-vitalgo-green" />,
-    title: "QR para Emergencias",
-    description: "Un código QR que puede salvarte la vida. Los paramédicos acceden al instante a tus alergias y condiciones médicas críticas.",
-    badge: "Vital"
-  },
-  {
-    icon: <Clock className="h-6 w-6 text-vitalgo-green" />,
-    title: "Consultas Más Rápidas",
-    description: "El médico ya tiene tu historial antes de verte. Consultas más eficientes que te ahorran hasta 70% del tiempo de espera."
-  },
-  {
-    icon: <Shield className="h-6 w-6 text-vitalgo-green" />,
-    title: "Máxima Seguridad",
-    description: "Tus datos médicos protegidos con los más altos estándares de seguridad. Solo tú decides quién puede verlos."
-  },
-  {
-    icon: <Stethoscope className="h-6 w-6 text-vitalgo-green" />,
-    title: "Ideal para Profesionales",
-    description: "Si eres médico o paramédico, accede rápidamente a la información de tus pacientes para brindar mejor atención."
-  },
-  {
-    icon: <Smartphone className="h-6 w-6 text-vitalgo-green" />,
-    title: "Acceso Multiplataforma",
-    description: "Disponible desde computadores, tablets y móviles. Tu expediente médico seguro desde cualquier dispositivo autorizado."
-  }
-]
-
 export function FeaturesSection() {
+  const t = useTranslations('home')
+
+  const features = [
+    {
+      icon: <FileText className="h-6 w-6 text-vitalgo-green" />,
+      title: t('features.feature1.title'),
+      description: t('features.feature1.description'),
+      badge: t('features.feature1.badge')
+    },
+    {
+      icon: <QrCode className="h-6 w-6 text-vitalgo-green" />,
+      title: t('features.feature2.title'),
+      description: t('features.feature2.description'),
+      badge: t('features.feature2.badge')
+    },
+    {
+      icon: <Clock className="h-6 w-6 text-vitalgo-green" />,
+      title: t('features.feature3.title'),
+      description: t('features.feature3.description')
+    },
+    {
+      icon: <Shield className="h-6 w-6 text-vitalgo-green" />,
+      title: t('features.feature4.title'),
+      description: t('features.feature4.description')
+    },
+    {
+      icon: <Stethoscope className="h-6 w-6 text-vitalgo-green" />,
+      title: t('features.feature5.title'),
+      description: t('features.feature5.description')
+    },
+    {
+      icon: <Smartphone className="h-6 w-6 text-vitalgo-green" />,
+      title: t('features.feature6.title'),
+      description: t('features.feature6.description')
+    }
+  ]
+
   return (
     <section
       className="py-16 lg:py-24 bg-gray-50/50"
@@ -49,19 +54,19 @@ export function FeaturesSection() {
             className="mb-4 bg-vitalgo-green/10 text-vitalgo-green"
             data-testid="home-features-badge"
           >
-            Funcionalidades
+            {t('features.badge')}
           </Badge>
           <h2
             className="text-3xl lg:text-4xl font-light text-gray-900 mb-4"
             data-testid="home-features-title"
           >
-            Todo lo que necesitas para cuidar tu salud
+            {t('features.title')}
           </h2>
           <p
             className="text-xl text-gray-600 max-w-3xl mx-auto"
             data-testid="home-features-description"
           >
-            Herramientas simples y poderosas para que tengas el control total de tu información médica
+            {t('features.description')}
           </p>
         </div>
 

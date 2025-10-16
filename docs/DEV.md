@@ -404,6 +404,331 @@ Before generating code:
 
 ---
 
+## Internationalization (i18n) Development Guide
+
+### Overview
+VitalGo supports **Spanish (default)** and **English** using `next-intl` v3.x with Next.js 15 App Router. The system features **dual persistence** (cookie + database) for seamless cross-device language preferences.
+
+### Architecture
+
+#### URL Strategy: "as-needed" Locale Prefix
+```
+Spanish (default): /dashboard, /profile, /login
+English:           /en/dashboard, /en/profile, /en/login
+```
+
+#### Persistence Strategy: Dual System
+1. **Cookie (`NEXT_LOCALE`)**: Immediate effect, works for all users, enables SSR
+2. **Database (`users.preferred_language`)**: Long-term storage, cross-device sync, authenticated users only
+
+### Directory Structure
+```
+frontend/
+├── messages/
+│   ├── es.json              # Spanish translations (150+ keys)
+│   └── en.json              # English translations (150+ keys)
+├── src/
+│   ├── i18n/
+│   │   ├── request.ts       # Request configuration
+│   │   ├── routing.ts       # Routing with "as-needed" prefix
+│   │   └── locale.ts        # Cookie management utilities
+│   ├── middleware.ts        # Locale detection middleware
+│   ├── app/
+│   │   ├── layout.tsx       # Root layout (minimal)
+│   │   ├── page.tsx         # Root redirect to default locale
+│   │   └── [locale]/
+│   │       ├── layout.tsx   # Locale-specific layout with providers
+│   │       ├── page.tsx     # Home page
+│   │       └── [routes]/    # All localized routes
+│   └── shared/
+│       ├── contexts/
+│       │   └── LanguageContext.tsx  # Language state management
+│       └── components/
+│           └── molecules/
+│               └── LanguageSelector.tsx  # Language switcher UI
+
+backend/
+└── slices/profile/
+    ├── application/dto/
+    │   └── language_dto.py  # Language DTOs
+    ├── application/use_cases/
+    │   └── update_language_use_case.py  # Business logic
+    └── infrastructure/api/
+        └── profile_endpoints.py  # GET/PUT /api/profile/language
+```
+
+### Translation File Structure
+**Namespace Organization** (`messages/es.json` and `messages/en.json`):
+```json
+{
+  "common": {
+    "loading": "Cargando..." / "Loading...",
+    "save": "Guardar" / "Save",
+    "cancel": "Cancelar" / "Cancel"
+  },
+  "nav": {
+    "dashboard": "Panel de Control" / "Dashboard",
+    "profile": "Mi Perfil" / "My Profile",
+    "medications": "Medicamentos" / "Medications"
+  },
+  "auth": {
+    "login": { "title": "...", "email": "...", "password": "..." },
+    "signup": { ... }
+  },
+  "dashboard": { ... },
+  "profile": { ... },
+  "medications": { ... },
+  "allergies": { ... },
+  "language": {
+    "selector": "Idioma" / "Language",
+    "spanish": "Español",
+    "english": "English",
+    "updating": "Actualizando idioma..." / "Updating language..."
+  }
+}
+```
+
+### Usage Patterns
+
+#### 1. Using Translations in Components
+```typescript
+'use client';
+import { useTranslations } from 'next-intl';
+
+export function MyComponent() {
+  const t = useTranslations('namespace');
+
+  return (
+    <div>
+      <h1>{t('title')}</h1>
+      <p>{t('description')}</p>
+      <button>{t('actions.save')}</button>
+    </div>
+  );
+}
+```
+
+#### 2. Using Language Context
+```typescript
+'use client';
+import { useLanguage } from '@/shared/contexts/LanguageContext';
+
+export function LanguageSwitcher() {
+  const { locale, setLocale, isChanging } = useLanguage();
+
+  const handleChange = async (newLocale: 'es' | 'en') => {
+    await setLocale(newLocale);  // Updates cookie + database
+  };
+
+  return (
+    <select value={locale} onChange={(e) => handleChange(e.target.value)} disabled={isChanging}>
+      <option value="es">Español</option>
+      <option value="en">English</option>
+    </select>
+  );
+}
+```
+
+#### 3. Programmatic Navigation with Locale
+```typescript
+import { useRouter, usePathname } from '@/i18n/routing';
+
+export function MyComponent() {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Navigate with locale
+  router.push('/profile');  // Automatically uses current locale
+  router.replace(pathname); // Refresh with current route
+}
+```
+
+#### 4. Link Component with Locale
+```typescript
+import { Link } from '@/i18n/routing';
+
+export function Navigation() {
+  return (
+    <nav>
+      <Link href="/dashboard">Dashboard</Link>
+      <Link href="/profile">Profile</Link>
+    </nav>
+  );
+}
+```
+
+### Backend API Endpoints
+
+#### GET /api/profile/language
+Get user's current preferred language.
+```python
+# Request
+GET /api/profile/language
+Authorization: Bearer {token}
+
+# Response (200)
+{
+  "preferred_language": "en"
+}
+```
+
+#### PUT /api/profile/language
+Update user's preferred language.
+```python
+# Request
+PUT /api/profile/language
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "preferred_language": "en"  # "es" | "en"
+}
+
+# Response (200)
+{
+  "preferred_language": "en",
+  "message": "Language preference updated successfully"
+}
+```
+
+### Database Schema
+
+#### users table
+```sql
+ALTER TABLE users
+ADD COLUMN preferred_language VARCHAR(5) NOT NULL DEFAULT 'es';
+
+CREATE INDEX idx_users_preferred_language
+ON users(preferred_language);
+```
+
+### Adding New Translations
+
+#### Step 1: Add keys to translation files
+```json
+// messages/es.json
+{
+  "myFeature": {
+    "title": "Mi Nueva Función",
+    "description": "Descripción de la función"
+  }
+}
+
+// messages/en.json
+{
+  "myFeature": {
+    "title": "My New Feature",
+    "description": "Feature description"
+  }
+}
+```
+
+#### Step 2: Use in components
+```typescript
+const t = useTranslations('myFeature');
+
+return (
+  <div>
+    <h2>{t('title')}</h2>
+    <p>{t('description')}</p>
+  </div>
+);
+```
+
+### Common Patterns
+
+#### Pattern 1: Conditional Rendering with Locale
+```typescript
+import { useLocale } from 'next-intl';
+
+export function LocaleSpecificContent() {
+  const locale = useLocale();
+
+  return (
+    <div>
+      {locale === 'es' ? (
+        <p>Contenido específico en español</p>
+      ) : (
+        <p>English-specific content</p>
+      )}
+    </div>
+  );
+}
+```
+
+#### Pattern 2: Date Formatting with Locale
+```typescript
+const locale = useLocale();
+
+const formattedDate = new Date().toLocaleDateString(locale, {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'America/Bogota'
+});
+```
+
+#### Pattern 3: Server-Side Translations
+```typescript
+import { getTranslations } from 'next-intl/server';
+
+export async function generateMetadata() {
+  const t = await getTranslations('metadata');
+
+  return {
+    title: t('title'),
+    description: t('description')
+  };
+}
+```
+
+### Language Switching Flow
+
+1. **User clicks language selector** → `setLocale()` called
+2. **Update cookie** → `setUserLocale()` server action
+3. **Update database** → `apiClient.put('/profile/language', { preferred_language })`
+4. **Update state** → `setLocaleState(newLocale)`
+5. **Navigate/Refresh** → `router.replace(pathname)` + `router.refresh()`
+
+### Troubleshooting
+
+#### Issue 1: Translations not updating
+**Solution**: Restart dev server after adding/modifying translation files
+
+#### Issue 2: Locale not persisting
+**Solution**: Check cookie settings and database sync in LanguageContext
+
+#### Issue 3: 404 on localized routes
+**Solution**: Ensure all routes are inside `[locale]` directory
+
+#### Issue 4: TypeScript errors with useTranslations
+**Solution**: Ensure translation key paths match JSON structure exactly
+
+### Migration Checklist
+
+When adding i18n to a new slice/feature:
+- [ ] Add translation keys to `messages/es.json` and `messages/en.json`
+- [ ] Replace hardcoded strings with `t('key')` calls
+- [ ] Test in both Spanish and English
+- [ ] Verify date/number formatting with locale
+- [ ] Check URL routing with `/en` prefix
+- [ ] Update component tests with locale provider
+
+### Performance Considerations
+
+- **Translation Loading**: Messages loaded per request, not bundled
+- **Cookie Size**: `NEXT_LOCALE` cookie is minimal (2-5 bytes)
+- **Database Queries**: Language preference cached with user session
+- **Bundle Impact**: next-intl adds ~15KB to client bundle
+
+### Security Considerations
+
+- **Cookie Settings**: `httpOnly: false` (needed for client access), `sameSite: 'lax'`
+- **Database Validation**: ISO 639-1 codes validated ("es" | "en")
+- **Authentication**: Language endpoint requires Bearer token
+
+---
+
 ## Implementation Case Study: Gynecological Information (RF003)
 
 ### Overview

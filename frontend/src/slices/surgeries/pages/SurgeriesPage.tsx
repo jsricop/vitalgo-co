@@ -5,6 +5,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { AuthGuard } from '../../../shared/components/guards/AuthGuard';
 import { PatientNavbar } from '../../../shared/components/organisms/PatientNavbar';
 import { SurgeryForm } from '../components/molecules/SurgeryForm';
@@ -33,6 +34,9 @@ const surgeryToFormData = (surgery: Surgery) => ({
 export default function SurgeriesPage({
   'data-testid': testId = 'surgeries-page'
 }: SurgeriesPageProps) {
+  const t = useTranslations('surgeries');
+  const tCommon = useTranslations('common');
+
   const [showForm, setShowForm] = useState(false);
   const [editingSurgery, setEditingSurgery] = useState<Surgery | null>(null);
   const [filterType, setFilterType] = useState<'all' | 'recent' | 'with_complications'>('all');
@@ -140,10 +144,10 @@ export default function SurgeriesPage({
                 />
                 <div>
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    Cirugías
+                    {t('title')}
                   </h1>
                   <p className="text-gray-600">
-                    Gestiona todas tus cirugías de forma segura. Mantén un registro completo de procedimientos quirúrgicos.
+                    {t('subtitle')}
                   </p>
                 </div>
               </div>
@@ -157,7 +161,7 @@ export default function SurgeriesPage({
                 <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                Agregar Cirugía
+                {t('addButton')}
               </button>
             </div>
 
@@ -165,15 +169,15 @@ export default function SurgeriesPage({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200">
               <div className="text-center">
                 <div className="text-2xl font-bold text-vitalgo-green">{surgeryCounts.total}</div>
-                <div className="text-sm text-gray-600">Total</div>
+                <div className="text-sm text-gray-600">{t('stats.total')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-purple-600">{surgeryCounts.recent}</div>
-                <div className="text-sm text-gray-600">Recientes (1 año)</div>
+                <div className="text-sm text-gray-600">{t('stats.recent')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-orange-600">{surgeryCounts.withComplications}</div>
-                <div className="text-sm text-gray-600">Con Complicaciones</div>
+                <div className="text-sm text-gray-600">{t('stats.withComplications')}</div>
               </div>
             </div>
           </div>
@@ -181,7 +185,7 @@ export default function SurgeriesPage({
           {/* Filter Controls */}
           <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6">
             <div className="flex flex-wrap items-center gap-4">
-              <span className="text-sm font-medium text-gray-700">Filtrar cirugías:</span>
+              <span className="text-sm font-medium text-gray-700">{t('filters.label')}</span>
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setFilterType('all')}
@@ -191,7 +195,7 @@ export default function SurgeriesPage({
                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
                   }`}
                 >
-                  Todas ({surgeryCounts.total})
+                  {t('filters.all', { count: surgeryCounts.total })}
                 </button>
                 <button
                   onClick={() => setFilterType('recent')}
@@ -201,7 +205,7 @@ export default function SurgeriesPage({
                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
                   }`}
                 >
-                  Recientes ({surgeryCounts.recent})
+                  {t('filters.recent', { count: surgeryCounts.recent })}
                 </button>
                 <button
                   onClick={() => setFilterType('with_complications')}
@@ -211,7 +215,7 @@ export default function SurgeriesPage({
                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
                   }`}
                 >
-                  Con Complicaciones ({surgeryCounts.withComplications})
+                  {t('filters.withComplications', { count: surgeryCounts.withComplications })}
                 </button>
               </div>
             </div>
@@ -227,7 +231,7 @@ export default function SurgeriesPage({
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  <span>Cargando cirugías...</span>
+                  <span>{t('loading')}</span>
                 </div>
               </div>
             ) : error ? (
@@ -237,7 +241,7 @@ export default function SurgeriesPage({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Error al cargar cirugías
+                  {t('error.title')}
                 </h3>
                 <p className="text-sm text-gray-600 mb-4">
                   {error}
@@ -247,7 +251,7 @@ export default function SurgeriesPage({
                   className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150"
                   data-testid={`${testId}-retry-button`}
                 >
-                  Intentar de nuevo
+                  {tCommon('actions.retry')}
                 </button>
               </div>
             ) : sortedSurgeries.length === 0 ? (
@@ -256,16 +260,16 @@ export default function SurgeriesPage({
                 <SurgeryIcon size="xl" color="default" className="mx-auto mb-6 opacity-50" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   {filterType === 'all'
-                    ? 'Sin cirugías registradas'
+                    ? t('empty.all.title')
                     : filterType === 'recent'
-                    ? 'Sin cirugías recientes'
-                    : 'Sin cirugías con complicaciones'
+                    ? t('empty.recent.title')
+                    : t('empty.withComplications.title')
                   }
                 </h3>
                 <p className="text-sm text-gray-600 mb-6">
                   {filterType === 'all'
-                    ? 'Agrega información sobre tus cirugías para un mejor seguimiento médico'
-                    : `No tienes cirugías registradas en la categoría ${filterType === 'recent' ? 'recientes' : 'con complicaciones'}`
+                    ? t('empty.all.description')
+                    : t('empty.filtered.description')
                   }
                 </p>
                 <button
@@ -276,7 +280,7 @@ export default function SurgeriesPage({
                   <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
-                  Agregar primera cirugía
+                  {t('empty.all.action')}
                 </button>
               </div>
             ) : (
@@ -298,8 +302,11 @@ export default function SurgeriesPage({
                 {/* Results Summary */}
                 <div className="mt-6 pt-6 border-t border-gray-200 text-center">
                   <p className="text-sm text-gray-600">
-                    Mostrando {sortedSurgeries.length} de {surgeries.length} cirugía{surgeries.length !== 1 ? 's' : ''}
-                    {filterType !== 'all' && ` con filtro ${filterType === 'recent' ? 'recientes' : 'con complicaciones'}`}
+                    {t('results.showing', {
+                      shown: sortedSurgeries.length,
+                      total: surgeries.length
+                    })}
+                    {filterType !== 'all' && ` ${t('results.withFilter')}`}
                   </p>
                 </div>
               </div>
@@ -313,18 +320,18 @@ export default function SurgeriesPage({
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-6">
                 <p className="text-gray-500 text-sm">
-                  © 2024 VitalGo. Todos los derechos reservados.
+                  {tCommon('footer.copyright')}
                 </p>
               </div>
               <div className="flex items-center space-x-6">
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-                  Privacidad
+                  {tCommon('footer.privacy')}
                 </a>
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-                  Términos
+                  {tCommon('footer.terms')}
                 </a>
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-                  Soporte
+                  {tCommon('footer.support')}
                 </a>
               </div>
             </div>

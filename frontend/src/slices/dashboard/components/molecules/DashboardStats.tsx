@@ -2,7 +2,10 @@
  * Dashboard Stats molecule component
  * Displays grid of statistics cards with medical data overview
  */
+'use client';
+
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { StatsCard } from '../atoms/StatsCard';
 import { DashboardStats as DashboardStatsType } from '../../types';
 
@@ -17,6 +20,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
   loading = false,
   'data-testid': testId
 }) => {
+  const t = useTranslations('dashboard');
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8" data-testid={testId}>
@@ -64,7 +68,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8" data-testid={testId}>
       <StatsCard
-        title="Medicamentos Activos"
+        title={t('stats.medications')}
         value={stats.active_medications}
         icon={medicationIcon}
         variant="info"
@@ -72,7 +76,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
       />
 
       <StatsCard
-        title="Alergias Activas"
+        title={t('stats.allergies')}
         value={stats.active_allergies}
         icon={allergyIcon}
         variant="warning"
@@ -80,7 +84,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
       />
 
       <StatsCard
-        title="Cirugías"
+        title={t('stats.surgeries')}
         value={stats.active_surgeries}
         icon={surgeryIcon}
         variant="default"
@@ -88,7 +92,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
       />
 
       <StatsCard
-        title="Enfermedades Activas"
+        title={t('stats.illnesses')}
         value={stats.active_illnesses}
         icon={illnessIcon}
         variant={stats.active_illnesses > 0 ? "warning" : "success"}

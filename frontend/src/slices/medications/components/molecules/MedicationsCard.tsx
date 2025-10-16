@@ -6,6 +6,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { MedicationsCardProps, Medication } from '../../types';
 import { MedicationCard } from './MedicationCard';
 import { MedicationForm } from './MedicationForm';
@@ -22,6 +23,8 @@ export const MedicationsCard: React.FC<MedicationsCardProps> = ({
   className = '',
   'data-testid': testId
 }) => {
+  const t = useTranslations('medications');
+  const tCommon = useTranslations('common');
   const [showForm, setShowForm] = useState(false);
   const [editingMedication, setEditingMedication] = useState<Medication | null>(null);
 
@@ -105,14 +108,14 @@ export const MedicationsCard: React.FC<MedicationsCardProps> = ({
           <svg className="h-5 w-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.866-.833-2.464 0L4.348 16.5c-.77.833.192 2.5 1.732 2.5z" />
           </svg>
-          <h3 className="text-red-800 font-medium">Error al cargar medicamentos</h3>
+          <h3 className="text-red-800 font-medium">{t('errors.loadFailed')}</h3>
         </div>
         <p className="text-red-600 mt-1 text-sm">{error}</p>
         <button
           onClick={refetch}
           className="mt-3 text-sm font-medium text-vitalgo-green hover:text-vitalgo-green-light"
         >
-          Intentar de nuevo
+          {tCommon('retry')}
         </button>
       </div>
     );
@@ -147,10 +150,10 @@ export const MedicationsCard: React.FC<MedicationsCardProps> = ({
             />
             <div>
               <h2 className="text-lg font-semibold text-vitalgo-dark">
-                Medicamentos
+                {t('title')}
               </h2>
               <p className="text-sm text-vitalgo-dark-light">
-                {medications.length} {medications.length === 1 ? 'medicamento registrado' : 'medicamentos registrados'}
+                {t('medicationCount', { count: medications.length })}
               </p>
             </div>
           </div>
@@ -165,7 +168,7 @@ export const MedicationsCard: React.FC<MedicationsCardProps> = ({
               <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
-              Agregar
+              {t('actions.add')}
             </button>
           )}
         </div>
@@ -202,7 +205,7 @@ export const MedicationsCard: React.FC<MedicationsCardProps> = ({
                   className="w-full text-center text-sm text-vitalgo-green hover:text-vitalgo-green-light font-medium"
                   data-testid={`${testId}-view-all-footer`}
                 >
-                  Ver todos los medicamentos ({medications.length})
+                  {t('viewAll', { count: medications.length })}
                 </button>
               </div>
             )}
@@ -217,10 +220,10 @@ export const MedicationsCard: React.FC<MedicationsCardProps> = ({
               />
             </div>
             <h3 className="text-lg font-medium text-vitalgo-dark mb-2">
-              No hay medicamentos registrados
+              {t('emptyState.title')}
             </h3>
             <p className="text-vitalgo-dark-light mb-4">
-              Comienza agregando tu primer medicamento para llevar un mejor control de tu tratamiento.
+              {t('emptyState.description')}
             </p>
             {showAddButton && (
               <button
@@ -232,7 +235,7 @@ export const MedicationsCard: React.FC<MedicationsCardProps> = ({
                 <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                Agregar primer medicamento
+                {t('emptyState.addFirst')}
               </button>
             )}
           </div>

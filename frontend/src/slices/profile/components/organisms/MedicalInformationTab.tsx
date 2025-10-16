@@ -5,6 +5,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { TabContentProps } from '../../types';
 import { usePersonalPatientInfo } from '../../hooks/usePersonalPatientInfo';
 import { MedicalInfoEditModal } from '../molecules/MedicalInfoEditModal';
@@ -13,6 +14,8 @@ import { MedicalInfoSection } from '../molecules/MedicalInfoSection';
 import { EmergencyContactSection } from '../molecules/EmergencyContactSection';
 
 export function MedicalInformationTab({ 'data-testid': testId }: TabContentProps) {
+  const t = useTranslations('profile.medical');
+  const tCommon = useTranslations('common');
   const { personalInfo, loading, error, updatePersonalInfo, refetch } = usePersonalPatientInfo();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -38,10 +41,10 @@ export function MedicalInformationTab({ 'data-testid': testId }: TabContentProps
         <div className="space-y-6">
           <div className="border-b border-gray-200 pb-4">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              Información Médica
+              {t('title')}
             </h3>
             <p className="text-gray-600">
-              Información médica general, EPS, ocupación y contacto de emergencia.
+              {t('subtitle')}
             </p>
           </div>
           <div className="flex items-center justify-center py-12">
@@ -58,10 +61,10 @@ export function MedicalInformationTab({ 'data-testid': testId }: TabContentProps
         <div className="space-y-6">
           <div className="border-b border-gray-200 pb-4">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              Información Médica
+              {t('title')}
             </h3>
             <p className="text-gray-600">
-              Información médica general, EPS, ocupación y contacto de emergencia.
+              {t('subtitle')}
             </p>
           </div>
           <div className="flex items-center justify-center py-12">
@@ -69,14 +72,14 @@ export function MedicalInformationTab({ 'data-testid': testId }: TabContentProps
               <svg className="mx-auto h-12 w-12 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
-              <h3 className="mt-2 text-sm font-medium text-gray-900">Error de conexión</h3>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">{t('connectionError')}</h3>
               <p className="mt-1 text-sm text-gray-500">{error}</p>
               <div className="mt-6">
                 <button
                   onClick={refetch}
                   className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-vitalgo-green hover:bg-vitalgo-green/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-vitalgo-green"
                 >
-                  Reintentar
+                  {tCommon('retry')}
                 </button>
               </div>
             </div>
@@ -93,10 +96,10 @@ export function MedicalInformationTab({ 'data-testid': testId }: TabContentProps
         <div className="border-b border-gray-200 pb-4 flex justify-between items-start">
           <div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              Información Médica
+              {t('title')}
             </h3>
             <p className="text-gray-600">
-              Información médica general, EPS, ocupación y contacto de emergencia.
+              {t('subtitle')}
             </p>
           </div>
           <button
@@ -106,7 +109,7 @@ export function MedicalInformationTab({ 'data-testid': testId }: TabContentProps
             <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
-            Editar
+            {tCommon('edit')}
           </button>
         </div>
 
@@ -128,10 +131,10 @@ export function MedicalInformationTab({ 'data-testid': testId }: TabContentProps
           <div className="flex items-center justify-between pt-4 border-t border-gray-100">
             <div className="flex items-center">
               <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
-              <span className="text-sm text-vitalgo-dark-lighter">Información médica protegida</span>
+              <span className="text-sm text-vitalgo-dark-lighter">{t('protectedInfo')}</span>
             </div>
             <div className="text-xs text-vitalgo-dark-lighter">
-              Última actualización: Hoy
+              {t('lastUpdate', { date: t('today') })}
             </div>
           </div>
         </div>
@@ -139,7 +142,7 @@ export function MedicalInformationTab({ 'data-testid': testId }: TabContentProps
         {/* Action Footer */}
         <div className="mt-6 text-center">
           <p className="text-xs text-vitalgo-dark-lighter">
-            🏥 Mantén tu información médica actualizada para una atención médica óptima
+            {t('keepUpdated')}
           </p>
         </div>
       </div>

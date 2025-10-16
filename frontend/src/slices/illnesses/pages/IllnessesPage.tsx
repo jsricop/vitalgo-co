@@ -5,6 +5,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { AuthGuard } from '../../../shared/components/guards/AuthGuard';
 import { PatientNavbar } from '../../../shared/components/organisms/PatientNavbar';
 import { IllnessForm } from '../components/molecules/IllnessForm';
@@ -22,6 +23,9 @@ interface IllnessesPageProps {
 export default function IllnessesPage({
   'data-testid': testId = 'illnesses-page'
 }: IllnessesPageProps) {
+  const t = useTranslations('illnesses');
+  const tCommon = useTranslations('common');
+
   const [showForm, setShowForm] = useState(false);
   const [editingIllness, setEditingIllness] = useState<PatientIllnessDTO | null>(null);
   const [filterStatus, setFilterStatus] = useState<'all' | 'activas' | 'cronicas' | 'curadas'>('all');
@@ -64,7 +68,7 @@ export default function IllnessesPage({
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('¿Estás seguro de que deseas eliminar esta enfermedad?')) {
+    if (!confirm(tCommon('confirmations.delete'))) {
       return;
     }
 
@@ -120,10 +124,10 @@ export default function IllnessesPage({
                 />
                 <div>
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    Enfermedades
+                    {t('title')}
                   </h1>
                   <p className="text-gray-600">
-                    Gestiona todas tus enfermedades y condiciones médicas. Mantén un registro completo de diagnósticos, tratamientos y seguimiento médico.
+                    {t('subtitle')}
                   </p>
                 </div>
               </div>
@@ -137,7 +141,7 @@ export default function IllnessesPage({
                 <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                Agregar Enfermedad
+                {t('addButton')}
               </button>
             </div>
 
@@ -145,19 +149,19 @@ export default function IllnessesPage({
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t border-gray-200">
               <div className="text-center">
                 <div className="text-2xl font-bold text-vitalgo-green">{statusCounts.total}</div>
-                <div className="text-sm text-gray-600">Total</div>
+                <div className="text-sm text-gray-600">{t('stats.total')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-red-600">{statusCounts.activas}</div>
-                <div className="text-sm text-gray-600">Activas</div>
+                <div className="text-sm text-gray-600">{t('stats.active')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-purple-600">{statusCounts.cronicas}</div>
-                <div className="text-sm text-gray-600">Crónicas</div>
+                <div className="text-sm text-gray-600">{t('stats.chronic')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600">{statusCounts.curadas}</div>
-                <div className="text-sm text-gray-600">Curadas</div>
+                <div className="text-sm text-gray-600">{t('stats.cured')}</div>
               </div>
             </div>
           </div>
@@ -165,7 +169,7 @@ export default function IllnessesPage({
           {/* Filter Controls */}
           <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6">
             <div className="flex items-center space-x-4">
-              <span className="text-sm font-medium text-gray-700">Filtrar por estado:</span>
+              <span className="text-sm font-medium text-gray-700">{t('filters.label')}</span>
               <div className="flex space-x-2">
                 <button
                   onClick={() => setFilterStatus('all')}
@@ -175,7 +179,7 @@ export default function IllnessesPage({
                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
                   }`}
                 >
-                  Todos ({statusCounts.total})
+                  {t('filters.all', { count: statusCounts.total })}
                 </button>
                 <button
                   onClick={() => setFilterStatus('activas')}
@@ -185,7 +189,7 @@ export default function IllnessesPage({
                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
                   }`}
                 >
-                  Activas ({statusCounts.activas})
+                  {t('filters.active', { count: statusCounts.activas })}
                 </button>
                 <button
                   onClick={() => setFilterStatus('cronicas')}
@@ -195,7 +199,7 @@ export default function IllnessesPage({
                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
                   }`}
                 >
-                  Crónicas ({statusCounts.cronicas})
+                  {t('filters.chronic', { count: statusCounts.cronicas })}
                 </button>
                 <button
                   onClick={() => setFilterStatus('curadas')}
@@ -205,7 +209,7 @@ export default function IllnessesPage({
                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
                   }`}
                 >
-                  Curadas ({statusCounts.curadas})
+                  {t('filters.cured', { count: statusCounts.curadas })}
                 </button>
               </div>
             </div>
@@ -221,14 +225,14 @@ export default function IllnessesPage({
                   </svg>
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  Error al cargar enfermedades
+                  {t('error.title')}
                 </h3>
                 <p className="text-gray-600 mb-4">{error}</p>
                 <button
                   onClick={refetch}
                   className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150"
                 >
-                  Intentar de nuevo
+                  {tCommon('actions.retry')}
                 </button>
               </div>
             ) : isLoading ? (
@@ -264,15 +268,15 @@ export default function IllnessesPage({
                   />
                 </div>
                 <h3 className="text-xl font-medium text-gray-900 mb-2">
-                  {filterStatus === 'all' ? 'No hay enfermedades registradas' :
-                   filterStatus === 'activas' ? 'No hay enfermedades activas' :
-                   filterStatus === 'cronicas' ? 'No hay enfermedades crónicas' :
-                   'No hay enfermedades curadas'}
+                  {filterStatus === 'all' ? t('empty.all.title') :
+                   filterStatus === 'activas' ? t('empty.active.title') :
+                   filterStatus === 'cronicas' ? t('empty.chronic.title') :
+                   t('empty.cured.title')}
                 </h3>
                 <p className="text-gray-600 mb-6">
                   {filterStatus === 'all'
-                    ? 'Comienza agregando tu primera enfermedad para llevar un mejor control de tu historial médico.'
-                    : 'Cambia el filtro para ver otras enfermedades o agrega una nueva.'
+                    ? t('empty.all.description')
+                    : t('empty.filtered.description')
                   }
                 </p>
                 {filterStatus === 'all' && (
@@ -285,7 +289,7 @@ export default function IllnessesPage({
                     <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
-                    Agregar primera enfermedad
+                    {t('empty.all.action')}
                   </button>
                 )}
               </div>
@@ -299,18 +303,18 @@ export default function IllnessesPage({
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-6">
                 <p className="text-gray-500 text-sm">
-                  © 2024 VitalGo. Todos los derechos reservados.
+                  {tCommon('footer.copyright')}
                 </p>
               </div>
               <div className="flex items-center space-x-6">
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-                  Privacidad
+                  {tCommon('footer.privacy')}
                 </a>
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-                  Términos
+                  {tCommon('footer.terms')}
                 </a>
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-                  Soporte
+                  {tCommon('footer.support')}
                 </a>
               </div>
             </div>

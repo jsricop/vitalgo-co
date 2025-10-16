@@ -1,7 +1,9 @@
+'use client';
 /**
  * Account Section molecule component
  */
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { TextInput } from '../atoms/TextInput';
 import { PasswordInput } from '../atoms/PasswordInput';
 import { FieldValidationState } from '../../types';
@@ -27,12 +29,14 @@ export const AccountSection: React.FC<AccountSectionProps> = ({
   onFieldBlur,
   validationStates
 }) => {
+  const t = useTranslations('signup.accountInfo');
+
   return (
     <div className="space-y-6" data-testid="account-section">
       <div className="border-b border-gray-200 pb-4">
-        <h3 className="text-lg font-medium text-gray-900">Información de la Cuenta</h3>
+        <h3 className="text-lg font-medium text-gray-900">{t('title')}</h3>
         <p className="text-sm text-gray-600">
-          Configura tu email y contraseña para acceder a la plataforma.
+          {t('subtitle')}
         </p>
       </div>
 
@@ -41,8 +45,8 @@ export const AccountSection: React.FC<AccountSectionProps> = ({
           id="email"
           name="email"
           type="email"
-          label="Correo electrónico"
-          placeholder="Ej: juan.perez@email.com"
+          label={t('fields.email.label')}
+          placeholder={t('fields.email.placeholder')}
           value={email}
           onChange={(e) => onInputChange('email', e.target.value)}
           onBlur={() => onFieldBlur('email')}
@@ -56,8 +60,8 @@ export const AccountSection: React.FC<AccountSectionProps> = ({
         <PasswordInput
           id="password"
           name="password"
-          label="Contraseña"
-          placeholder="Mínimo 8 caracteres"
+          label={t('fields.password.label')}
+          placeholder={t('fields.password.placeholder')}
           value={password}
           onChange={(e) => onInputChange('password', e.target.value)}
           onBlur={() => onFieldBlur('password')}
@@ -70,8 +74,8 @@ export const AccountSection: React.FC<AccountSectionProps> = ({
         <PasswordInput
           id="confirmPassword"
           name="confirmPassword"
-          label="Confirmar contraseña"
-          placeholder="Repite tu contraseña"
+          label={t('fields.confirmPassword.label')}
+          placeholder={t('fields.confirmPassword.placeholder')}
           value={confirmPassword}
           onChange={(e) => onInputChange('confirmPassword', e.target.value)}
           onBlur={() => onFieldBlur('confirmPassword')}

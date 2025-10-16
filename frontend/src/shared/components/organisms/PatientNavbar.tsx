@@ -6,10 +6,12 @@
 
 import { useState } from "react"
 import { usePathname } from "next/navigation"
+import { useTranslations } from "next-intl"
 import Link from "next/link"
 import { BrandHeader } from "../molecules/BrandHeader"
 import { UserMenu } from "../molecules/UserMenu"
 import { MobileMenuToggle } from "../molecules/MobileMenuToggle"
+import { LanguageSelectorCompact } from "../molecules/LanguageSelector"
 import { useAuthUser } from "../../hooks/useAuthUser"
 
 interface NavigationItem {
@@ -30,18 +32,19 @@ export function PatientNavbar({
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { user, isLoading, logout } = useAuthUser()
+  const t = useTranslations('nav')
 
   const navigationItems: NavigationItem[] = [
     {
-      label: "Mi Perfil",
+      label: t('profile'),
       href: "/profile"
     },
     {
-      label: "Panel de Control",
+      label: t('dashboard'),
       href: "/dashboard"
     },
     {
-      label: "Mi QR",
+      label: t('qr'),
       href: "/qr"
     }
   ]
@@ -74,7 +77,7 @@ export function PatientNavbar({
             <BrandHeader isAuthenticated={true} />
             <div className="flex items-center space-x-2">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-vitalgo-green"></div>
-              <span className="text-sm text-gray-600">Cargando...</span>
+              <span className="text-sm text-gray-600">{t('loading')}</span>
             </div>
           </div>
         </div>
@@ -90,7 +93,7 @@ export function PatientNavbar({
           <div className="flex justify-between items-center h-16">
             <BrandHeader isAuthenticated={true} />
             <div className="flex items-center space-x-3">
-              <span className="text-sm text-gray-600">Cargando usuario...</span>
+              <span className="text-sm text-gray-600">{t('loadingUser')}</span>
             </div>
           </div>
         </div>
@@ -132,8 +135,9 @@ export function PatientNavbar({
             </div>
           </div>
 
-          {/* Desktop User Menu */}
+          {/* Desktop User Menu and Language Selector */}
           <div className="hidden md:flex items-center space-x-4 flex-shrink-0">
+            <LanguageSelectorCompact />
             <UserMenu
               user={user}
               onLogout={logout}
@@ -186,6 +190,14 @@ export function PatientNavbar({
                   )
                 })}
               </nav>
+            </div>
+
+            {/* Mobile Language Selector */}
+            <div className="px-4 mt-4 border-t border-gray-200 pt-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-700">{t('language')}</span>
+                <LanguageSelectorCompact />
+              </div>
             </div>
 
             {/* Mobile User Menu */}

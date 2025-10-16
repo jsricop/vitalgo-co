@@ -6,6 +6,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { AllergiesCardProps, Allergy } from '../../types';
 import { AllergyCard } from './AllergyCard';
 import { AllergyForm } from './AllergyForm';
@@ -30,6 +31,8 @@ export const AllergiesCard: React.FC<AllergiesCardProps> = ({
   className = '',
   'data-testid': testId
 }) => {
+  const t = useTranslations('allergies');
+  const tCommon = useTranslations('common');
   const [showForm, setShowForm] = useState(false);
   const [editingAllergy, setEditingAllergy] = useState<Allergy | null>(null);
 
@@ -116,10 +119,10 @@ export const AllergiesCard: React.FC<AllergiesCardProps> = ({
           </div>
           <div>
             <h3 className="text-lg font-semibold text-vitalgo-dark">
-              Alergias
+              {t('title')}
             </h3>
             <p className="text-sm text-vitalgo-dark-light">
-              {allergies.length} {allergies.length === 1 ? 'alergia registrada' : 'alergias registradas'}
+              {t('allergyCount', { count: allergies.length })}
             </p>
           </div>
         </div>
@@ -134,7 +137,7 @@ export const AllergiesCard: React.FC<AllergiesCardProps> = ({
             <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
-            Agregar
+            {t('actions.add')}
           </button>
         )}
       </div>
@@ -149,7 +152,7 @@ export const AllergiesCard: React.FC<AllergiesCardProps> = ({
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>
-              <span className="text-sm">Cargando alergias...</span>
+              <span className="text-sm">{t('loading')}</span>
             </div>
           </div>
         ) : error ? (
@@ -159,13 +162,13 @@ export const AllergiesCard: React.FC<AllergiesCardProps> = ({
               <svg className="h-8 w-8 text-red-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <p className="text-sm text-red-600 font-medium">Error al cargar alergias</p>
+              <p className="text-sm text-red-600 font-medium">{t('errors.loadFailed')}</p>
               <p className="text-xs text-red-500 mt-1">{error}</p>
               <button
                 onClick={() => refetch()}
                 className="mt-2 text-xs text-vitalgo-green hover:text-vitalgo-green-dark focus:outline-none"
               >
-                Intentar de nuevo
+                {tCommon('retry')}
               </button>
             </div>
           </div>
@@ -176,10 +179,10 @@ export const AllergiesCard: React.FC<AllergiesCardProps> = ({
               <AllergyIcon size="xl" color="primary" data-testid={`${testId}-empty-icon`} />
             </div>
             <h3 className="text-lg font-medium text-vitalgo-dark mb-2">
-              No hay alergias registradas
+              {t('emptyState.title')}
             </h3>
             <p className="text-vitalgo-dark-light mb-4">
-              Comienza agregando tu primera alergia para llevar un mejor control de tu historial médico.
+              {t('emptyState.description')}
             </p>
             {showAddButton && (
               <button
@@ -191,7 +194,7 @@ export const AllergiesCard: React.FC<AllergiesCardProps> = ({
                 <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                Agregar primera alergia
+                {t('emptyState.addFirst')}
               </button>
             )}
           </div>
@@ -217,7 +220,7 @@ export const AllergiesCard: React.FC<AllergiesCardProps> = ({
                   className="w-full text-center text-sm text-vitalgo-green hover:text-vitalgo-green-light font-medium"
                   data-testid={`${testId}-view-all-footer`}
                 >
-                  Ver todas las alergias ({allergies.length})
+                  {t('viewAll', { count: allergies.length })}
                 </button>
               </div>
             )}

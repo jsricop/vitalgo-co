@@ -5,6 +5,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { QRCard } from '../molecules/QRCard';
 import { useQRGeneration } from '../../hooks/useQRGeneration';
 import { PatientNavbar } from '@/shared/components/organisms/PatientNavbar';
@@ -15,6 +16,7 @@ interface QRPageProps {
 }
 
 export function QRPage({ 'data-testid': testId }: QRPageProps) {
+  const t = useTranslations('qr');
   const { qrData, isLoading, error, generateQR, downloadQR, clearError } = useQRGeneration();
 
   useEffect(() => {
@@ -35,13 +37,13 @@ export function QRPage({ 'data-testid': testId }: QRPageProps) {
             <div className="text-center">
               <div className="bg-white rounded-xl shadow-lg p-8 max-w-md mx-auto">
                 <div className="text-red-500 text-6xl mb-4">⚠️</div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Error al cargar QR</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('error.title')}</h2>
                 <p className="text-gray-600 mb-6">{error}</p>
                 <button
                   onClick={handleRetry}
                   className="bg-vitalgo-green text-white px-6 py-3 rounded-md hover:bg-vitalgo-green/90 transition-colors"
                 >
-                  Reintentar
+                  {t('error.retry')}
                 </button>
               </div>
             </div>
@@ -69,31 +71,31 @@ export function QRPage({ 'data-testid': testId }: QRPageProps) {
           {/* Information Section */}
           <div className="mt-12 bg-white rounded-xl shadow-lg p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
-              ¿Cómo funciona tu código QR?
+              {t('howItWorks.title')}
             </h2>
 
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center">
                 <div className="text-4xl mb-3">📱</div>
-                <h3 className="font-semibold text-gray-900 mb-2">Escanea</h3>
+                <h3 className="font-semibold text-gray-900 mb-2">{t('howItWorks.scan.title')}</h3>
                 <p className="text-sm text-gray-600">
-                  Personal médico puede escanear tu QR con cualquier dispositivo
+                  {t('howItWorks.scan.description')}
                 </p>
               </div>
 
               <div className="text-center">
                 <div className="text-4xl mb-3">🏥</div>
-                <h3 className="font-semibold text-gray-900 mb-2">Acceso Inmediato</h3>
+                <h3 className="font-semibold text-gray-900 mb-2">{t('howItWorks.access.title')}</h3>
                 <p className="text-sm text-gray-600">
-                  Obtienen acceso instantáneo a tu información médica crítica
+                  {t('howItWorks.access.description')}
                 </p>
               </div>
 
               <div className="text-center">
                 <div className="text-4xl mb-3">🚨</div>
-                <h3 className="font-semibold text-gray-900 mb-2">Emergencias</h3>
+                <h3 className="font-semibold text-gray-900 mb-2">{t('howItWorks.emergency.title')}</h3>
                 <p className="text-sm text-gray-600">
-                  Información vital: alergias, medicamentos, contactos de emergencia
+                  {t('howItWorks.emergency.description')}
                 </p>
               </div>
             </div>

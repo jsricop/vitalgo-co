@@ -1,7 +1,9 @@
+'use client';
 /**
  * Personal Info Section molecule component
  */
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { TextInput } from '../atoms/TextInput';
 import { DocumentTypeSelect } from '../atoms/DocumentTypeSelect';
 import { DateInput } from '../atoms/DateInput';
@@ -56,12 +58,14 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   validationStates,
   errors
 }) => {
+  const t = useTranslations('signup.personalInfo');
+
   return (
     <div className="space-y-6" data-testid="personal-info-section">
       <div className="border-b border-gray-200 pb-4">
-        <h3 className="text-lg font-medium text-gray-900">Información Personal</h3>
+        <h3 className="text-lg font-medium text-gray-900">{t('title')}</h3>
         <p className="text-sm text-gray-600">
-          Ingresa tu información personal básica para crear tu cuenta.
+          {t('subtitle')}
         </p>
       </div>
 
@@ -69,8 +73,8 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         <TextInput
           id="firstName"
           name="firstName"
-          label="Nombres"
-          placeholder="Ej: Juan Carlos"
+          label={t('fields.firstName.label')}
+          placeholder={t('fields.firstName.placeholder')}
           value={firstName}
           onChange={(e) => onInputChange('firstName', e.target.value)}
           onBlur={() => onFieldBlur('firstName')}
@@ -84,8 +88,8 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         <TextInput
           id="lastName"
           name="lastName"
-          label="Apellidos"
-          placeholder="Ej: Pérez García"
+          label={t('fields.lastName.label')}
+          placeholder={t('fields.lastName.placeholder')}
           value={lastName}
           onChange={(e) => onInputChange('lastName', e.target.value)}
           onBlur={() => onFieldBlur('lastName')}
@@ -99,7 +103,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         <DocumentTypeSelect
           id="documentType"
           name="documentType"
-          label="Tipo de documento"
+          label={t('fields.documentType')}
           value={documentType}
           onChange={(e) => onInputChange('documentType', e.target.value)}
           onBlur={() => onFieldBlur('documentType')}
@@ -111,8 +115,8 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         <TextInput
           id="documentNumber"
           name="documentNumber"
-          label="Número de documento"
-          placeholder="Ej: 12345678"
+          label={t('fields.documentNumber.label')}
+          placeholder={t('fields.documentNumber.placeholder')}
           value={documentNumber}
           onChange={(e) => onInputChange('documentNumber', e.target.value)}
           onBlur={() => onFieldBlur('documentNumber')}
@@ -127,8 +131,8 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           <CountrySelect
             value={originCountry}
             onChange={onOriginCountryChange}
-            label="País de origen"
-            placeholder="Selecciona tu país de origen"
+            label={t('fields.originCountry.label')}
+            placeholder={t('fields.originCountry.placeholder')}
             error={errors.originCountry}
             required
             data-testid="originCountry-select"
@@ -152,7 +156,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           <DateInput
             id="birthDate"
             name="birthDate"
-            label="Fecha de nacimiento"
+            label={t('fields.birthDate')}
             value={birthDate}
             onChange={(e) => onInputChange('birthDate', e.target.value)}
             onBlur={() => onFieldBlur('birthDate')}

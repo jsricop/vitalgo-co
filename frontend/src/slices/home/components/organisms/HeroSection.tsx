@@ -1,17 +1,21 @@
+"use client"
+
 import { ArrowRight, Globe, Stethoscope } from 'lucide-react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { Button } from '../atoms/Button'
 import { Badge } from '../atoms/Badge'
 import { StatCard } from '../molecules/StatCard'
 
-const stats = [
-  { number: "10K+", label: "Pacientes Confían en Nosotros", icon: <ArrowRight className="h-5 w-5 text-vitalgo-green" /> },
-  { number: "500+", label: "Centros de Salud Conectados", icon: <Stethoscope className="h-5 w-5 text-vitalgo-green" /> },
-  { number: "70%", label: "Menos Tiempo de Espera", icon: <Globe className="h-5 w-5 text-vitalgo-green" /> },
-  { number: "24/7", label: "Siempre Disponible", icon: <ArrowRight className="h-5 w-5 text-vitalgo-green" /> }
-]
-
 export function HeroSection() {
+  const t = useTranslations('home')
+
+  const stats = [
+    { number: "10K+", label: t('hero.stats.patients'), icon: <ArrowRight className="h-5 w-5 text-vitalgo-green" /> },
+    { number: "500+", label: t('hero.stats.healthCenters'), icon: <Stethoscope className="h-5 w-5 text-vitalgo-green" /> },
+    { number: "70%", label: t('hero.stats.timeSaved'), icon: <Globe className="h-5 w-5 text-vitalgo-green" /> },
+    { number: "24/7", label: t('hero.stats.availability'), icon: <ArrowRight className="h-5 w-5 text-vitalgo-green" /> }
+  ]
   return (
     <section
       className="relative overflow-hidden bg-gradient-to-br from-white via-vitalgo-green/5 to-white py-16 lg:py-24"
@@ -39,25 +43,23 @@ export function HeroSection() {
             data-testid="home-hero-badge"
           >
             <Globe className="w-3 h-3 mr-1" />
-            Líder en Salud Digital Colombia
+            {t('hero.badge')}
           </Badge>
 
           <h2
             className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-light tracking-tight text-gray-900 mb-6"
             data-testid="home-hero-title"
           >
-            Tu salud.
+            {t('hero.title')}
             <br />
-            <span className="text-vitalgo-green font-normal">Simplificada.</span>
+            <span className="text-vitalgo-green font-normal">{t('hero.titleHighlight')}</span>
           </h2>
 
           <p
             className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto mb-8"
             data-testid="home-hero-description"
           >
-            Tu expediente médico digital completo y seguro. Acceso inmediato a tu historial clínico,
-            exámenes, diagnósticos y tratamientos desde cualquier centro de salud autorizado.
-            Consultas más rápidas que te ahorran hasta <strong className="text-vitalgo-green">70%</strong> del tiempo de espera.
+            {t('hero.description')}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
@@ -67,7 +69,7 @@ export function HeroSection() {
                 className="bg-vitalgo-green hover:bg-vitalgo-green/90 text-white px-8 py-4 text-lg"
                 data-testid="home-hero-patient-button"
               >
-                Soy Paciente
+                {t('hero.patientButton')}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
@@ -77,7 +79,7 @@ export function HeroSection() {
                 className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg"
                 data-testid="home-hero-professional-button"
               >
-                Soy Profesional de Salud
+                {t('hero.professionalButton')}
                 <Stethoscope className="ml-2 h-5 w-5" />
               </Button>
             </Link>
@@ -91,7 +93,7 @@ export function HeroSection() {
                 className="border-gray-300 text-gray-700 hover:bg-gray-100 hover:text-gray-900 px-8 py-4 text-lg"
                 data-testid="home-hero-login-button"
               >
-                Ya tengo cuenta - Iniciar sesión
+                {t('hero.loginButton')}
               </Button>
             </Link>
           </div>

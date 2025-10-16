@@ -9,6 +9,7 @@ from shared.database import get_db
 from slices.auth.infrastructure.api.auth_endpoints import get_current_user
 from slices.signup.domain.models.user_model import User
 from slices.profile.application.use_cases.complete_profile_use_case import CompleteProfileUseCase
+from slices.profile.application.use_cases.update_language_use_case import UpdateLanguagePreferenceUseCase
 from slices.profile.application.dto.profile_completion_dto import (
     ProfileCompletenessResponse,
     ExtendedPatientProfileDTO,
@@ -22,6 +23,10 @@ from slices.profile.application.dto.profile_completion_dto import (
 from slices.profile.application.dto.basic_patient_dto import (
     BasicPatientInfoDTO,
     BasicPatientUpdateDTO
+)
+from slices.profile.application.dto.language_dto import (
+    LanguagePreferenceDTO,
+    LanguagePreferenceResponseDTO
 )
 
 router = APIRouter(prefix="/api/profile", tags=["profile"])
@@ -271,3 +276,52 @@ async def delete_allergy(
         )
 
     return result
+
+
+@router.get("/language")
+async def get_language_preference(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Get user's current language preference
+    """
+    use_case = UpdateLanguagePreferenceUseCase(db)
+    result = use_case.get_current_language(str(current_user.id))
+
+    if not result["success"]:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=result["message"]
+        )
+
+    return {
+        "preferred_language": result["preferred_language"]
+    }
+
+
+@router.put("/language", response_model=LanguagePreferenceResponseDTO)
+async def update_language_preference(
+    language_data: LanguagePreferenceDTO,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Update user's preferred language (es/en)
+
+    This endpoint allows users to change their interface language preference.
+    The preference is stored in the database and persists across sessions.
+    """
+    use_case = UpdateLanguagePreferenceUseCase(db)
+    result = use_case.execute(str(current_user.id), language_data)
+
+    if not result["success"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=result["message"]
+        )
+
+    return LanguagePreferenceResponseDTO(
+        preferred_language=result["preferred_language"],
+        message=result["message"]
+    )

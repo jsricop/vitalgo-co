@@ -975,6 +975,86 @@ class BasicPatientUpdateDTO(BaseModel):
     class Config:
         str_strip_whitespace = True
         validate_assignment = True
+
+class LanguagePreferenceDTO(BaseModel):
+    """DTO for updating user language preference (i18n support)"""
+    preferred_language: Literal["es", "en"] = Field(
+        ...,
+        description="User's preferred language code (ISO 639-1): 'es' for Spanish, 'en' for English"
+    )
+
+    class Config:
+        str_strip_whitespace = True
+        validate_assignment = True
+        json_schema_extra = {
+            "example": {"preferred_language": "en"}
+        }
+
+class LanguagePreferenceResponseDTO(BaseModel):
+    """DTO for language preference response"""
+    preferred_language: str = Field(..., description="User's current preferred language code")
+    message: str = Field(..., description="Success message")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "preferred_language": "en",
+                "message": "Language preference updated successfully"
+            }
+        }
+```
+
+### Internationalization (i18n) Types
+
+#### Frontend Language Types (from /src/i18n/*)
+```typescript
+// Locale types
+type Locale = 'es' | 'en';
+const locales = ['es', 'en'] as const;
+const defaultLocale: Locale = 'es';
+
+// Language Context types
+interface LanguageContextType {
+  locale: Locale;
+  setLocale: (locale: Locale) => Promise<void>;
+  isChanging: boolean;
+}
+
+interface LanguageProviderProps {
+  children: React.ReactNode;
+  initialLocale: Locale;
+}
+
+// Language Selector component types
+interface LanguageSelectorProps {
+  className?: string;
+  'data-testid'?: string;
+}
+
+interface LanguageSelectorCompactProps {
+  className?: string;
+  'data-testid'?: string;
+}
+```
+
+#### Backend Language Types (from /slices/profile/application/dto/language_dto.py)
+```python
+from typing import Literal
+from pydantic import BaseModel, Field
+
+LanguageCode = Literal["es", "en"]
+
+class LanguagePreferenceDTO(BaseModel):
+    """DTO for updating user language preference"""
+    preferred_language: LanguageCode = Field(
+        ...,
+        description="User's preferred language code (ISO 639-1): 'es' for Spanish, 'en' for English"
+    )
+
+class LanguagePreferenceResponseDTO(BaseModel):
+    """DTO for language preference response"""
+    preferred_language: str = Field(..., description="User's current preferred language code")
+    message: str = Field(..., description="Success message")
 ```
 
 ## Database Enums & Constraints

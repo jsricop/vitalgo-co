@@ -3,6 +3,7 @@
  * Patient Signup Form organism component
  */
 import React, { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { PersonalInfoSection } from '../molecules/PersonalInfoSection';
 import { AccountSection } from '../molecules/AccountSection';
 import { CheckboxWithLink } from '../atoms/CheckboxWithLink';
@@ -22,6 +23,12 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
   onError,
   allowedDocumentTypes
 }) => {
+  // Translation hooks
+  const tSignup = useTranslations('signup');
+  const tValidation = useTranslations('validation');
+  const tForms = useTranslations('forms');
+  const tCommon = useTranslations('common');
+
   // Form state
   const [formData, setFormData] = useState<PatientRegistrationForm>({
     firstName: '',
@@ -72,12 +79,12 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
 
         setDocumentTypes(filteredTypes);
       } catch (error) {
-        onError('Error cargando tipos de documento');
+        onError(tSignup('errors.loadDocumentTypes'));
       }
     };
 
     loadDocumentTypes();
-  }, [onError, allowedDocumentTypes]);
+  }, [onError, allowedDocumentTypes, tSignup]);
 
   // Handle input changes
   const handleInputChange = (field: string, value: string | boolean) => {
@@ -117,7 +124,7 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
               isValidating: false,
               isValid,
               error: null,
-              feedback: isValid ? 'Coinciden' : 'No coinciden'
+              feedback: isValid ? tSignup('validation.passwordsMatch') : tSignup('validation.passwordsNoMatch')
             }
           }));
         }
@@ -196,7 +203,7 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
     } catch (error) {
       setValidationStates(prev => ({
         ...prev,
-        [field]: { isValidating: false, isValid: false, error: 'Error de validación' }
+        [field]: { isValidating: false, isValid: false, error: tSignup('errors.validationError') }
       }));
     }
   };
@@ -218,7 +225,7 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
       firstName: {
         isValidating: false,
         isValid,
-        error: isValid ? null : 'Debe contener al menos un nombre (solo letras)'
+        error: isValid ? null : tSignup('validation.firstNameInvalid')
       }
     }));
   };
@@ -231,7 +238,7 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
       lastName: {
         isValidating: false,
         isValid,
-        error: isValid ? null : 'Debe contener al menos un apellido (solo letras)'
+        error: isValid ? null : tSignup('validation.lastNameInvalid')
       }
     }));
   };
@@ -245,7 +252,7 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
         documentNumber: {
           isValidating: false,
           isValid: result.valid,
-          error: result.valid ? null : result.error || 'Documento inválido'
+          error: result.valid ? null : result.error || tSignup('validation.documentInvalid')
         }
       }));
     } catch (error) {
@@ -254,7 +261,7 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
         documentNumber: {
           isValidating: false,
           isValid: false,
-          error: 'Error validando documento'
+          error: tSignup('validation.documentValidationError')
         }
       }));
     }
@@ -269,7 +276,7 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
         email: {
           isValidating: false,
           isValid: result.valid,
-          error: result.valid ? null : result.error || 'Email inválido'
+          error: result.valid ? null : result.error || tSignup('validation.emailInvalid')
         }
       }));
     } catch (error) {
@@ -278,7 +285,7 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
         email: {
           isValidating: false,
           isValid: false,
-          error: 'Error validando email'
+          error: tSignup('validation.emailValidationError')
         }
       }));
     }
@@ -300,7 +307,7 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
       password: {
         isValidating: false,
         isValid,
-        error: isValid ? null : 'La contraseña no cumple con los requisitos'
+        error: isValid ? null : tSignup('validation.passwordWeak')
       }
     }));
   };
@@ -313,8 +320,8 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
       confirmPassword: {
         isValidating: false,
         isValid,
-        error: isValid ? null : 'Las contraseñas no coinciden',
-        feedback: isValid ? 'Coinciden' : 'No coinciden'
+        error: isValid ? null : tSignup('validation.passwordsMismatch'),
+        feedback: isValid ? tSignup('validation.passwordsMatch') : tSignup('validation.passwordsNoMatch')
       }
     }));
   };
@@ -327,27 +334,27 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
     let errorMessage = '';
 
     if (!cleanNumber) {
-      errorMessage = 'Número de teléfono requerido';
+      errorMessage = tSignup('validation.phoneRequired');
     } else {
       // Country-specific validation
       switch (countryCode) {
         case 'CO': // Colombia
           isValid = /^3\d{9}$/.test(cleanNumber);
-          errorMessage = isValid ? '' : 'Número móvil colombiano debe empezar con 3 y tener 10 dígitos';
+          errorMessage = isValid ? '' : tSignup('validation.phoneInvalidCO');
           break;
         case 'US':
         case 'CA': // North America
           isValid = /^\d{10}$/.test(cleanNumber);
-          errorMessage = isValid ? '' : 'Número debe tener 10 dígitos';
+          errorMessage = isValid ? '' : tSignup('validation.phoneInvalidUSCA');
           break;
         case 'MX': // México
           isValid = /^\d{10}$/.test(cleanNumber);
-          errorMessage = isValid ? '' : 'Número mexicano debe tener 10 dígitos';
+          errorMessage = isValid ? '' : tSignup('validation.phoneInvalidMX');
           break;
         default:
           // Generic validation for other countries
           isValid = cleanNumber.length >= 7 && cleanNumber.length <= 15;
-          errorMessage = isValid ? '' : 'Número debe tener entre 7 y 15 dígitos';
+          errorMessage = isValid ? '' : tSignup('validation.phoneInvalidGeneric');
       }
     }
 
@@ -369,9 +376,9 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
                   (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())) ? 1 : 0);
 
     if (age < 18) {
-      setErrors(prev => ({ ...prev, birthDate: 'Debe ser mayor de 18 años' }));
+      setErrors(prev => ({ ...prev, birthDate: tSignup('validation.ageRestriction') }));
     } else if (age > 120) {
-      setErrors(prev => ({ ...prev, birthDate: 'Edad inválida' }));
+      setErrors(prev => ({ ...prev, birthDate: tSignup('validation.ageInvalid') }));
     } else {
       setErrors(prev => ({ ...prev, birthDate: '' }));
     }
@@ -408,7 +415,7 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
     e.preventDefault();
 
     if (!isFormValid()) {
-      onError('Por favor completa todos los campos correctamente');
+      onError(tSignup('errors.completeAllFields'));
       return;
     }
 
@@ -420,10 +427,10 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
       if (response.success) {
         onSuccess(response);
       } else {
-        onError(response.message || 'Error en el registro');
+        onError(response.message || tSignup('errors.registrationFailed'));
       }
     } catch (error) {
-      onError('Error de conexión. Inténtalo nuevamente.');
+      onError(tSignup('errors.connectionError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -475,9 +482,9 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
       {/* Legal Section - Enlaces al slice legal */}
       <div className="space-y-6">
         <div className="border-b border-gray-200 pb-4">
-          <h3 className="text-lg font-medium text-gray-900">Términos Legales</h3>
+          <h3 className="text-lg font-medium text-gray-900">{tSignup('legalSectionTitle')}</h3>
           <p className="text-sm text-gray-600">
-            Acepta nuestros términos y condiciones para completar el registro.
+            {tSignup('legalSectionSubtitle')}
           </p>
         </div>
 
@@ -487,8 +494,8 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
             name="acceptTerms"
             checked={formData.acceptTerms}
             onChange={(e) => handleInputChange('acceptTerms', e.target.checked)}
-            text="Acepto los"
-            linkText="términos y condiciones"
+            text={tSignup('legal.acceptTermsText')}
+            linkText={tCommon('termsAndConditions')}
             linkUrl="/terminos-y-condiciones"
             required
             data-testid="acceptTerms-checkbox"
@@ -500,8 +507,8 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
             name="acceptPrivacy"
             checked={formData.acceptPrivacy}
             onChange={(e) => handleInputChange('acceptPrivacy', e.target.checked)}
-            text="Acepto la"
-            linkText="política de privacidad"
+            text={tSignup('legal.acceptPrivacyText')}
+            linkText={tCommon('privacyPolicy')}
             linkUrl="/politica-de-privacidad"
             required
             data-testid="acceptPrivacy-checkbox"
@@ -515,18 +522,18 @@ export const PatientSignupForm: React.FC<PatientSignupFormProps> = ({
             loading={isSubmitting}
             data-testid="submit-button"
           >
-            Crear cuenta
+            {tSignup('createAccountButton')}
           </SubmitButton>
 
           <div className="mt-4 text-center">
             <p className="text-sm text-gray-600">
-              ¿Ya tienes cuenta?{' '}
+              {tSignup('alreadyHaveAccount')}{' '}
               <a
                 href="/login"
                 className="text-blue-600 hover:text-blue-800 font-medium"
                 data-testid="login-link"
               >
-                Inicia sesión
+                {tSignup('loginLink')}
               </a>
             </p>
           </div>

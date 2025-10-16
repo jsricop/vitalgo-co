@@ -5,6 +5,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { TabContentProps } from '../../types';
 import { usePersonalPatientInfo } from '../../hooks/usePersonalPatientInfo';
 import { PersonalInfoEditModal } from '../molecules/PersonalInfoEditModal';
@@ -16,6 +17,7 @@ import {
 } from '../../utils/personalInfoUtils';
 
 export function PersonalInformationTab({ 'data-testid': testId }: TabContentProps) {
+  const t = useTranslations('profile.personal');
   const { personalInfo, loading, error, updatePersonalInfo, refetch } = usePersonalPatientInfo();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -44,15 +46,15 @@ export function PersonalInformationTab({ 'data-testid': testId }: TabContentProp
         <div className="space-y-6">
           <div className="border-b border-gray-200 pb-4">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              Información Personal
+              {t('title')}
             </h3>
             <p className="text-gray-600">
-              Información demográfica y de residencia para tu perfil médico.
+              {t('subtitle')}
             </p>
           </div>
           <div className="flex items-center justify-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-vitalgo-green"></div>
-            <span className="ml-3 text-gray-600">Cargando información...</span>
+            <span className="ml-3 text-gray-600">{t('loading')}</span>
           </div>
         </div>
       </div>
@@ -65,10 +67,10 @@ export function PersonalInformationTab({ 'data-testid': testId }: TabContentProp
         <div className="space-y-6">
           <div className="border-b border-gray-200 pb-4">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              Información Personal
+              {t('title')}
             </h3>
             <p className="text-gray-600">
-              Información demográfica y de residencia para tu perfil médico.
+              {t('subtitle')}
             </p>
           </div>
           <div className="flex items-center justify-center py-12">
@@ -83,7 +85,7 @@ export function PersonalInformationTab({ 'data-testid': testId }: TabContentProp
                 onClick={refetch}
                 className="px-4 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150"
               >
-                Reintentar
+                {t('retry')}
               </button>
             </div>
           </div>
@@ -98,10 +100,10 @@ export function PersonalInformationTab({ 'data-testid': testId }: TabContentProp
         <div className="space-y-6">
           <div className="border-b border-gray-200 pb-4">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              Información Personal
+              {t('title')}
             </h3>
             <p className="text-gray-600">
-              Información demográfica y de residencia para tu perfil médico.
+              {t('subtitle')}
             </p>
           </div>
           <div className="flex items-center justify-center py-12">
@@ -111,7 +113,7 @@ export function PersonalInformationTab({ 'data-testid': testId }: TabContentProp
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                 </svg>
               </div>
-              <p className="text-sm text-gray-600">No se encontró información personal</p>
+              <p className="text-sm text-gray-600">{t('notFound')}</p>
             </div>
           </div>
         </div>
@@ -131,10 +133,10 @@ export function PersonalInformationTab({ 'data-testid': testId }: TabContentProp
         <div className="flex items-start justify-between mb-8">
           <div>
             <h3 className="text-xl font-semibold text-vitalgo-dark mb-2">
-              Información Personal
+              {t('title')}
             </h3>
             <p className="text-vitalgo-dark-light">
-              Tu información demográfica y de residencia
+              {t('description')}
             </p>
           </div>
           <button
@@ -145,7 +147,7 @@ export function PersonalInformationTab({ 'data-testid': testId }: TabContentProp
             <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
-            Editar
+            {t('edit')}
           </button>
         </div>
 
@@ -161,19 +163,19 @@ export function PersonalInformationTab({ 'data-testid': testId }: TabContentProp
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
-                <h4 className="text-sm font-semibold text-vitalgo-dark ml-2">Información Demográfica</h4>
+                <h4 className="text-sm font-semibold text-vitalgo-dark ml-2">{t('demographic.title')}</h4>
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs text-vitalgo-dark-lighter">Sexo biológico</span>
+                  <span className="text-xs text-vitalgo-dark-lighter">{t('demographic.biologicalSex')}</span>
                   <span className="text-sm font-medium text-vitalgo-dark">{demographicData.biologicalSex}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-xs text-vitalgo-dark-lighter">Género</span>
+                  <span className="text-xs text-vitalgo-dark-lighter">{t('demographic.gender')}</span>
                   <span className="text-sm font-medium text-vitalgo-dark">{demographicData.gender}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-xs text-vitalgo-dark-lighter">Lugar de nacimiento</span>
+                  <span className="text-xs text-vitalgo-dark-lighter">{t('demographic.birthLocation')}</span>
                   <span className="text-sm font-medium text-vitalgo-dark">{demographicData.birthLocation}</span>
                 </div>
               </div>
@@ -188,15 +190,15 @@ export function PersonalInformationTab({ 'data-testid': testId }: TabContentProp
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
-                <h4 className="text-sm font-semibold text-vitalgo-dark ml-2">Información de Residencia</h4>
+                <h4 className="text-sm font-semibold text-vitalgo-dark ml-2">{t('residence.title')}</h4>
               </div>
               <div className="space-y-2">
                 <div>
-                  <span className="text-xs text-vitalgo-dark-lighter block">Dirección</span>
+                  <span className="text-xs text-vitalgo-dark-lighter block">{t('residence.address')}</span>
                   <span className="text-sm font-medium text-vitalgo-dark">{residenceData.address}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-xs text-vitalgo-dark-lighter">Ubicación</span>
+                  <span className="text-xs text-vitalgo-dark-lighter">{t('residence.location')}</span>
                   <span className="text-sm font-medium text-vitalgo-dark">{residenceData.location}</span>
                 </div>
               </div>
@@ -211,7 +213,7 @@ export function PersonalInformationTab({ 'data-testid': testId }: TabContentProp
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.866-.833-2.464 0L4.348 16.5c-.77.833.192 2.5 1.732 2.5z" />
                 </svg>
                 <div>
-                  <p className="text-sm font-medium text-yellow-800">Campos pendientes por completar:</p>
+                  <p className="text-sm font-medium text-yellow-800">{t('missingFields.message')}</p>
                   <p className="text-sm text-yellow-700 mt-1">{missingFields.join(', ')}</p>
                 </div>
               </div>
@@ -223,11 +225,11 @@ export function PersonalInformationTab({ 'data-testid': testId }: TabContentProp
             <div className="flex items-center">
               <div className={`w-2 h-2 rounded-full mr-2 ${isComplete ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
               <span className="text-sm text-vitalgo-dark-lighter">
-                {isComplete ? 'Información completa' : 'Información incompleta'}
+                {isComplete ? t('status.complete') : t('status.incomplete')}
               </span>
             </div>
             <div className="text-xs text-vitalgo-dark-lighter">
-              Última actualización: Hoy
+              {t('lastUpdated')}
             </div>
           </div>
         </div>
@@ -235,7 +237,7 @@ export function PersonalInformationTab({ 'data-testid': testId }: TabContentProp
         {/* Action Footer */}
         <div className="mt-6 text-center">
           <p className="text-xs text-vitalgo-dark-lighter">
-            💡 Completa tu información personal para un mejor servicio médico
+            {t('completionHint')}
           </p>
         </div>
       </div>

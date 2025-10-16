@@ -1,8 +1,10 @@
+'use client';
 /**
  * Medical Data Form molecule component
  * Generic form for creating/editing medical data (medications, allergies, surgeries, illnesses)
  */
 import React, { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { MedicalDataFormData, MedicalDataType } from '../../types';
 
 interface MedicalDataFormProps {
@@ -22,6 +24,8 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
   isLoading = false,
   'data-testid': testId
 }) => {
+  const t = useTranslations(type);
+  const tForms = useTranslations('forms');
   const [formData, setFormData] = useState<MedicalDataFormData>(initialData);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -42,46 +46,46 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
     switch (type) {
       case 'medications':
         if (!formData.medication_name?.trim()) {
-          newErrors.medication_name = 'El nombre del medicamento es requerido';
+          newErrors.medication_name = t('validation.nameRequired');
         }
         if (!formData.dosage?.trim()) {
-          newErrors.dosage = 'La dosis es requerida';
+          newErrors.dosage = t('validation.dosageRequired');
         }
         if (!formData.frequency?.trim()) {
-          newErrors.frequency = 'La frecuencia es requerida';
+          newErrors.frequency = t('validation.frequencyRequired');
         }
         if (!formData.start_date) {
-          newErrors.start_date = 'La fecha de inicio es requerida';
+          newErrors.start_date = t('validation.startDateRequired');
         }
         break;
 
       case 'allergies':
         if (!formData.allergy_name?.trim()) {
-          newErrors.allergy_name = 'El nombre de la alergia es requerido';
+          newErrors.allergy_name = t('validation.nameRequired');
         }
         if (!formData.severity) {
-          newErrors.severity = 'La severidad es requerida';
+          newErrors.severity = t('validation.severityRequired');
         }
         break;
 
       case 'surgeries':
         if (!formData.surgery_name?.trim()) {
-          newErrors.surgery_name = 'El nombre de la cirugía es requerido';
+          newErrors.surgery_name = t('validation.nameRequired');
         }
         if (!formData.surgery_date) {
-          newErrors.surgery_date = 'La fecha de la cirugía es requerida';
+          newErrors.surgery_date = t('validation.dateRequired');
         }
         break;
 
       case 'illnesses':
         if (!formData.illness_name?.trim()) {
-          newErrors.illness_name = 'El nombre de la enfermedad es requerido';
+          newErrors.illness_name = t('validation.nameRequired');
         }
         if (!formData.diagnosis_date) {
-          newErrors.diagnosis_date = 'La fecha de diagnóstico es requerida';
+          newErrors.diagnosis_date = t('validation.diagnosisDateRequired');
         }
         if (!formData.status) {
-          newErrors.status = 'El estado es requerido';
+          newErrors.status = t('validation.statusRequired');
         }
         break;
     }
@@ -108,7 +112,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
     <>
       <div>
         <label htmlFor="medication_name" className="block text-sm font-medium text-gray-700 mb-1">
-          Nombre del Medicamento <span className="text-red-500">*</span>
+          {t('fields.name')} <span className="text-red-500">*</span>
         </label>
         <input
           type="text"
@@ -118,7 +122,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
           className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
             errors.medication_name ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
           }`}
-          placeholder="Ej: Paracetamol"
+          placeholder={t('fields.namePlaceholder')}
         />
         {errors.medication_name && (
           <p className="mt-1 text-sm text-red-600">{errors.medication_name}</p>
@@ -128,7 +132,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label htmlFor="dosage" className="block text-sm font-medium text-gray-700 mb-1">
-            Dosis <span className="text-red-500">*</span>
+            {t('fields.dosage')} <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -138,7 +142,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
             className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
               errors.dosage ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
             }`}
-            placeholder="Ej: 500mg"
+            placeholder={t('fields.dosagePlaceholder')}
           />
           {errors.dosage && (
             <p className="mt-1 text-sm text-red-600">{errors.dosage}</p>
@@ -147,7 +151,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
 
         <div>
           <label htmlFor="frequency" className="block text-sm font-medium text-gray-700 mb-1">
-            Frecuencia <span className="text-red-500">*</span>
+            {t('fields.frequency')} <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -157,7 +161,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
             className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
               errors.frequency ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
             }`}
-            placeholder="Ej: Cada 8 horas"
+            placeholder={t('fields.frequencyPlaceholder')}
           />
           {errors.frequency && (
             <p className="mt-1 text-sm text-red-600">{errors.frequency}</p>
@@ -168,7 +172,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label htmlFor="start_date" className="block text-sm font-medium text-gray-700 mb-1">
-            Fecha de Inicio <span className="text-red-500">*</span>
+            {t('fields.startDate')} <span className="text-red-500">*</span>
           </label>
           <input
             type="date"
@@ -186,7 +190,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
 
         <div>
           <label htmlFor="end_date" className="block text-sm font-medium text-gray-700 mb-1">
-            Fecha de Fin
+            {t('fields.endDate')}
           </label>
           <input
             type="date"
@@ -200,7 +204,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
 
       <div>
         <label htmlFor="prescribing_doctor" className="block text-sm font-medium text-gray-700 mb-1">
-          Doctor que Prescribe
+          {t('fields.doctor')}
         </label>
         <input
           type="text"
@@ -208,7 +212,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
           value={formData.prescribing_doctor || ''}
           onChange={(e) => handleInputChange('prescribing_doctor', e.target.value)}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Ej: Dr. Juan Pérez"
+          placeholder={t('fields.doctorPlaceholder')}
         />
       </div>
 
@@ -221,7 +225,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
           className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
         />
         <label htmlFor="is_active" className="ml-2 block text-sm text-gray-700">
-          Medicamento activo
+          {t('fields.isActive')}
         </label>
       </div>
     </>
@@ -231,7 +235,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
     <>
       <div>
         <label htmlFor="allergy_name" className="block text-sm font-medium text-gray-700 mb-1">
-          Nombre de la Alergia <span className="text-red-500">*</span>
+          {t('fields.name')} <span className="text-red-500">*</span>
         </label>
         <input
           type="text"
@@ -241,7 +245,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
           className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
             errors.allergy_name ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
           }`}
-          placeholder="Ej: Penicilina"
+          placeholder={t('fields.namePlaceholder')}
         />
         {errors.allergy_name && (
           <p className="mt-1 text-sm text-red-600">{errors.allergy_name}</p>
@@ -250,7 +254,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
 
       <div>
         <label htmlFor="severity" className="block text-sm font-medium text-gray-700 mb-1">
-          Severidad <span className="text-red-500">*</span>
+          {t('fields.severity')} <span className="text-red-500">*</span>
         </label>
         <select
           id="severity"
@@ -260,10 +264,10 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
             errors.severity ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
           }`}
         >
-          <option value="">Seleccionar severidad</option>
-          <option value="mild">Leve</option>
-          <option value="moderate">Moderada</option>
-          <option value="severe">Severa</option>
+          <option value="">{t('fields.severityPlaceholder')}</option>
+          <option value="mild">{t('severity.mild')}</option>
+          <option value="moderate">{t('severity.moderate')}</option>
+          <option value="severe">{t('severity.severe')}</option>
         </select>
         {errors.severity && (
           <p className="mt-1 text-sm text-red-600">{errors.severity}</p>
@@ -272,7 +276,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
 
       <div>
         <label htmlFor="reaction" className="block text-sm font-medium text-gray-700 mb-1">
-          Reacción
+          {t('fields.reaction')}
         </label>
         <textarea
           id="reaction"
@@ -280,7 +284,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
           onChange={(e) => handleInputChange('reaction', e.target.value)}
           rows={3}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Describe la reacción alérgica..."
+          placeholder={t('fields.reactionPlaceholder')}
         />
       </div>
     </>
@@ -290,7 +294,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
     <>
       <div>
         <label htmlFor="surgery_name" className="block text-sm font-medium text-gray-700 mb-1">
-          Nombre de la Cirugía <span className="text-red-500">*</span>
+          {t('fields.name')} <span className="text-red-500">*</span>
         </label>
         <input
           type="text"
@@ -300,7 +304,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
           className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
             errors.surgery_name ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
           }`}
-          placeholder="Ej: Apendicectomía"
+          placeholder={t('fields.namePlaceholder')}
         />
         {errors.surgery_name && (
           <p className="mt-1 text-sm text-red-600">{errors.surgery_name}</p>
@@ -309,7 +313,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
 
       <div>
         <label htmlFor="surgery_date" className="block text-sm font-medium text-gray-700 mb-1">
-          Fecha de la Cirugía <span className="text-red-500">*</span>
+          {t('fields.date')} <span className="text-red-500">*</span>
         </label>
         <input
           type="date"
@@ -328,7 +332,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label htmlFor="hospital" className="block text-sm font-medium text-gray-700 mb-1">
-            Hospital
+            {t('fields.hospital')}
           </label>
           <input
             type="text"
@@ -336,13 +340,13 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
             value={formData.hospital || ''}
             onChange={(e) => handleInputChange('hospital', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Ej: Hospital Nacional"
+            placeholder={t('fields.hospitalPlaceholder')}
           />
         </div>
 
         <div>
           <label htmlFor="surgeon" className="block text-sm font-medium text-gray-700 mb-1">
-            Cirujano
+            {t('fields.surgeon')}
           </label>
           <input
             type="text"
@@ -350,7 +354,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
             value={formData.surgeon || ''}
             onChange={(e) => handleInputChange('surgeon', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Ej: Dr. María González"
+            placeholder={t('fields.surgeonPlaceholder')}
           />
         </div>
       </div>
@@ -361,7 +365,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
     <>
       <div>
         <label htmlFor="illness_name" className="block text-sm font-medium text-gray-700 mb-1">
-          Nombre de la Enfermedad <span className="text-red-500">*</span>
+          {t('fields.name')} <span className="text-red-500">*</span>
         </label>
         <input
           type="text"
@@ -371,7 +375,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
           className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
             errors.illness_name ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
           }`}
-          placeholder="Ej: Diabetes Tipo 2"
+          placeholder={t('fields.namePlaceholder')}
         />
         {errors.illness_name && (
           <p className="mt-1 text-sm text-red-600">{errors.illness_name}</p>
@@ -381,7 +385,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label htmlFor="diagnosis_date" className="block text-sm font-medium text-gray-700 mb-1">
-            Fecha de Diagnóstico <span className="text-red-500">*</span>
+            {t('fields.diagnosisDate')} <span className="text-red-500">*</span>
           </label>
           <input
             type="date"
@@ -399,7 +403,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
 
         <div>
           <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
-            Estado <span className="text-red-500">*</span>
+            {t('fields.status')} <span className="text-red-500">*</span>
           </label>
           <select
             id="status"
@@ -409,10 +413,10 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
               errors.status ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
             }`}
           >
-            <option value="">Seleccionar estado</option>
-            <option value="active">Activa</option>
-            <option value="resolved">Resuelta</option>
-            <option value="managed">Controlada</option>
+            <option value="">{t('fields.statusPlaceholder')}</option>
+            <option value="active">{t('status.active')}</option>
+            <option value="resolved">{t('status.resolved')}</option>
+            <option value="managed">{t('status.managed')}</option>
           </select>
           {errors.status && (
             <p className="mt-1 text-sm text-red-600">{errors.status}</p>
@@ -429,27 +433,21 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
           className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
         />
         <label htmlFor="is_chronic" className="ml-2 block text-sm text-gray-700">
-          Enfermedad crónica
+          {t('fields.isChronic')}
         </label>
       </div>
     </>
   );
 
   const getTitle = () => {
-    const titles = {
-      medications: 'Medicamento',
-      allergies: 'Alergia',
-      surgeries: 'Cirugía',
-      illnesses: 'Enfermedad'
-    };
-    return titles[type];
+    return t('title');
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" data-testid={testId}>
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-6">
-          {initialData && Object.keys(initialData).length > 1 ? 'Editar' : 'Agregar'} {getTitle()}
+          {initialData && Object.keys(initialData).length > 1 ? tForms('actions.edit') : tForms('actions.add')} {getTitle()}
         </h3>
 
         <div className="space-y-4">
@@ -460,7 +458,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
 
           <div>
             <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
-              Notas Adicionales
+              {t('fields.notes')}
             </label>
             <textarea
               id="notes"
@@ -468,7 +466,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
               onChange={(e) => handleInputChange('notes', e.target.value)}
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Información adicional..."
+              placeholder={t('fields.notesPlaceholder')}
             />
           </div>
         </div>
@@ -480,7 +478,7 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
             disabled={isLoading}
             className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
           >
-            Cancelar
+            {tForms('actions.cancel')}
           </button>
           <button
             type="submit"
@@ -490,10 +488,10 @@ export const MedicalDataForm: React.FC<MedicalDataFormProps> = ({
             {isLoading ? (
               <div className="flex items-center">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                Guardando...
+                {tForms('actions.saving')}
               </div>
             ) : (
-              'Guardar'
+              tForms('actions.save')
             )}
           </button>
         </div>
