@@ -2,17 +2,19 @@
  * TabNavigation Molecule Component
  * Navigation bar with tab buttons for profile sections
  */
+import { useTranslations } from 'next-intl';
 import { TabButton } from '../atoms/TabButton';
 import { ProfileTab, TabConfig, TabNavigationProps } from '../../types';
 
-const TAB_CONFIGS: TabConfig[] = [
-  { id: 'basic', label: 'Información básica', testId: 'profile-tab-basic' },
-  { id: 'personal', label: 'Información personal', testId: 'profile-tab-personal' },
-  { id: 'medical', label: 'Información médica', testId: 'profile-tab-medical' },
-  { id: 'gynecological', label: 'Información ginecológica', testId: 'profile-tab-gynecological' },
-];
-
 export function TabNavigation({ activeTab, onTabChange, biologicalSex, 'data-testid': testId }: TabNavigationProps) {
+  const t = useTranslations('profile.tabs');
+
+  const TAB_CONFIGS: TabConfig[] = [
+    { id: 'basic', label: t('basic'), testId: 'profile-tab-basic' },
+    { id: 'personal', label: t('personal'), testId: 'profile-tab-personal' },
+    { id: 'medical', label: t('medical'), testId: 'profile-tab-medical' },
+    { id: 'gynecological', label: t('gynecological'), testId: 'profile-tab-gynecological' },
+  ];
   // Filter out gynecological tab for non-female patients
   const availableTabs = TAB_CONFIGS.filter(tab =>
     tab.id !== 'gynecological' || biologicalSex === 'F'

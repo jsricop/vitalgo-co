@@ -3,6 +3,7 @@
  * Searchable dropdown with support for "Otro" option, based on CountrySelect pattern
  */
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { ChevronDown, Search } from 'lucide-react';
 
 interface SelectOption {
@@ -31,13 +32,14 @@ export function SearchableSelect({
   options,
   onChange,
   onOtherChange,
-  placeholder = "Selecciona una opción",
+  placeholder,
   error,
   required = false,
   hasOtherOption = false,
   otherValue = '',
   'data-testid': testId
 }: SearchableSelectProps) {
+  const t = useTranslations('common');
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredOptions, setFilteredOptions] = useState(options);
@@ -118,7 +120,7 @@ export function SearchableSelect({
           <div className="flex items-center justify-between">
             <span className={selectedOption || isOtherSelected ? 'text-vitalgo-dark' : 'text-gray-500'}>
               {selectedOption?.flag && <span className="mr-2">{selectedOption.flag}</span>}
-              {selectedOption?.label || (isOtherSelected ? 'Otro' : placeholder)}
+              {selectedOption?.label || (isOtherSelected ? t('other') : (placeholder || t('selectOption')))}
             </span>
             <ChevronDown
               className={`h-4 w-4 text-gray-400 transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`}
@@ -138,7 +140,7 @@ export function SearchableSelect({
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Buscar..."
+                  placeholder={t('searchPlaceholder')}
                   className="w-full pl-8 pr-3 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-vitalgo-green focus:border-vitalgo-green"
                 />
               </div>
@@ -175,14 +177,14 @@ export function SearchableSelect({
                 >
                   <div className="flex items-center">
                     <span className="mr-2">🌍</span>
-                    <span>Otro</span>
+                    <span>{t('other')}</span>
                   </div>
                 </button>
               )}
 
               {filteredOptions.length === 0 && (
                 <div className="px-3 py-2 text-sm text-gray-500">
-                  No se encontraron resultados
+                  {t('noResults')}
                 </div>
               )}
             </div>
@@ -197,9 +199,9 @@ export function SearchableSelect({
             type="text"
             value={otherValue}
             onChange={(e) => onOtherChange(e.target.value)}
-            placeholder="Especifica..."
+            placeholder={t('specify')}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-vitalgo-green focus:border-vitalgo-green text-sm"
-            aria-label={`Especifica ${label.toLowerCase()}`}
+            aria-label={`${t('specify')} ${label.toLowerCase()}`}
           />
         </div>
       )}

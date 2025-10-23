@@ -5,6 +5,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { PersonalPatientInfo, PersonalPatientUpdate } from '../../types/personalInfo';
 
 interface GynecologicalInfoEditModalProps {
@@ -24,6 +25,8 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
   isLoading = false,
   'data-testid': testId = 'gynecological-info-edit-modal'
 }) => {
+  const t = useTranslations('profile.forms');
+  const tCommon = useTranslations('common');
   const [formData, setFormData] = useState<PersonalPatientUpdate>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -82,7 +85,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
 
     // Pregnancy validation
     if (formData.is_pregnant === true && (!formData.pregnancy_weeks || formData.pregnancy_weeks < 1 || formData.pregnancy_weeks > 42)) {
-      newErrors.pregnancy_weeks = 'Las semanas de embarazo deben estar entre 1 y 42';
+      newErrors.pregnancy_weeks = t('validation.pregnancyWeeksRange');
     }
 
     // Reproductive history validation
@@ -93,31 +96,31 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
 
     // Business logic validation
     if (births > pregnancies) {
-      newErrors.births_count = 'Los partos no pueden ser mayores que los embarazos';
+      newErrors.births_count = t('validation.birthsLessThanPregnancies');
     }
 
     if (cesareans > births) {
-      newErrors.cesareans_count = 'Las cesáreas no pueden ser mayores que los partos';
+      newErrors.cesareans_count = t('validation.cesareansLessThanBirths');
     }
 
     if (abortions > pregnancies) {
-      newErrors.abortions_count = 'Los abortos no pueden ser mayores que los embarazos';
+      newErrors.abortions_count = t('validation.abortionsLessThanPregnancies');
     }
 
     if ((births + abortions) > pregnancies) {
-      newErrors.pregnancies_count = 'La suma de partos y abortos no puede ser mayor que los embarazos';
+      newErrors.pregnancies_count = t('validation.birthsAbortionsLessThanPregnancies');
     }
 
     // Date validation
     if (formData.last_menstruation_date && formData.last_menstruation_date.trim()) {
       const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
       if (!dateRegex.test(formData.last_menstruation_date)) {
-        newErrors.last_menstruation_date = 'Formato de fecha inválido (YYYY-MM-DD)';
+        newErrors.last_menstruation_date = t('validation.dateFormat');
       } else {
         const date = new Date(formData.last_menstruation_date);
         const today = new Date();
         if (date > today) {
-          newErrors.last_menstruation_date = 'La fecha no puede ser futura';
+          newErrors.last_menstruation_date = t('validation.dateFuture');
         }
       }
     }
@@ -141,7 +144,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
         setErrors({ general: result.message });
       }
     } catch (error) {
-      setErrors({ general: 'Error inesperado. Por favor intenta de nuevo.' });
+      setErrors({ general: t('messages.errorUpdate') });
     } finally {
       setIsSubmitting(false);
     }
@@ -180,7 +183,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                 id="modal-title"
                 data-testid="modal-title"
               >
-                Editar Información Ginecológica
+                {t('modals.editGynecologicalInfo')}
               </h3>
               <button
                 type="button"
@@ -188,7 +191,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                 onClick={onClose}
                 data-testid="modal-close-button"
               >
-                <span className="sr-only">Cerrar</span>
+                <span className="sr-only">{tCommon('close')}</span>
                 <svg
                   className="h-6 w-6"
                   fill="none"
@@ -205,7 +208,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
               </button>
             </div>
             <p className="text-sm text-vitalgo-dark-light">
-              Actualiza tu información de salud reproductiva y ginecológica
+              {t('messages.updateGynecologicalInfo')}
             </p>
           </div>
 
@@ -214,11 +217,11 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
             <div className="space-y-6">
               {/* Pregnancy Status Section */}
               <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="text-lg font-medium text-vitalgo-dark mb-4">Estado de Embarazo</h4>
+                <h4 className="text-lg font-medium text-vitalgo-dark mb-4">{t('sectionTitles.pregnancyStatus')}</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-vitalgo-dark mb-3">
-                      ¿Estás embarazada?
+                      {t('labels.isPregnant')}
                     </label>
                     <div className="flex flex-wrap gap-4">
                       <label className="flex items-center p-2 hover:bg-purple-50 cursor-pointer transition-colors duration-150">
@@ -232,7 +235,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                           }}
                           className="h-4 w-4 text-purple-500 focus:ring-purple-500 border-purple-300 accent-purple-500"
                         />
-                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">Sí</span>
+                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">{t('options.pregnancyStatus.yes')}</span>
                       </label>
                       <label className="flex items-center p-2 hover:bg-purple-50 cursor-pointer transition-colors duration-150">
                         <input
@@ -246,7 +249,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                           }}
                           className="h-4 w-4 text-purple-500 focus:ring-purple-500 border-purple-300 accent-purple-500"
                         />
-                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">No</span>
+                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">{t('options.pregnancyStatus.no')}</span>
                       </label>
                       <label className="flex items-center p-2 hover:bg-purple-50 cursor-pointer transition-colors duration-150">
                         <input
@@ -260,7 +263,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                           }}
                           className="h-4 w-4 text-purple-500 focus:ring-purple-500 border-purple-300 accent-purple-500"
                         />
-                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">Prefiero no responder</span>
+                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">{t('options.pregnancyStatus.preferNotToSay')}</span>
                       </label>
                     </div>
                   </div>
@@ -268,7 +271,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                   {formData.is_pregnant === true && (
                     <div>
                       <label className="block text-sm font-medium text-vitalgo-dark mb-2">
-                        Semanas de embarazo
+                        {t('labels.pregnancyWeeks')}
                       </label>
                       <input
                         type="number"
@@ -279,7 +282,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                         className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 ${
                           errors.pregnancy_weeks ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder="Ej: 12"
+                        placeholder={t('placeholders.pregnancyWeeks')}
                       />
                       {errors.pregnancy_weeks && (
                         <p className="mt-1 text-sm text-red-600">{errors.pregnancy_weeks}</p>
@@ -291,11 +294,11 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
 
               {/* Menstrual Information Section */}
               <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="text-lg font-medium text-vitalgo-dark mb-4">Información Menstrual</h4>
+                <h4 className="text-lg font-medium text-vitalgo-dark mb-4">{t('sectionTitles.menstrualInfo')}</h4>
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-vitalgo-dark mb-3">
-                      Estado menstrual
+                      {t('labels.menstrualStatus')}
                     </label>
                     <div className="flex flex-wrap gap-4">
                       <label className="flex items-center p-2 hover:bg-purple-50 cursor-pointer transition-colors duration-150">
@@ -307,7 +310,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                           onChange={(e) => handleFieldChange('menstrual_status', e.target.value)}
                           className="h-4 w-4 text-purple-500 focus:ring-purple-500 border-purple-300 accent-purple-500"
                         />
-                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">No ha tenido menstruación</span>
+                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">{t('options.menstrualStatus.notStarted')}</span>
                       </label>
                       <label className="flex items-center p-2 hover:bg-purple-50 cursor-pointer transition-colors duration-150">
                         <input
@@ -318,7 +321,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                           onChange={(e) => handleFieldChange('menstrual_status', e.target.value)}
                           className="h-4 w-4 text-purple-500 focus:ring-purple-500 border-purple-300 accent-purple-500"
                         />
-                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">Tiene menstruación</span>
+                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">{t('options.menstrualStatus.active')}</span>
                       </label>
                       <label className="flex items-center p-2 hover:bg-purple-50 cursor-pointer transition-colors duration-150">
                         <input
@@ -329,7 +332,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                           onChange={(e) => handleFieldChange('menstrual_status', e.target.value)}
                           className="h-4 w-4 text-purple-500 focus:ring-purple-500 border-purple-300 accent-purple-500"
                         />
-                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">En menopausia</span>
+                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">{t('options.menstrualStatus.menopause')}</span>
                       </label>
                       <label className="flex items-center p-2 hover:bg-purple-50 cursor-pointer transition-colors duration-150">
                         <input
@@ -340,14 +343,14 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                           onChange={() => handleFieldChange('menstrual_status', null)}
                           className="h-4 w-4 text-purple-500 focus:ring-purple-500 border-purple-300 accent-purple-500"
                         />
-                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">Prefiero no responder</span>
+                        <span className="ml-2 text-sm text-vitalgo-dark font-medium">{t('options.menstrualStatus.preferNotToSay')}</span>
                       </label>
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-vitalgo-dark mb-2">
-                      Fecha de última menstruación
+                      {t('labels.lastMenstruation')}
                     </label>
                     <input
                       type="date"
@@ -366,11 +369,11 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
 
               {/* Reproductive History Section */}
               <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="text-lg font-medium text-vitalgo-dark mb-4">Historial Reproductivo</h4>
+                <h4 className="text-lg font-medium text-vitalgo-dark mb-4">{t('sectionTitles.reproductiveHistory')}</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-vitalgo-dark mb-2">
-                      Número de embarazos
+                      {t('labels.pregnancies')}
                     </label>
                     <input
                       type="number"
@@ -380,7 +383,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                       className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 ${
                         errors.pregnancies_count ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="0"
+                      placeholder={t('placeholders.countDefault')}
                     />
                     {errors.pregnancies_count && (
                       <p className="mt-1 text-sm text-red-600">{errors.pregnancies_count}</p>
@@ -389,7 +392,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
 
                   <div>
                     <label className="block text-sm font-medium text-vitalgo-dark mb-2">
-                      Número de partos
+                      {t('labels.births')}
                     </label>
                     <input
                       type="number"
@@ -399,7 +402,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                       className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 ${
                         errors.births_count ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="0"
+                      placeholder={t('placeholders.countDefault')}
                     />
                     {errors.births_count && (
                       <p className="mt-1 text-sm text-red-600">{errors.births_count}</p>
@@ -408,7 +411,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
 
                   <div>
                     <label className="block text-sm font-medium text-vitalgo-dark mb-2">
-                      Número de cesáreas
+                      {t('labels.cesareans')}
                     </label>
                     <input
                       type="number"
@@ -418,7 +421,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                       className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 ${
                         errors.cesareans_count ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="0"
+                      placeholder={t('placeholders.countDefault')}
                     />
                     {errors.cesareans_count && (
                       <p className="mt-1 text-sm text-red-600">{errors.cesareans_count}</p>
@@ -427,7 +430,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
 
                   <div>
                     <label className="block text-sm font-medium text-vitalgo-dark mb-2">
-                      Número de abortos
+                      {t('labels.abortions')}
                     </label>
                     <input
                       type="number"
@@ -437,7 +440,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
                       className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 ${
                         errors.abortions_count ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="0"
+                      placeholder={t('placeholders.countDefault')}
                     />
                     {errors.abortions_count && (
                       <p className="mt-1 text-sm text-red-600">{errors.abortions_count}</p>
@@ -448,26 +451,26 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
 
               {/* Contraception Section */}
               <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="text-lg font-medium text-vitalgo-dark mb-4">Anticoncepción</h4>
+                <h4 className="text-lg font-medium text-vitalgo-dark mb-4">{t('sectionTitles.contraception')}</h4>
                 <div>
                   <label className="block text-sm font-medium text-vitalgo-dark mb-2">
-                    Método anticonceptivo actual
+                    {t('labels.contraceptiveMethod')}
                   </label>
                   <select
                     value={formData.contraceptive_method || ''}
                     onChange={(e) => handleFieldChange('contraceptive_method', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                   >
-                    <option value="">Selecciona un método</option>
-                    <option value="NINGUNO">Ninguno</option>
-                    <option value="PILDORA">Píldora anticonceptiva</option>
-                    <option value="PRESERVATIVO">Preservativo</option>
-                    <option value="DIU">DIU</option>
-                    <option value="IMPLANTE">Implante subdérmico</option>
-                    <option value="INYECCION">Inyección anticonceptiva</option>
-                    <option value="DIAFRAGMA">Diafragma</option>
-                    <option value="NATURAL">Métodos naturales</option>
-                    <option value="OTRO">Otro</option>
+                    <option value="">{t('placeholders.contraceptiveMethod')}</option>
+                    <option value="NINGUNO">{t('options.contraceptiveMethods.none')}</option>
+                    <option value="PILDORA">{t('options.contraceptiveMethods.pill')}</option>
+                    <option value="PRESERVATIVO">{t('options.contraceptiveMethods.condom')}</option>
+                    <option value="DIU">{t('options.contraceptiveMethods.iud')}</option>
+                    <option value="IMPLANTE">{t('options.contraceptiveMethods.implant')}</option>
+                    <option value="INYECCION">{t('options.contraceptiveMethods.injection')}</option>
+                    <option value="DIAFRAGMA">{t('options.contraceptiveMethods.diaphragm')}</option>
+                    <option value="NATURAL">{t('options.contraceptiveMethods.natural')}</option>
+                    <option value="OTRO">{t('options.contraceptiveMethods.other')}</option>
                   </select>
                 </div>
               </div>
@@ -498,10 +501,10 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
               {isFormLoading ? (
                 <div className="flex items-center">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Guardando...
+                  {t('buttons.saving')}
                 </div>
               ) : (
-                'Guardar Información Ginecológica'
+                t('buttons.saveGynecologicalInfo')
               )}
             </button>
             <button
@@ -511,7 +514,7 @@ export const GynecologicalInfoEditModal: React.FC<GynecologicalInfoEditModalProp
               disabled={isFormLoading}
               data-testid={`${testId}-cancel-button`}
             >
-              Cancelar
+              {t('buttons.cancel')}
             </button>
           </div>
         </div>

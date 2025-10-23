@@ -3,6 +3,7 @@
  * Reusable radio button group with support for "Otro" option
  */
 import React from 'react';
+import { useTranslations } from 'next-intl';
 
 interface RadioOption {
   value: string;
@@ -38,6 +39,7 @@ export function RadioButtonField({
   layout = 'vertical',
   'data-testid': testId
 }: RadioButtonFieldProps) {
+  const t = useTranslations('common');
   const isOtherSelected = value === 'OTRO';
 
   return (
@@ -76,9 +78,9 @@ export function RadioButtonField({
             type="text"
             value={otherValue}
             onChange={(e) => onOtherChange(e.target.value)}
-            placeholder="Especifica..."
+            placeholder={t('specify')}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-vitalgo-green focus:border-vitalgo-green text-sm"
-            aria-label={`Especifica ${label.toLowerCase()}`}
+            aria-label={`${t('specify')} ${label.toLowerCase()}`}
           />
         </div>
       )}

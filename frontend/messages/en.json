@@ -22,6 +22,12 @@
     "finish": "Finish",
     "continue": "Continue",
     "and": "and",
+    "select": "Select...",
+    "selectOption": "Select an option",
+    "searchPlaceholder": "Search...",
+    "other": "Other",
+    "noResults": "No results found",
+    "specify": "Specify...",
     "termsAndConditions": "Terms and Conditions",
     "privacyPolicy": "Privacy Policy",
     "allRightsReserved": "All rights reserved.",
@@ -245,6 +251,233 @@
   },
   "profile": {
     "title": "My Profile",
+    "pageTitle": "My Profile",
+    "pageDescription": "Manage your personal and medical information securely.",
+    "footer": {
+      "copyright": "© 2024 VitalGo. All rights reserved.",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "support": "Support"
+    },
+    "tabs": {
+      "basic": "Basic Information",
+      "personal": "Personal Information",
+      "medical": "Medical Information",
+      "gynecological": "Gynecological Information"
+    },
+    "forms": {
+      "validation": {
+        "firstNameRequired": "First name is required",
+        "lastNameRequired": "Last name is required",
+        "documentTypeRequired": "Document type is required",
+        "documentNumberRequired": "Document number is required",
+        "documentNumberInvalid": "Invalid document number format",
+        "phoneRequired": "Phone number is required",
+        "phoneInvalid": "Invalid phone number format",
+        "birthDateRequired": "Birth date is required",
+        "birthDateInvalid": "Invalid birth date",
+        "originCountryRequired": "Country of origin is required",
+        "biologicalSexRequired": "Biological sex is required",
+        "genderRequired": "Gender is required",
+        "birthCountryRequired": "Birth country is required",
+        "birthCityRequired": "Birth city is required",
+        "residenceCountryRequired": "Residence country is required",
+        "residenceCityRequired": "Residence city is required",
+        "residenceAddressRequired": "Address is required",
+        "bloodTypeRequired": "Blood type is required",
+        "heightInvalid": "Invalid height (must be between 50-250 cm)",
+        "weightInvalid": "Invalid weight (must be between 20-300 kg)",
+        "emergencyContactNameRequired": "Emergency contact name is required",
+        "emergencyContactPhoneRequired": "Emergency contact phone is required",
+        "emergencyContactRelationRequired": "Relationship is required",
+        "pregnancyWeeksInvalid": "Weeks must be between 1-42",
+        "pregnancyWeeksRequired": "Weeks of pregnancy are required when pregnant",
+        "menstrualStatusRequired": "Menstrual status is required",
+        "contraceptiveMethodRequired": "Contraceptive method is required",
+        "numberMustBePositive": "Must be a positive number",
+        "selectOption": "Please select an option",
+        "specifyGender": "Specify your gender",
+        "specifyBirthCountry": "Specify your birth country",
+        "birthDepartmentRequiredColombia": "Birth department is required for Colombia",
+        "birthCityRequiredColombia": "Birth city is required for Colombia",
+        "specifyResidenceCountry": "Specify your residence country",
+        "residenceDepartmentRequired": "Residence department is required",
+        "residenceCityRequired": "Residence city is required",
+        "epsRequired": "EPS is required",
+        "phoneFormatInvalid": "Invalid phone format (must be 10 digits)"
+      },
+      "labels": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "documentType": "Document Type",
+        "documentNumber": "Document Number",
+        "phone": "Phone",
+        "birthDate": "Birth Date",
+        "originCountry": "Country of Origin",
+        "biologicalSex": "Biological Sex",
+        "gender": "Gender",
+        "birthCountry": "Birth Country",
+        "birthCity": "Birth City",
+        "residenceCountry": "Residence Country",
+        "residenceCity": "Residence City",
+        "residenceAddress": "Address",
+        "bloodType": "Blood Type",
+        "height": "Height (cm)",
+        "weight": "Weight (kg)",
+        "organDonor": "Organ Donor",
+        "emergencyContactName": "Full Name",
+        "emergencyContactPhone": "Phone",
+        "emergencyContactRelation": "Relationship",
+        "isPregnant": "Are you pregnant?",
+        "pregnancyWeeks": "Weeks of pregnancy",
+        "menstrualStatus": "Menstrual Status",
+        "lastMenstruation": "Last Menstruation",
+        "pregnancies": "Pregnancies",
+        "births": "Births",
+        "cesareans": "Cesarean Sections",
+        "abortions": "Abortions",
+        "contraceptiveMethod": "Contraceptive Method"
+      },
+      "placeholders": {
+        "firstName": "e.g., John Michael",
+        "lastName": "e.g., Smith Johnson",
+        "documentNumber": "e.g., 12345678",
+        "phone": "e.g., +1 555 123 4567",
+        "selectCountry": "Select a country",
+        "selectDocumentType": "Select type",
+        "selectBiologicalSex": "Select biological sex",
+        "selectGender": "Select gender",
+        "birthCity": "e.g., New York",
+        "residenceCity": "e.g., Los Angeles",
+        "residenceAddress": "e.g., 123 Main Street, Apt 4B",
+        "selectBloodType": "Select blood type",
+        "height": "e.g., 170",
+        "weight": "e.g., 70",
+        "emergencyContactName": "e.g., John Doe",
+        "emergencyContactPhone": "e.g., +1 555 987 6543",
+        "selectRelation": "Select relationship",
+        "selectDate": "Select date",
+        "selectMenstrualStatus": "Select status",
+        "pregnancyWeeks": "e.g., 12",
+        "selectContraceptiveMethod": "Select method"
+      },
+      "options": {
+        "documentTypes": {
+          "cc": "Citizenship Card",
+          "ti": "Identity Card",
+          "ce": "Foreign ID",
+          "passport": "Passport"
+        },
+        "biologicalSex": {
+          "male": "Male",
+          "female": "Female",
+          "intersex": "Intersex"
+        },
+        "gender": {
+          "male": "Male",
+          "female": "Female",
+          "nonBinary": "Non-binary",
+          "other": "Other",
+          "preferNotToSay": "Prefer not to say"
+        },
+        "bloodTypes": {
+          "a_positive": "A+",
+          "a_negative": "A-",
+          "b_positive": "B+",
+          "b_negative": "B-",
+          "ab_positive": "AB+",
+          "ab_negative": "AB-",
+          "o_positive": "O+",
+          "o_negative": "O-",
+          "unknown": "Unknown"
+        },
+        "relationships": {
+          "spouse": "Spouse",
+          "parent": "Parent",
+          "child": "Child",
+          "sibling": "Sibling",
+          "friend": "Friend",
+          "other": "Other"
+        },
+        "pregnancyStatus": {
+          "yes": "Yes",
+          "no": "No",
+          "notSure": "Not sure"
+        },
+        "menstrualStatus": {
+          "regular": "Regular",
+          "irregular": "Irregular",
+          "amenorrhea": "Amenorrhea",
+          "menopause": "Menopause",
+          "postmenopause": "Postmenopause"
+        },
+        "contraceptiveMethods": {
+          "none": "None",
+          "pills": "Birth Control Pills",
+          "iud": "IUD",
+          "implant": "Implant",
+          "injection": "Injection",
+          "condom": "Condom",
+          "naturalMethods": "Natural Methods",
+          "sterilization": "Sterilization",
+          "other": "Other"
+        }
+      },
+      "buttons": {
+        "save": "Save Changes",
+        "saving": "Saving...",
+        "cancel": "Cancel",
+        "close": "Close",
+        "saveBasicInfo": "Save Basic Information",
+        "savePersonalInfo": "Save Personal Information",
+        "saveMedicalInfo": "Save Medical Information",
+        "saveGynecologicalInfo": "Save Gynecological Information"
+      },
+      "sections": {
+        "demographicInfo": "Demographic Information",
+        "birthLocation": "Birth Location",
+        "residenceInfo": "Residence Information",
+        "residenceLocation": "Residence Location",
+        "basicMedicalInfo": "Basic Medical Information",
+        "physicalMeasurements": "Physical Measurements",
+        "emergencyContact": "Emergency Contact",
+        "pregnancyStatus": "Pregnancy Status",
+        "menstrualInfo": "Menstrual Information",
+        "reproductiveHistory": "Reproductive History",
+        "contraception": "Contraception",
+        "editBasicInfo": "Edit Basic Information",
+        "editPersonalInfo": "Edit Personal Information"
+      },
+      "messages": {
+        "updateBasicInfo": "Update your registered personal information",
+        "updatePersonalInfo": "Update your demographic and residence information",
+        "updateMedicalInfo": "Update your general medical information",
+        "updateGynecologicalInfo": "Update your gynecological and reproductive health information",
+        "notSpecified": "Not specified",
+        "optional": "Optional",
+        "successUpdate": "Information updated successfully",
+        "errorUpdate": "Error updating information. Please try again."
+      },
+      "modals": {
+        "editBasicInfo": "Edit Basic Information",
+        "editPersonalInfo": "Edit Personal Information",
+        "editMedicalInfo": "Edit Medical Information",
+        "editGynecologicalInfo": "Edit Gynecological Information"
+      },
+      "sectionTitles": {
+        "socialSecurityOccupation": "Social Security and Occupation",
+        "medicalInfo": "Medical Information",
+        "emergencyContact": "Emergency Contact",
+        "pregnancyStatus": "Pregnancy Status",
+        "menstrualInfo": "Menstrual Information",
+        "reproductiveHistory": "Reproductive History",
+        "contraception": "Contraception"
+      },
+      "sectionDescriptions": {
+        "completeMedicalInfo": "Complete your basic medical information, EPS and emergency contact.",
+        "completeGynecologicalInfo": "Complete your gynecological and reproductive health information."
+      }
+    },
     "basicInfo": "Basic Information",
     "medicalInfo": "Medical Information",
     "emergencyContact": "Emergency Contact",
@@ -259,36 +492,77 @@
     "updateError": "Error updating profile",
     "basic": {
       "title": "Basic Information",
-      "subtitle": "Your personal and contact information",
+      "subtitle": "Information registered during your signup",
       "edit": "Edit Information",
-      "loading": "Loading profile...",
+      "loading": "Loading basic information...",
       "error": "Error loading profile",
       "retry": "Retry",
-      "notFound": "Profile not found",
+      "notFound": "Basic information not found",
+      "personalProfile": "Personal Profile",
+      "contactInfo": "Contact information and registration data",
+      "patientLabel": "Patient",
+      "verifiedProfile": "Verified profile",
+      "today": "Today",
+      "lastUpdate": "Last updated: {date}",
+      "keepUpdated": "💡 Keep your basic information up to date for better service",
       "sections": {
         "personalInfo": "Personal Information",
         "identification": "Identification",
-        "contact": "Contact Information"
+        "contact": "Contact"
       },
       "fields": {
         "firstName": "First Name",
         "lastName": "Last Name",
-        "birthDate": "Birth Date",
-        "originCountry": "Country of Origin",
-        "documentType": "Document Type",
-        "documentNumber": "Document Number",
-        "phone": "Phone Number",
+        "birthDate": "Birth date",
+        "originCountry": "Country of origin",
+        "documentType": "Document type",
+        "documentNumber": "Document No.",
+        "phone": "Phone",
         "email": "Email",
         "age": "Age",
         "gender": "Gender"
       },
-      "verifiedProfile": "Verified Profile",
-      "lastUpdate": "Last updated: {date}",
-      "keepUpdated": "Keep your information up to date for better service"
+      "documentTypes": {
+        "cc": "Citizenship Card",
+        "ti": "Identity Card",
+        "ce": "Foreign ID",
+        "passport": "Passport"
+      },
+      "countries": {
+        "colombia": "Colombia",
+        "usa": "United States",
+        "canada": "Canada",
+        "mexico": "Mexico",
+        "argentina": "Argentina",
+        "brazil": "Brazil",
+        "chile": "Chile",
+        "peru": "Peru",
+        "ecuador": "Ecuador",
+        "venezuela": "Venezuela",
+        "uruguay": "Uruguay",
+        "paraguay": "Paraguay",
+        "bolivia": "Bolivia",
+        "costaRica": "Costa Rica",
+        "panama": "Panama",
+        "guatemala": "Guatemala",
+        "honduras": "Honduras",
+        "elSalvador": "El Salvador",
+        "nicaragua": "Nicaragua",
+        "cuba": "Cuba",
+        "dominicanRepublic": "Dominican Republic",
+        "spain": "Spain"
+      }
     },
     "personal": {
       "title": "Personal Information",
-      "subtitle": "Additional personal details",
+      "subtitle": "Demographic and residence information",
+      "description": "Your demographic information and location",
+      "loading": "Loading personal information...",
+      "notFound": "Personal information not found",
+      "retry": "Retry",
+      "edit": "Edit",
+      "lastUpdated": "Last updated: Today",
+      "completionHint": "💡 Complete your personal information for better medical service",
       "maritalStatus": "Marital Status",
       "occupation": "Occupation",
       "address": "Address",
@@ -303,11 +577,33 @@
         "divorced": "Divorced",
         "widowed": "Widowed",
         "other": "Other"
+      },
+      "demographic": {
+        "title": "Demographic Information",
+        "biologicalSex": "Biological sex",
+        "gender": "Gender",
+        "birthLocation": "Birth location"
+      },
+      "residence": {
+        "title": "Residence Information",
+        "address": "Address",
+        "location": "Location"
+      },
+      "missingFields": {
+        "message": "Incomplete information"
+      },
+      "status": {
+        "complete": "Information complete",
+        "incomplete": "Information incomplete"
       }
     },
     "medical": {
       "title": "Medical Information",
-      "subtitle": "Your medical data and history",
+      "subtitle": "General medical and health information",
+      "protectedInfo": "Protected medical information",
+      "today": "Today",
+      "lastUpdate": "Last updated: {date}",
+      "keepUpdated": "💡 Keep your medical information up to date for better care",
       "bloodType": "Blood Type",
       "height": "Height",
       "weight": "Weight",
@@ -332,6 +628,10 @@
     "gynecological": {
       "title": "Gynecological Information",
       "subtitle": "Women's health information",
+      "description": "Your reproductive and gynecological health information",
+      "notSpecified": "Not specified",
+      "lastUpdated": "Last updated: Today",
+      "keepUpdatedHint": "💡 Keep your gynecological information up to date for better reproductive health care",
       "lastMenstrualPeriod": "Last Menstrual Period",
       "menstrualCycleLength": "Cycle Length (days)",
       "pregnancies": "Number of Pregnancies",
@@ -342,6 +642,33 @@
       "lastPapSmear": "Last Pap Smear",
       "lastMammogram": "Last Mammogram",
       "breastfeedingStatus": "Breastfeeding Status",
+      "cards": {
+        "pregnancy": {
+          "title": "Pregnancy Status",
+          "isPregnant": "Are you pregnant?",
+          "weeks": "Weeks"
+        },
+        "menstrual": {
+          "title": "Menstrual Information",
+          "status": "Menstrual status",
+          "lastPeriod": "Last menstruation"
+        },
+        "reproductive": {
+          "title": "Reproductive History",
+          "pregnancies": "Pregnancies",
+          "births": "Births",
+          "cesareans": "Cesarean sections",
+          "abortions": "Abortions"
+        },
+        "contraceptive": {
+          "title": "Contraception",
+          "currentMethod": "Current method"
+        }
+      },
+      "status": {
+        "available": "Information available",
+        "incomplete": "Incomplete information"
+      },
       "contraceptiveMethods": {
         "none": "None",
         "pills": "Birth control pills",

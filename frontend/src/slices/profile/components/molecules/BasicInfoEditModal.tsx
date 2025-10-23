@@ -5,6 +5,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { BasicPatientInfo, BasicPatientUpdate } from '../../types';
 import { PhoneInputGroup } from '../../../../shared/components/molecules/PhoneInputGroup';
 import { Country, getCountryByCode } from '../../../signup/data/countries';
@@ -27,6 +28,8 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
   isLoading = false,
   'data-testid': testId = 'basic-info-edit-modal'
 }) => {
+  const t = useTranslations('profile.forms');
+  const tCommon = useTranslations('common');
   const [formData, setFormData] = useState<BasicPatientUpdate>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -147,41 +150,37 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
     const newErrors: Record<string, string> = {};
 
     if (!formData.firstName?.trim()) {
-      newErrors.firstName = 'El nombre es obligatorio';
-    } else if (formData.firstName.trim().length < 2) {
-      newErrors.firstName = 'El nombre debe tener al menos 2 caracteres';
+      newErrors.firstName = t('validation.firstNameRequired');
     }
 
     if (!formData.lastName?.trim()) {
-      newErrors.lastName = 'El apellido es obligatorio';
-    } else if (formData.lastName.trim().length < 2) {
-      newErrors.lastName = 'El apellido debe tener al menos 2 caracteres';
+      newErrors.lastName = t('validation.lastNameRequired');
     }
 
     if (!formData.documentType?.trim()) {
-      newErrors.documentType = 'El tipo de documento es obligatorio';
+      newErrors.documentType = t('validation.documentTypeRequired');
     }
 
     if (!formData.documentNumber?.trim()) {
-      newErrors.documentNumber = 'El número de documento es obligatorio';
-    } else if (formData.documentNumber.trim().length < 6) {
-      newErrors.documentNumber = 'El número de documento debe tener al menos 6 caracteres';
+      newErrors.documentNumber = t('validation.documentNumberRequired');
+    } else if (!/^[0-9]+$/.test(formData.documentNumber.trim())) {
+      newErrors.documentNumber = t('validation.documentNumberInvalid');
     }
 
     if (!formData.phoneInternational?.trim()) {
-      newErrors.phoneInternational = 'El teléfono es obligatorio';
-    } else if (formData.phoneInternational.trim().length < 10) {
-      newErrors.phoneInternational = 'El teléfono debe tener al menos 10 dígitos';
+      newErrors.phoneInternational = t('validation.phoneRequired');
+    } else if (formData.phoneInternational.trim().replace(/[^0-9]/g, '').length < 10) {
+      newErrors.phoneInternational = t('validation.phoneInvalid');
     }
 
     if (!formData.birthDate) {
-      newErrors.birthDate = 'La fecha de nacimiento es obligatoria';
+      newErrors.birthDate = t('validation.birthDateRequired');
     }
 
     if (!formData.email?.trim()) {
-      newErrors.email = 'El email es obligatorio';
+      newErrors.email = t('validation.phoneRequired');
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'El email debe tener un formato válido';
+      newErrors.email = t('validation.phoneInvalid');
     }
 
     setErrors(newErrors);
@@ -203,7 +202,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
         setErrors({ general: result.message });
       }
     } catch (error) {
-      setErrors({ general: 'Error inesperado. Por favor intenta de nuevo.' });
+      setErrors({ general: t('messages.errorUpdate') });
     } finally {
       setIsSubmitting(false);
     }
@@ -257,7 +256,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
                 id="modal-title"
                 data-testid="modal-title"
               >
-                Editar Información Básica
+                {t('modals.editBasicInfo')}
               </h3>
               <button
                 type="button"
@@ -265,7 +264,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
                 onClick={onClose}
                 data-testid="modal-close-button"
               >
-                <span className="sr-only">Cerrar</span>
+                <span className="sr-only">{tCommon('close')}</span>
                 <svg
                   className="h-6 w-6"
                   fill="none"
@@ -282,7 +281,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
               </button>
             </div>
             <p className="text-sm text-vitalgo-dark-light">
-              Actualiza tu información personal registrada
+              {t('messages.updateBasicInfo')}
             </p>
           </div>
 
@@ -294,7 +293,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
                 {/* First Name */}
                 <div>
                   <label htmlFor="firstName" className={labelClasses}>
-                    Nombres <span className={requiredClasses}>*</span>
+                    {t('labels.firstName')} <span className={requiredClasses}>*</span>
                   </label>
                   <input
                     type="text"
@@ -302,7 +301,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
                     value={formData.firstName || ''}
                     onChange={(e) => handleInputChange('firstName', e.target.value)}
                     className={fieldClasses('firstName')}
-                    placeholder="Ej: Juan Carlos"
+                    placeholder={t('placeholders.firstName')}
                     disabled={isFormLoading}
                     data-testid={`${testId}-first-name`}
                     style={{ fontSize: '16px' }}
@@ -318,7 +317,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
                 {/* Last Name */}
                 <div>
                   <label htmlFor="lastName" className={labelClasses}>
-                    Apellidos <span className={requiredClasses}>*</span>
+                    {t('labels.lastName')} <span className={requiredClasses}>*</span>
                   </label>
                   <input
                     type="text"
@@ -326,7 +325,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
                     value={formData.lastName || ''}
                     onChange={(e) => handleInputChange('lastName', e.target.value)}
                     className={fieldClasses('lastName')}
-                    placeholder="Ej: García López"
+                    placeholder={t('placeholders.lastName')}
                     disabled={isFormLoading}
                     data-testid={`${testId}-last-name`}
                     style={{ fontSize: '16px' }}
@@ -345,7 +344,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
                 {/* Document Type */}
                 <div>
                   <label htmlFor="documentType" className={labelClasses}>
-                    Tipo de Documento <span className={requiredClasses}>*</span>
+                    {t('labels.documentType')} <span className={requiredClasses}>*</span>
                   </label>
                   <select
                     id="documentType"
@@ -355,11 +354,11 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
                     disabled={isFormLoading}
                     data-testid={`${testId}-document-type`}
                   >
-                    <option value="">Seleccionar tipo</option>
-                    <option value="CC">Cédula de Ciudadanía</option>
-                    <option value="TI">Tarjeta de Identidad</option>
-                    <option value="CE">Cédula de Extranjería</option>
-                    <option value="PAS">Pasaporte</option>
+                    <option value="">{t('placeholders.selectDocumentType')}</option>
+                    <option value="CC">{t('options.documentTypes.cc')}</option>
+                    <option value="TI">{t('options.documentTypes.ti')}</option>
+                    <option value="CE">{t('options.documentTypes.ce')}</option>
+                    <option value="PAS">{t('options.documentTypes.passport')}</option>
                   </select>
                   {errors.documentType && (
                     <p className={errorClasses} data-testid={`${testId}-document-type-error`}>
@@ -371,7 +370,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
                 {/* Document Number */}
                 <div>
                   <label htmlFor="documentNumber" className={labelClasses}>
-                    Número de Documento <span className={requiredClasses}>*</span>
+                    {t('labels.documentNumber')} <span className={requiredClasses}>*</span>
                   </label>
                   <input
                     type="text"
@@ -379,7 +378,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
                     value={formData.documentNumber || ''}
                     onChange={(e) => handleInputChange('documentNumber', e.target.value)}
                     className={fieldClasses('documentNumber')}
-                    placeholder="Ej: 12345678"
+                    placeholder={t('placeholders.documentNumber')}
                     disabled={isFormLoading}
                     data-testid={`${testId}-document-number`}
                     style={{ fontSize: '16px' }}
@@ -416,7 +415,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
                   value={formData.email || ''}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   className={fieldClasses('email')}
-                  placeholder="Ej: juan@email.com"
+                  placeholder={t('placeholders.phone')}
                   disabled={isFormLoading}
                   data-testid={`${testId}-email`}
                   style={{ fontSize: '16px' }}
@@ -431,7 +430,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
 
               <div>
                 <label htmlFor="birthDate" className={labelClasses}>
-                  Fecha de Nacimiento <span className={requiredClasses}>*</span>
+                  {t('labels.birthDate')} <span className={requiredClasses}>*</span>
                 </label>
                 <input
                   type="date"
@@ -476,10 +475,10 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
               {isFormLoading ? (
                 <div className="flex items-center">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Guardando...
+                  {t('buttons.saving')}
                 </div>
               ) : (
-                'Guardar Cambios'
+                t('buttons.save')
               )}
             </button>
             <button
@@ -489,7 +488,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
               disabled={isFormLoading}
               data-testid={`${testId}-cancel-button`}
             >
-              Cancelar
+              {t('buttons.cancel')}
             </button>
           </div>
         </div>

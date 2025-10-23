@@ -5,6 +5,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { PersonalPatientInfo, PersonalPatientUpdate } from '../../types/personalInfo';
 import { DemographicInfoSection } from './DemographicInfoSection';
 import { ResidenceInfoSection } from './ResidenceInfoSection';
@@ -26,6 +27,8 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
   isLoading = false,
   'data-testid': testId = 'personal-info-edit-modal'
 }) => {
+  const t = useTranslations('profile.forms');
+  const tCommon = useTranslations('common');
   const [formData, setFormData] = useState<PersonalPatientUpdate>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -87,59 +90,59 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
 
     // Required fields validation
     if (!formData.biological_sex?.trim()) {
-      newErrors.biological_sex = 'El sexo biológico es obligatorio';
+      newErrors.biological_sex = t('validation.biologicalSexRequired');
     }
 
     if (!formData.gender?.trim()) {
-      newErrors.gender = 'El género es obligatorio';
+      newErrors.gender = t('validation.genderRequired');
     }
 
     // Validate "otro" gender field if selected
     if (formData.gender === 'OTRO' && !formData.gender_other?.trim()) {
-      newErrors.gender_other = 'Especifica tu género';
+      newErrors.gender_other = t('validation.specifyGender');
     }
 
     if (!formData.birth_country?.trim()) {
-      newErrors.birth_country = 'El país de nacimiento es obligatorio';
+      newErrors.birth_country = t('validation.birthCountryRequired');
     }
 
     // Validate "otro" birth country field if selected
     if (formData.birth_country === 'OTHER' && !formData.birth_country_other?.trim()) {
-      newErrors.birth_country_other = 'Especifica tu país de nacimiento';
+      newErrors.birth_country_other = t('validation.specifyBirthCountry');
     }
 
     // Colombian birth location validation
     if (formData.birth_country === 'CO') {
       if (!formData.birth_department?.trim()) {
-        newErrors.birth_department = 'El departamento de nacimiento es obligatorio para Colombia';
+        newErrors.birth_department = t('validation.birthDepartmentRequiredColombia');
       }
       if (!formData.birth_city?.trim()) {
-        newErrors.birth_city = 'La ciudad de nacimiento es obligatoria para Colombia';
+        newErrors.birth_city = t('validation.birthCityRequiredColombia');
       }
     }
 
     // Residence information validation
     if (!formData.residence_address?.trim()) {
-      newErrors.residence_address = 'La dirección de residencia es obligatoria';
+      newErrors.residence_address = t('validation.residenceAddressRequired');
     }
 
     if (!formData.residence_country?.trim()) {
-      newErrors.residence_country = 'El país de residencia es obligatorio';
+      newErrors.residence_country = t('validation.residenceCountryRequired');
     }
 
     // Validate "otro" residence country field if selected
     if (formData.residence_country === 'OTHER' && !formData.residence_country_other?.trim()) {
-      newErrors.residence_country_other = 'Especifica tu país de residencia';
+      newErrors.residence_country_other = t('validation.specifyResidenceCountry');
     }
 
     // Only validate Colombian residence fields if residence country is Colombia
     if (formData.residence_country === 'CO') {
       if (!formData.residence_department?.trim()) {
-        newErrors.residence_department = 'El departamento de residencia es obligatorio';
+        newErrors.residence_department = t('validation.residenceDepartmentRequired');
       }
 
       if (!formData.residence_city?.trim()) {
-        newErrors.residence_city = 'La ciudad de residencia es obligatoria';
+        newErrors.residence_city = t('validation.residenceCityRequired');
       }
     }
 
@@ -162,7 +165,7 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
         setErrors({ general: result.message });
       }
     } catch (error) {
-      setErrors({ general: 'Error inesperado. Por favor intenta de nuevo.' });
+      setErrors({ general: t('messages.errorUpdate') });
     } finally {
       setIsSubmitting(false);
     }
@@ -201,7 +204,7 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
                 id="modal-title"
                 data-testid="modal-title"
               >
-                Editar Información Personal
+                {t('modals.editPersonalInfo')}
               </h3>
               <button
                 type="button"
@@ -209,7 +212,7 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
                 onClick={onClose}
                 data-testid="modal-close-button"
               >
-                <span className="sr-only">Cerrar</span>
+                <span className="sr-only">{tCommon('close')}</span>
                 <svg
                   className="h-6 w-6"
                   fill="none"
@@ -226,7 +229,7 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
               </button>
             </div>
             <p className="text-sm text-vitalgo-dark-light">
-              Actualiza tu información demográfica y de residencia
+              {t('messages.updatePersonalInfo')}
             </p>
           </div>
 
@@ -273,10 +276,10 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
               {isFormLoading ? (
                 <div className="flex items-center">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Guardando...
+                  {t('buttons.saving')}
                 </div>
               ) : (
-                'Guardar Información Personal'
+                t('buttons.savePersonalInfo')
               )}
             </button>
             <button
@@ -286,7 +289,7 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
               disabled={isFormLoading}
               data-testid={`${testId}-cancel-button`}
             >
-              Cancelar
+              {t('buttons.cancel')}
             </button>
           </div>
         </div>

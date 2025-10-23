@@ -2,6 +2,7 @@
  * SelectField Atom Component
  * Reusable select dropdown for forms
  */
+import { useTranslations } from 'next-intl';
 import { SelectFieldProps } from '../../types/personalInfo';
 
 export function SelectField({
@@ -9,11 +10,12 @@ export function SelectField({
   value,
   onChange,
   options,
-  placeholder = "Seleccionar...",
+  placeholder,
   required = false,
   error,
   className = ""
 }: SelectFieldProps) {
+  const t = useTranslations('common');
   return (
     <div className={`space-y-1 ${className}`}>
       <label className="block text-sm font-medium text-gray-700">
@@ -29,7 +31,7 @@ export function SelectField({
             : 'border-gray-300'
         }`}
       >
-        <option value="">{placeholder}</option>
+        <option value="">{placeholder || t('select')}</option>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}

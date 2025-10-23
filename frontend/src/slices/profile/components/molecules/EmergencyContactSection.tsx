@@ -3,6 +3,7 @@
  * Displays emergency contact information
  */
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { PersonalPatientInfo } from '../../types/personalInfo';
 import { getEmergencyContactRelationshipByValue, formatPhoneNumber } from '../../data/medicalData';
 
@@ -11,8 +12,10 @@ interface EmergencyContactSectionProps {
 }
 
 export function EmergencyContactSection({ personalInfo }: EmergencyContactSectionProps) {
+  const t = useTranslations('profile.forms');
+
   const formatRelationshipDisplay = (relationship?: string) => {
-    if (!relationship) return 'No especificado';
+    if (!relationship) return t('messages.notSpecified');
     const relationshipOption = getEmergencyContactRelationshipByValue(relationship);
     return relationshipOption?.label || relationship;
   };
@@ -28,7 +31,7 @@ export function EmergencyContactSection({ personalInfo }: EmergencyContactSectio
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z" />
           </svg>
         </div>
-        <h4 className="text-sm font-semibold text-vitalgo-dark ml-2">Contacto de Emergencia</h4>
+        <h4 className="text-sm font-semibold text-vitalgo-dark ml-2">{t('sectionTitles.emergencyContact')}</h4>
       </div>
 
       {hasEmergencyContact ? (
@@ -36,14 +39,14 @@ export function EmergencyContactSection({ personalInfo }: EmergencyContactSectio
           {/* Name and Relationship */}
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-xs text-vitalgo-dark-lighter">Nombre Completo</span>
+              <span className="text-xs text-vitalgo-dark-lighter">{t('labels.emergencyName')}</span>
               <span className="text-sm font-medium text-vitalgo-dark">
-                {personalInfo?.emergency_contact_name || 'No especificado'}
+                {personalInfo?.emergency_contact_name || t('messages.notSpecified')}
               </span>
             </div>
 
             <div className="flex justify-between items-center">
-              <span className="text-xs text-vitalgo-dark-lighter">Parentesco</span>
+              <span className="text-xs text-vitalgo-dark-lighter">{t('labels.emergencyRelationship')}</span>
               <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
                 {formatRelationshipDisplay(personalInfo?.emergency_contact_relationship)}
               </span>
@@ -53,21 +56,21 @@ export function EmergencyContactSection({ personalInfo }: EmergencyContactSectio
           {/* Phones */}
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-xs text-vitalgo-dark-lighter">Teléfono Principal</span>
+              <span className="text-xs text-vitalgo-dark-lighter">{t('labels.emergencyPhone')}</span>
               <div className="flex items-center text-sm font-medium text-vitalgo-dark font-mono">
                 <svg className="h-3 w-3 text-vitalgo-dark-lighter mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
                 {personalInfo?.emergency_contact_phone ?
                   formatPhoneNumber(personalInfo.emergency_contact_phone) :
-                  'No especificado'
+                  t('messages.notSpecified')
                 }
               </div>
             </div>
 
             {personalInfo?.emergency_contact_phone_alt && (
               <div className="flex justify-between items-center">
-                <span className="text-xs text-vitalgo-dark-lighter">Teléfono Alternativo</span>
+                <span className="text-xs text-vitalgo-dark-lighter">{t('labels.emergencyPhoneAlt')}</span>
                 <div className="flex items-center text-sm font-medium text-vitalgo-dark font-mono">
                   <svg className="h-3 w-3 text-vitalgo-dark-lighter mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -85,9 +88,9 @@ export function EmergencyContactSection({ personalInfo }: EmergencyContactSectio
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
           </div>
-          <h3 className="text-sm font-medium text-vitalgo-dark">Sin contacto de emergencia</h3>
+          <h3 className="text-sm font-medium text-vitalgo-dark">{t('messages.noEmergencyContact')}</h3>
           <p className="text-xs text-vitalgo-dark-lighter mt-1">
-            No hay información de contacto de emergencia configurada.
+            {t('messages.noEmergencyContactMessage')}
           </p>
         </div>
       )}

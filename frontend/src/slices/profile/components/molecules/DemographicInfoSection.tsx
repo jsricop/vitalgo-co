@@ -2,6 +2,7 @@
  * DemographicInfoSection Molecule Component
  * Handles biological sex, gender, and birth location information
  */
+import { useTranslations } from 'next-intl';
 import { SelectField } from '../atoms/SelectField';
 import { RadioButtonField } from '../atoms/RadioButtonField';
 import { SearchableSelect } from '../atoms/SearchableSelect';
@@ -21,6 +22,8 @@ export function DemographicInfoSection({
   onChange,
   errors = {}
 }: DemographicInfoSectionProps) {
+  const t = useTranslations('profile.forms');
+
   const handleCountryChange = (country: string) => {
     onChange('birth_country', country);
     // Reset department and city when country changes
@@ -57,11 +60,11 @@ export function DemographicInfoSection({
     <div className="space-y-6">
       <div className="bg-white px-4 py-3 rounded-lg border border-gray-200">
         <h4 className="text-sm font-medium text-gray-900 mb-3">
-          Información Demográfica
+          {t('sections.demographicInfo')}
         </h4>
         <div className="space-y-4">
           <RadioButtonField
-            label="Sexo Biológico"
+            label={t('labels.biologicalSex')}
             name="biological_sex"
             value={data.biological_sex || ''}
             onChange={(value) => onChange('biological_sex', value)}
@@ -71,7 +74,7 @@ export function DemographicInfoSection({
             layout="columns"
           />
           <RadioButtonField
-            label="Género"
+            label={t('labels.gender')}
             name="gender"
             value={data.gender || ''}
             onChange={handleGenderChange}
@@ -88,11 +91,11 @@ export function DemographicInfoSection({
 
       <div className="bg-white px-4 py-3 rounded-lg border border-gray-200">
         <h4 className="text-sm font-medium text-gray-900 mb-3">
-          Lugar de Nacimiento
+          {t('sections.birthLocation')}
         </h4>
         <div className="space-y-4">
           <SearchableSelect
-            label="País de Nacimiento"
+            label={t('labels.birthCountry')}
             value={data.birth_country || ''}
             onChange={handleCountryChange}
             options={birthplaceCountries}
@@ -106,7 +109,7 @@ export function DemographicInfoSection({
           {showColombianFields && (
             <>
               <SelectField
-                label="Departamento de Nacimiento"
+                label={t('labels.birthDepartment')}
                 value={data.birth_department || ''}
                 onChange={handleDepartmentChange}
                 options={COLOMBIA_DEPARTMENTS}
@@ -116,7 +119,7 @@ export function DemographicInfoSection({
 
               {data.birth_department && (
                 <SelectField
-                  label="Ciudad de Nacimiento"
+                  label={t('labels.birthCity')}
                   value={data.birth_city || ''}
                   onChange={(value) => onChange('birth_city', value)}
                   options={departmentCities}

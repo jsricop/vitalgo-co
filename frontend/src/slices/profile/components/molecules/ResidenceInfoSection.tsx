@@ -2,6 +2,7 @@
  * ResidenceInfoSection Molecule Component
  * Handles residence address and location information
  */
+import { useTranslations } from 'next-intl';
 import { SelectField } from '../atoms/SelectField';
 import { TextAreaField } from '../atoms/TextAreaField';
 import { SearchableSelect } from '../atoms/SearchableSelect';
@@ -20,6 +21,8 @@ export function ResidenceInfoSection({
   onChange,
   errors = {}
 }: ResidenceInfoSectionProps) {
+  const t = useTranslations('profile.forms');
+
   const handleCountryChange = (country: string) => {
     onChange('residence_country', country);
     // Reset department and city when country changes
@@ -49,21 +52,21 @@ export function ResidenceInfoSection({
   return (
     <div className="bg-white px-4 py-3 rounded-lg border border-gray-200">
       <h4 className="text-sm font-medium text-gray-900 mb-3">
-        Información de Residencia
+        {t('sections.residenceInfo')}
       </h4>
       <div className="space-y-4">
         <TextAreaField
-          label="Dirección de Residencia Completa"
+          label={t('labels.residenceAddress')}
           value={data.residence_address || ''}
           onChange={(value) => onChange('residence_address', value)}
-          placeholder="Ej: Carrera 15 # 93-47, Apto 502, Bogotá"
+          placeholder={t('placeholders.residenceAddress')}
           required
           rows={2}
           error={errors.residence_address}
         />
 
         <SearchableSelect
-          label="País de Residencia"
+          label={t('labels.residenceCountry')}
           value={data.residence_country || ''}
           onChange={handleCountryChange}
           options={residenceCountries}
@@ -77,7 +80,7 @@ export function ResidenceInfoSection({
         {showColombianResidenceFields && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <SelectField
-              label="Departamento de Residencia"
+              label={t('labels.residenceDepartment')}
               value={data.residence_department || ''}
               onChange={handleDepartmentChange}
               options={COLOMBIA_DEPARTMENTS}
@@ -87,7 +90,7 @@ export function ResidenceInfoSection({
 
             {data.residence_department && (
               <SelectField
-                label="Ciudad de Residencia"
+                label={t('labels.residenceCity')}
                 value={data.residence_city || ''}
                 onChange={(value) => onChange('residence_city', value)}
                 options={departmentCities}

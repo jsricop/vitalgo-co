@@ -5,6 +5,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { PersonalPatientInfo, PersonalPatientUpdate } from '../../types/personalInfo';
 import { SelectField } from '../atoms/SelectField';
 import { TextAreaField } from '../atoms/TextAreaField';
@@ -49,6 +50,8 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
   isLoading = false,
   'data-testid': testId = 'medical-info-edit-modal'
 }) => {
+  const t = useTranslations('profile.forms');
+  const tCommon = useTranslations('common');
   const [formData, setFormData] = useState<MedicalFormData>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -109,42 +112,42 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
 
     // Required fields validation
     if (!formData.eps) {
-      newErrors.eps = 'EPS es requerido';
+      newErrors.eps = t('validation.epsRequired');
     }
 
     if (formData.eps === 'OTRO' && !formData.eps_other) {
-      newErrors.eps_other = 'Especifique el nombre de la EPS';
+      newErrors.eps_other = t('validation.epsOtherSpecify');
     }
 
     if (!formData.occupation) {
-      newErrors.occupation = 'Ocupación es requerida';
+      newErrors.occupation = t('validation.occupationRequired');
     }
 
     if (!formData.blood_type) {
-      newErrors.blood_type = 'Tipo de sangre es requerido';
+      newErrors.blood_type = t('validation.bloodTypeRequired');
     }
 
     if (!formData.emergency_contact_name) {
-      newErrors.emergency_contact_name = 'Nombre del contacto de emergencia es requerido';
+      newErrors.emergency_contact_name = t('validation.emergencyNameRequired');
     }
 
     if (!formData.emergency_contact_relationship) {
-      newErrors.emergency_contact_relationship = 'Parentesco es requerido';
+      newErrors.emergency_contact_relationship = t('validation.emergencyRelationshipRequired');
     }
 
     if (!formData.emergency_contact_phone) {
-      newErrors.emergency_contact_phone = 'Teléfono principal es requerido';
+      newErrors.emergency_contact_phone = t('validation.emergencyPhoneRequired');
     } else if (!validatePhoneNumber(formData.emergency_contact_phone)) {
-      newErrors.emergency_contact_phone = 'Formato de teléfono inválido (debe tener 10 dígitos)';
+      newErrors.emergency_contact_phone = t('validation.phoneFormat');
     }
 
     // Optional phone validation
     if (formData.emergency_contact_phone_alt && !validatePhoneNumber(formData.emergency_contact_phone_alt)) {
-      newErrors.emergency_contact_phone_alt = 'Formato de teléfono inválido (debe tener 10 dígitos)';
+      newErrors.emergency_contact_phone_alt = t('validation.phoneFormat');
     }
 
     if (formData.complementary_plan === 'OTRO' && !formData.complementary_plan_other) {
-      newErrors.complementary_plan_other = 'Especifique el plan complementario';
+      newErrors.complementary_plan_other = t('validation.complementaryPlanSpecify');
     }
 
     setErrors(newErrors);
@@ -168,7 +171,7 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
       }
     } catch (error) {
       console.error('Error submitting medical info:', error);
-      setErrors({ general: 'Error inesperado. Por favor intenta de nuevo.' });
+      setErrors({ general: t('messages.errorUpdate') });
     } finally {
       setIsSubmitting(false);
     }
@@ -207,7 +210,7 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
                 id="modal-title"
                 data-testid="modal-title"
               >
-                Editar Información Médica
+                {t('modals.editMedicalInfo')}
               </h3>
               <button
                 type="button"
@@ -215,7 +218,7 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
                 onClick={onClose}
                 data-testid="modal-close-button"
               >
-                <span className="sr-only">Cerrar</span>
+                <span className="sr-only">{tCommon('close')}</span>
                 <svg
                   className="h-6 w-6"
                   fill="none"
@@ -232,7 +235,7 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
               </button>
             </div>
             <p className="text-sm text-vitalgo-dark-light">
-              Complete la información médica básica, EPS y contacto de emergencia.
+              {t('sectionDescriptions.completeMedicalInfo')}
             </p>
           </div>
 
@@ -247,15 +250,15 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
                   </div>
-                  Seguridad Social y Ocupación
+                  {t('sectionTitles.socialSecurityOccupation')}
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <SelectField
-                    label="EPS *"
+                    label={t('labels.eps')}
                     value={formData.eps || ''}
                     onChange={(value) => handleFieldChange('eps', value)}
                     options={epsOptions}
-                    placeholder="Seleccione su EPS"
+                    placeholder={t('placeholders.selectEps')}
                     required
                     error={errors.eps}
                   />
@@ -263,10 +266,10 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
                   {isOtherValueRequired(formData.eps || '') && (
                     <div className="md:col-span-2">
                       <TextAreaField
-                        label="Especifique su EPS *"
+                        label={t('labels.epsOther')}
                         value={formData.eps_other || ''}
                         onChange={(value) => handleFieldChange('eps_other', value)}
-                        placeholder="Ingrese el nombre de su EPS"
+                        placeholder={t('placeholders.epsOther')}
                         required
                         error={errors.eps_other}
                         rows={2}
@@ -276,10 +279,10 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
 
                   <div className="md:col-span-2">
                     <TextAreaField
-                      label="Ocupación *"
+                      label={t('labels.occupation')}
                       value={formData.occupation || ''}
                       onChange={(value) => handleFieldChange('occupation', value)}
-                      placeholder="Ingrese su ocupación"
+                      placeholder={t('placeholders.occupation')}
                       required
                       error={errors.occupation}
                       rows={2}
@@ -288,30 +291,30 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
 
                   <div className="md:col-span-2">
                     <TextAreaField
-                      label="Seguro Adicional"
+                      label={t('labels.additionalInsurance')}
                       value={formData.additional_insurance || ''}
                       onChange={(value) => handleFieldChange('additional_insurance', value)}
-                      placeholder="Seguro adicional (opcional)"
+                      placeholder={t('placeholders.additionalInsurance')}
                       error={errors.additional_insurance}
                       rows={2}
                     />
                   </div>
 
                   <SelectField
-                    label="Plan Complementario"
+                    label={t('labels.complementaryPlan')}
                     value={formData.complementary_plan || ''}
                     onChange={(value) => handleFieldChange('complementary_plan', value)}
                     options={complementaryPlanOptions}
-                    placeholder="Seleccione plan complementario"
+                    placeholder={t('placeholders.complementaryPlan')}
                     error={errors.complementary_plan}
                   />
 
                   {isOtherValueRequired(formData.complementary_plan || '') && (
                     <TextAreaField
-                      label="Especifique el Plan *"
+                      label={t('labels.complementaryPlanOther')}
                       value={formData.complementary_plan_other || ''}
                       onChange={(value) => handleFieldChange('complementary_plan_other', value)}
-                      placeholder="Especifique el plan complementario"
+                      placeholder={t('placeholders.complementaryPlanOther')}
                       required
                       error={errors.complementary_plan_other}
                       rows={2}
@@ -328,11 +331,11 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>
                   </div>
-                  Información Médica
+                  {t('sectionTitles.medicalInfo')}
                 </h4>
                 <div>
                   <RadioButtonField
-                    label="Tipo de Sangre *"
+                    label={t('labels.bloodType')}
                     name="blood_type"
                     value={formData.blood_type || ''}
                     onChange={(value) => handleFieldChange('blood_type', value)}
@@ -351,15 +354,15 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z" />
                     </svg>
                   </div>
-                  Contacto de Emergencia
+                  {t('sectionTitles.emergencyContact')}
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-2">
                     <TextAreaField
-                      label="Nombre Completo *"
+                      label={t('labels.emergencyName')}
                       value={formData.emergency_contact_name || ''}
                       onChange={(value) => handleFieldChange('emergency_contact_name', value)}
-                      placeholder="Nombre completo del contacto de emergencia"
+                      placeholder={t('placeholders.emergencyName')}
                       required
                       error={errors.emergency_contact_name}
                       rows={2}
@@ -367,11 +370,11 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
                   </div>
 
                   <SelectField
-                    label="Parentesco *"
+                    label={t('labels.emergencyRelationship')}
                     value={formData.emergency_contact_relationship || ''}
                     onChange={(value) => handleFieldChange('emergency_contact_relationship', value)}
                     options={emergencyContactRelationshipOptions}
-                    placeholder="Seleccione parentesco"
+                    placeholder={t('placeholders.emergencyRelationship')}
                     required
                     error={errors.emergency_contact_relationship}
                   />
@@ -379,20 +382,20 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
                   <div></div>
 
                   <TextAreaField
-                    label="Teléfono Principal *"
+                    label={t('labels.emergencyPhone')}
                     value={formData.emergency_contact_phone || ''}
                     onChange={(value) => handleFieldChange('emergency_contact_phone', value)}
-                    placeholder="3001234567"
+                    placeholder={t('placeholders.emergencyPhone')}
                     required
                     error={errors.emergency_contact_phone}
                     rows={1}
                   />
 
                   <TextAreaField
-                    label="Teléfono Alternativo"
+                    label={t('labels.emergencyPhoneAlt')}
                     value={formData.emergency_contact_phone_alt || ''}
                     onChange={(value) => handleFieldChange('emergency_contact_phone_alt', value)}
-                    placeholder="3001234567 (opcional)"
+                    placeholder={t('placeholders.emergencyPhoneAlt')}
                     error={errors.emergency_contact_phone_alt}
                     rows={1}
                   />
@@ -425,10 +428,10 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
               {isFormLoading ? (
                 <div className="flex items-center">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Guardando...
+                  {t('buttons.saving')}
                 </div>
               ) : (
-                'Guardar Cambios'
+                t('buttons.saveMedicalInfo')
               )}
             </button>
             <button
@@ -438,7 +441,7 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
               disabled={isFormLoading}
               data-testid={`${testId}-cancel-button`}
             >
-              Cancelar
+              {t('buttons.cancel')}
             </button>
           </div>
         </div>

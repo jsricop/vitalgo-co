@@ -5,6 +5,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { AuthGuard } from '../../../shared/components/guards/AuthGuard';
 import { PatientNavbar } from '../../../shared/components/organisms/PatientNavbar';
 import { TabNavigation } from '../components/molecules/TabNavigation';
@@ -22,6 +23,8 @@ interface ProfilePageProps {
 export const ProfilePage: React.FC<ProfilePageProps> = ({
   'data-testid': testId
 }) => {
+  const t = useTranslations('profile');
+  const tCommon = useTranslations('common');
   const [activeTab, setActiveTab] = useState<ProfileTab>('basic');
   const { personalInfo, refetch: refetchPersonalInfo } = usePersonalPatientInfo();
 
@@ -80,10 +83,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                 </div>
                 <div>
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    Mi Perfil
+                    {t('title')}
                   </h1>
                   <p className="text-gray-600">
-                    Gestiona tu información personal y médica de forma segura.
+                    {t('pageDescription')}
                   </p>
                 </div>
               </div>
@@ -108,18 +111,18 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-6">
                 <p className="text-gray-500 text-sm">
-                  © 2024 VitalGo. Todos los derechos reservados.
+                  {t('footer.copyright')}
                 </p>
               </div>
               <div className="flex items-center space-x-6">
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-                  Privacidad
+                  {t('footer.privacy')}
                 </a>
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-                  Términos
+                  {t('footer.terms')}
                 </a>
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
-                  Soporte
+                  {t('footer.support')}
                 </a>
               </div>
             </div>
