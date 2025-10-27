@@ -131,6 +131,48 @@
       "autoLoginMessage": "Te estamos iniciando sesión automáticamente...",
       "backToHome": "Volver al inicio",
       "benefits": "Al registrarte, podrás acceder de forma segura a tus expedientes médicos, compartir información con profesionales de la salud autorizados y gestionar tu historial médico digital."
+    },
+    "personalInfo": {
+      "title": "Información Personal",
+      "subtitle": "Ingresa tus datos personales para crear tu cuenta",
+      "fields": {
+        "firstName": {
+          "label": "Nombres",
+          "placeholder": "Ingresa tus nombres"
+        },
+        "lastName": {
+          "label": "Apellidos",
+          "placeholder": "Ingresa tus apellidos"
+        },
+        "documentType": "Tipo de Documento",
+        "documentNumber": {
+          "label": "Número de Documento",
+          "placeholder": "Ingresa tu número de documento"
+        },
+        "originCountry": {
+          "label": "País de Origen",
+          "placeholder": "Selecciona tu país"
+        },
+        "birthDate": "Fecha de Nacimiento"
+      }
+    },
+    "accountInfo": {
+      "title": "Información de Cuenta",
+      "subtitle": "Crea tus credenciales de acceso",
+      "fields": {
+        "email": {
+          "label": "Correo Electrónico",
+          "placeholder": "tu@email.com"
+        },
+        "password": {
+          "label": "Contraseña",
+          "placeholder": "Mínimo 8 caracteres"
+        },
+        "confirmPassword": {
+          "label": "Confirmar Contraseña",
+          "placeholder": "Ingresa tu contraseña nuevamente"
+        }
+      }
     }
   },
   "dashboard": {

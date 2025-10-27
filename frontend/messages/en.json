@@ -192,6 +192,48 @@
       "autoLoginMessage": "We are logging you in automatically...",
       "backToHome": "Back to home",
       "benefits": "By registering, you will be able to securely access your medical records, share information with authorized healthcare professionals, and manage your digital medical history."
+    },
+    "personalInfo": {
+      "title": "Personal Information",
+      "subtitle": "Enter your personal details to create your account",
+      "fields": {
+        "firstName": {
+          "label": "First Name",
+          "placeholder": "Enter your first name"
+        },
+        "lastName": {
+          "label": "Last Name",
+          "placeholder": "Enter your last name"
+        },
+        "documentType": "Document Type",
+        "documentNumber": {
+          "label": "Document Number",
+          "placeholder": "Enter your document number"
+        },
+        "originCountry": {
+          "label": "Country of Origin",
+          "placeholder": "Select your country"
+        },
+        "birthDate": "Birth Date"
+      }
+    },
+    "accountInfo": {
+      "title": "Account Information",
+      "subtitle": "Create your login credentials",
+      "fields": {
+        "email": {
+          "label": "Email Address",
+          "placeholder": "your@email.com"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Minimum 8 characters"
+        },
+        "confirmPassword": {
+          "label": "Confirm Password",
+          "placeholder": "Re-enter your password"
+        }
+      }
     }
   },
   "dashboard": {
