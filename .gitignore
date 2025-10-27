@@ -98,7 +98,9 @@ test_signup_migration.py
 
 # Deployment artifacts
 deployment.env
+deployment-staging.env
 /tmp/vitalgo_*
+/tmp/vitalgo_staging_*
 *_backup_*
 *.backup
 deployment_*.log
@@ -115,10 +117,13 @@ terraform/user_data.sh
 
 # Production deployment files with sensitive data - NEVER COMMIT
 deployment.env
+deployment-staging.env
 deployment.env.*
+deployment-staging.env.*
 MIGRATION_DEPLOYMENT_GUIDE.md
 scripts/secure-deploy.sh
 docker-compose.local.yml
+docker-compose.staging.yml
 
 # Production deployment logs and backups
 /tmp/vitalgo_deployment_*

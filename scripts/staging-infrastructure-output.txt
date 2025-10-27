@@ -1,0 +1,124 @@
+═══════════════════════════════════════════════════════════════
+VitalGo Staging Infrastructure - Configuration Values
+Created: $(date)
+Region: us-east-2 (Ohio)
+═══════════════════════════════════════════════════════════════
+
+AWS RESOURCES CREATED:
+----------------------
+EC2 Instance ID:       i-0ceea6423c7ba3878
+EC2 Public IP:         18.190.138.46
+EC2 Key Pair:          vitalgo-staging-ohio
+EC2 Key File:          /Users/jsricop/.ssh/vitalgo-staging-ohio.pem
+EC2 Security Group:    sg-00ec656144295fa7c
+RDS Instance ID:       vitalgo-staging-db
+RDS Endpoint:          [PENDING - will be available in 5-10 minutes]
+RDS Security Group:    sg-06318578c7c7f257a
+
+DATABASE CONFIGURATION:
+-----------------------
+DB Name:               vitalgo_staging
+DB Username:           vitalgo_staging_user
+DB Password:           tiH68EwDy0pjZX4kRQgy
+
+APPLICATION SECRETS (STAGING ONLY - NEVER USE IN PRODUCTION):
+--------------------------------------------------------------
+SECRET_KEY:            NveiqsDnHmUtaYPuLHCKt7qqu/tiKaO3XgF7HIAP0XA=
+JWT_SECRET_KEY:        ZIhDCNwnjotUJ5Zhz8mGkBVDEHt8PAxZD3CymV6kNUw=
+
+ACCESS INFORMATION:
+-------------------
+SSH Command:           ssh -i /Users/jsricop/.ssh/vitalgo-staging-ohio.pem ec2-user@18.190.138.46
+Frontend URL:          http://18.190.138.46:3000
+Backend URL:           http://18.190.138.46:8000
+API Docs:              http://18.190.138.46:8000/docs
+Health Check:          http://18.190.138.46:8000/health
+
+DEPLOYMENT FILE VALUES (deployment-staging.env):
+------------------------------------------------
+DOCKERHUB_USERNAME=[YOUR_DOCKERHUB_USERNAME]
+EC2_PUBLIC_IP=18.190.138.46
+EC2_SSH_KEY=/Users/jsricop/.ssh/vitalgo-staging-ohio.pem
+DOMAIN_NAME=18.190.138.46
+RDS_INSTANCE_ID=vitalgo-staging-db
+RDS_ENDPOINT=[PENDING - check RDS console or wait for availability]
+DB_NAME=vitalgo_staging
+DB_USER=vitalgo_staging_user
+DB_PASSWORD=tiH68EwDy0pjZX4kRQgy
+SECRET_KEY=NveiqsDnHmUtaYPuLHCKt7qqu/tiKaO3XgF7HIAP0XA=
+JWT_SECRET_KEY=ZIhDCNwnjotUJ5Zhz8mGkBVDEHt8PAxZD3CymV6kNUw=
+FRONTEND_URL=http://18.190.138.46:3000
+ENVIRONMENT=staging
+
+═══════════════════════════════════════════════════════════════
+NEXT STEPS:
+═══════════════════════════════════════════════════════════════
+
+1. WAIT FOR RDS (Currently creating, takes 5-10 minutes):
+   Check status: aws rds describe-db-instances --region us-east-2 --db-instance-identifier vitalgo-staging-db
+
+   Once available, get endpoint:
+   aws rds describe-db-instances --region us-east-2 --db-instance-identifier vitalgo-staging-db --query 'DBInstances[0].Endpoint.Address' --output text
+
+2. SSH into EC2 and install Docker:
+   ssh -i /Users/jsricop/.ssh/vitalgo-staging-ohio.pem ec2-user@18.190.138.46
+
+   sudo yum update -y
+   sudo yum install docker -y
+   sudo systemctl start docker
+   sudo systemctl enable docker
+   sudo usermod -a -G docker ec2-user
+
+   # Install Docker Compose
+   sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+   sudo chmod +x /usr/local/bin/docker-compose
+
+   # Logout and login again
+   exit
+   ssh -i /Users/jsricop/.ssh/vitalgo-staging-ohio.pem ec2-user@18.190.138.46
+
+   # Verify
+   docker --version
+   docker-compose --version
+
+   # Create working directory
+   mkdir -p ~/vitalgo
+
+3. Update deployment-staging.env:
+   Once RDS endpoint is available, update scripts/deployment-staging.env with all values above
+
+4. Deploy to staging:
+   ./scripts/deploy-staging.sh --with-migrations
+
+5. Initialize test data:
+   ./scripts/init-staging-db.sh
+
+═══════════════════════════════════════════════════════════════
+IMPORTANT: Save this file securely! It contains sensitive data.
+═══════════════════════════════════════════════════════════════
+
+SECURITY REMINDERS:
+-------------------
+- Never commit this file to git
+- Keep SSH key secure (chmod 600 /Users/jsricop/.ssh/vitalgo-staging-ohio.pem)
+- Save DB password in secure password manager
+- These secrets are for STAGING only - never use in production
+- Different region (Ohio) from production
+- IP-based access (no domain required)
+
+COST INFORMATION:
+-----------------
+Estimated monthly cost: ~$33/month (24/7 operation)
+With stop/start strategy: ~$10/month (8h/day, weekdays)
+
+To stop staging when not in use:
+aws ec2 stop-instances --instance-ids i-0ceea6423c7ba3878 --region us-east-2
+aws rds stop-db-instance --db-instance-identifier vitalgo-staging-db --region us-east-2
+
+To start staging:
+aws ec2 start-instances --instance-ids i-0ceea6423c7ba3878 --region us-east-2
+aws rds start-db-instance --db-instance-identifier vitalgo-staging-db --region us-east-2
+
+═══════════════════════════════════════════════════════════════
+STATUS: EC2 Ready ✅ | RDS Creating 🔄 | Docker Not Installed ⏳
+═══════════════════════════════════════════════════════════════

@@ -90,6 +90,12 @@ vitalgo-co/
 ./scripts/local-deploy.sh --preserve-data    # Conservar datos
 ./scripts/local-deploy.sh --status           # Verificar estado
 
+# Despliegue staging (AWS Ohio - Pruebas)
+./scripts/deploy-staging.sh                  # Despliegue automático
+./scripts/deploy-staging.sh --with-migrations # Con migraciones DB
+./scripts/deploy-staging.sh --validate       # Solo validación
+./scripts/init-staging-db.sh                 # Inicializar datos de prueba
+
 # Despliegue producción (AWS)
 ./scripts/deploy.sh                          # Despliegue automático
 ./scripts/deploy.sh --with-migrations        # Con migraciones DB
@@ -129,6 +135,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 ### 🚀 Scripts de Automatización
 - **[smart-commit.sh](scripts/smart-commit.sh)** - Commit inteligente con revisión automática (`./scripts/smart-commit.sh --help`)
 - **[local-deploy.sh](scripts/local-deploy.sh)** - Configuración de desarrollo local (`./scripts/local-deploy.sh --help`)
+- **[deploy-staging.sh](scripts/deploy-staging.sh)** - Despliegue a staging AWS Ohio (`./scripts/deploy-staging.sh --help`)
 - **[deploy.sh](scripts/deploy.sh)** - Despliegue a producción AWS (`./scripts/deploy.sh --help`)
 
 ## 🧪 Testing
@@ -153,6 +160,39 @@ El script `scripts/local-deploy.sh` configura automáticamente:
 - Redis para cache y sesiones
 - Migraciones de base de datos
 - Verificaciones de conectividad
+
+### Staging (Pruebas - AWS Ohio)
+El ambiente de staging permite probar cambios antes de producción:
+
+```bash
+# Despliegue a staging
+./scripts/deploy-staging.sh                    # Despliegue automático
+./scripts/deploy-staging.sh --with-migrations  # Con migraciones DB
+./scripts/deploy-staging.sh --validate         # Solo validación
+
+# Inicializar datos de prueba
+./scripts/init-staging-db.sh
+```
+
+**Acceso:**
+- Frontend: `http://{STAGING_IP}:3000`
+- Backend: `http://{STAGING_IP}:8000`
+- API Docs: `http://{STAGING_IP}:8000/docs`
+
+**Credenciales de prueba:**
+- Paciente: `test.patient@vitalgo.com` / `TestPassword123!`
+- Paramédico: `test.paramedic@vitalgo.com` / `TestParamedic123!`
+
+**Características:**
+- ✅ Completamente aislado de producción
+- ✅ Región AWS Ohio (us-east-2)
+- ✅ Acceso basado en IP (sin dominio)
+- ✅ Datos de prueba frescos
+- ✅ Instancias más pequeñas (optimizado en costos)
+
+**Documentación completa:**
+- Quick Reference: `docs/STAGING.md`
+- Setup Guide: `docs/STAGING_SETUP_PLAN.md`
 
 ### Producción (AWS)
 El script `scripts/deploy.sh` maneja:
