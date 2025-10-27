@@ -184,6 +184,14 @@
       "peru": "Peru",
       "venezuela": "Venezuela",
       "other": "Other"
+    },
+    "page": {
+      "title": "Patient Registration",
+      "subtitle": "Create your account to access your digital medical records",
+      "successMessage": "Account created successfully!",
+      "autoLoginMessage": "We are logging you in automatically...",
+      "backToHome": "Back to home",
+      "benefits": "By registering, you will be able to securely access your medical records, share information with authorized healthcare professionals, and manage your digital medical history."
     }
   },
   "dashboard": {
@@ -777,6 +785,66 @@
       "active": "Active",
       "completed": "Completed",
       "paused": "Paused"
+    },
+    "form": {
+      "title": {
+        "create": "Add Medication",
+        "edit": "Edit Medication"
+      },
+      "subtitle": {
+        "create": "Complete the information for the new medication",
+        "edit": "Update the medication information"
+      },
+      "fields": {
+        "medicationName": "Medication Name",
+        "dosage": "Dosage",
+        "frequency": "Frequency",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "prescribedBy": "Prescribing Doctor",
+        "isActive": "Active medication",
+        "notes": "Additional Notes"
+      },
+      "placeholders": {
+        "medicationName": "e.g., Paracetamol",
+        "dosage": "e.g., 500mg",
+        "frequency": "e.g., Every 8 hours",
+        "prescribedBy": "e.g., Dr. John Smith",
+        "notes": "Additional information about the medication..."
+      },
+      "helpers": {
+        "endDate": "Optional. Leave empty if it's an ongoing treatment.",
+        "isActive": "Inactive medications won't appear in main summaries.",
+        "charactersCount": "{count}/1000 characters"
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "save": "Save",
+        "update": "Update",
+        "saving": "Saving..."
+      },
+      "validation": {
+        "errorTitle": "Please correct the following errors:"
+      }
+    },
+    "card": {
+      "labels": {
+        "prescribed": "Prescribed by",
+        "start": "Start",
+        "end": "End",
+        "updated": "Updated"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete",
+        "activate": "Activate",
+        "deactivate": "Deactivate"
+      },
+      "emptyStates": {
+        "noDate": "Not specified",
+        "invalidDate": "Invalid date",
+        "noDetails": "No additional details"
+      }
     }
   },
   "allergies": {
@@ -870,6 +938,58 @@
       "updateFailed": "Failed to update allergy",
       "deleteFailed": "Failed to delete allergy",
       "loadFailed": "Failed to load allergies"
+    },
+    "form": {
+      "title": {
+        "create": "Add Allergy",
+        "edit": "Edit Allergy"
+      },
+      "subtitle": {
+        "create": "Complete the information for the new allergy",
+        "edit": "Update the allergy information"
+      },
+      "fields": {
+        "allergen": "Allergen",
+        "severityLevel": "Severity Level",
+        "reactionDescription": "Reaction Description",
+        "diagnosisDate": "Diagnosis Date",
+        "notes": "Additional Notes"
+      },
+      "placeholders": {
+        "allergen": "e.g., Pollen, Nuts, Penicillin",
+        "reactionDescription": "Describe the symptoms or reactions you experience...",
+        "notes": "Additional information, treatments, precautions..."
+      },
+      "options": {
+        "severityLevels": {
+          "leve": "Mild",
+          "moderada": "Moderate",
+          "severa": "Severe",
+          "critica": "Critical"
+        }
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "save": "Save",
+        "update": "Update",
+        "saving": "Saving..."
+      }
+    },
+    "card": {
+      "labels": {
+        "diagnosis": "Diagnosis",
+        "notes": "Notes",
+        "updated": "Updated"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "emptyStates": {
+        "noDate": "Not specified",
+        "invalidDate": "Invalid date",
+        "noDetails": "No additional details"
+      }
     }
   },
   "surgeries": {
@@ -965,6 +1085,70 @@
       "updateFailed": "Failed to update surgery",
       "deleteFailed": "Failed to delete surgery",
       "loadFailed": "Failed to load surgeries"
+    },
+    "form": {
+      "title": {
+        "create": "Add Surgery",
+        "edit": "Edit Surgery"
+      },
+      "subtitle": {
+        "create": "Complete the information for the new surgery",
+        "edit": "Update the surgery information"
+      },
+      "fields": {
+        "procedureName": "Procedure Name",
+        "surgeryDate": "Surgery Date",
+        "hospitalName": "Hospital or Clinic",
+        "surgeonName": "Surgeon Name",
+        "anesthesiaType": "Anesthesia Type",
+        "durationHours": "Duration (hours)",
+        "notes": "Additional Notes",
+        "complications": "Complications"
+      },
+      "placeholders": {
+        "procedureName": "e.g., Appendectomy, Gallbladder Surgery",
+        "hospitalName": "e.g., Central Hospital",
+        "surgeonName": "e.g., Dr. John Smith",
+        "durationHours": "e.g., 2",
+        "notes": "Additional information about the surgery, preparations, recovery...",
+        "complications": "Describe any complications that occurred during or after the surgery..."
+      },
+      "options": {
+        "anesthesiaTypes": {
+          "": "Not specified",
+          "general": "General Anesthesia",
+          "local": "Local Anesthesia",
+          "regional": "Regional Anesthesia",
+          "spinal": "Spinal Anesthesia",
+          "epidural": "Epidural Anesthesia",
+          "conscious_sedation": "Conscious Sedation",
+          "other": "Other"
+        }
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "save": "Save",
+        "update": "Update",
+        "saving": "Saving..."
+      }
+    },
+    "card": {
+      "labels": {
+        "doctor": "Dr.",
+        "duration": "duration",
+        "notes": "Notes",
+        "complications": "Complications",
+        "updated": "Updated"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "emptyStates": {
+        "noDate": "Not specified",
+        "invalidDate": "Invalid date",
+        "noDetails": "No additional details"
+      }
     }
   },
   "illnesses": {
@@ -1066,6 +1250,59 @@
       "updateFailed": "Failed to update illness",
       "deleteFailed": "Failed to delete illness",
       "loadFailed": "Failed to load illnesses"
+    },
+    "form": {
+      "title": {
+        "create": "Add Illness",
+        "edit": "Edit Illness"
+      },
+      "subtitle": {
+        "create": "Complete the information for the new illness",
+        "edit": "Update the illness information"
+      },
+      "fields": {
+        "illnessName": "Illness Name",
+        "diagnosisDate": "Diagnosis Date",
+        "status": "Status",
+        "isChronic": "Chronic condition",
+        "cie10Code": "ICD-10 Code",
+        "diagnosedBy": "Diagnosed by",
+        "treatmentDescription": "Treatment Description",
+        "notes": "Additional Notes"
+      },
+      "placeholders": {
+        "illnessName": "e.g., Arterial hypertension",
+        "cie10Code": "e.g., I10",
+        "diagnosedBy": "Dr. John Smith",
+        "treatmentDescription": "Current treatment description...",
+        "notes": "Additional notes about the illness..."
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "save": "Save",
+        "update": "Update",
+        "saving": "Saving..."
+      }
+    },
+    "card": {
+      "labels": {
+        "diagnosed": "Diagnosed",
+        "diagnosedBy": "Diagnosed by",
+        "treatment": "Treatment",
+        "cie10": "ICD-10",
+        "updated": "Updated"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete",
+        "markAsCured": "Mark as cured",
+        "markAsActive": "Mark as active"
+      },
+      "emptyStates": {
+        "noDate": "Not specified",
+        "invalidDate": "Invalid date",
+        "noDetails": "No additional details"
+      }
     }
   },
   "qr": {

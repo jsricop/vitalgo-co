@@ -5,6 +5,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { AllergyFormProps } from '../../types';
 import { useAllergyForm } from '../../hooks/useAllergyForm';
 
@@ -16,6 +17,8 @@ export const AllergyForm: React.FC<AllergyFormProps> = ({
   mode = 'create',
   'data-testid': testId
 }) => {
+  const t = useTranslations('allergies.form');
+
   const {
     formData,
     errors,
@@ -47,10 +50,10 @@ export const AllergyForm: React.FC<AllergyFormProps> = ({
   const requiredClasses = "text-red-500";
 
   const severityOptions = [
-    { value: 'leve', label: 'Leve' },
-    { value: 'moderada', label: 'Moderada' },
-    { value: 'severa', label: 'Severa' },
-    { value: 'critica', label: 'Crítica' }
+    { value: 'leve', label: t('options.severityLevels.leve') },
+    { value: 'moderada', label: t('options.severityLevels.moderada') },
+    { value: 'severa', label: t('options.severityLevels.severa') },
+    { value: 'critica', label: t('options.severityLevels.critica') }
   ];
 
   return (
@@ -58,13 +61,10 @@ export const AllergyForm: React.FC<AllergyFormProps> = ({
       {/* Header */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold text-vitalgo-dark">
-          {mode === 'edit' ? 'Editar' : 'Agregar'} Alergia
+          {t(mode === 'edit' ? 'title.edit' : 'title.create')}
         </h3>
         <p className="text-sm text-vitalgo-dark-light mt-1">
-          {mode === 'edit'
-            ? 'Actualiza la información de la alergia'
-            : 'Completa la información de la nueva alergia'
-          }
+          {t(mode === 'edit' ? 'subtitle.edit' : 'subtitle.create')}
         </p>
       </div>
 
@@ -72,7 +72,7 @@ export const AllergyForm: React.FC<AllergyFormProps> = ({
         {/* Allergen Name */}
         <div>
           <label htmlFor="allergen" className={labelClasses}>
-            Alérgeno <span className={requiredClasses}>*</span>
+            {t('fields.allergen')} <span className={requiredClasses}>*</span>
           </label>
           <input
             type="text"
@@ -80,7 +80,7 @@ export const AllergyForm: React.FC<AllergyFormProps> = ({
             value={formData.allergen}
             onChange={(e) => handleInputChange('allergen', e.target.value)}
             className={fieldClasses('allergen')}
-            placeholder="Ej: Polen, Nueces, Penicilina"
+            placeholder={t('placeholders.allergen')}
             disabled={isFormLoading}
             data-testid={`${testId}-allergen`}
             style={{ fontSize: '16px' }} // Prevents iOS zoom
@@ -96,7 +96,7 @@ export const AllergyForm: React.FC<AllergyFormProps> = ({
         {/* Severity Level */}
         <div>
           <label htmlFor="severityLevel" className={labelClasses}>
-            Nivel de Severidad <span className={requiredClasses}>*</span>
+            {t('fields.severityLevel')} <span className={requiredClasses}>*</span>
           </label>
           <select
             id="severityLevel"
@@ -123,14 +123,14 @@ export const AllergyForm: React.FC<AllergyFormProps> = ({
         {/* Reaction Description */}
         <div>
           <label htmlFor="reactionDescription" className={labelClasses}>
-            Descripción de la Reacción
+            {t('fields.reactionDescription')}
           </label>
           <textarea
             id="reactionDescription"
             value={formData.reactionDescription || ''}
             onChange={(e) => handleInputChange('reactionDescription', e.target.value)}
             className={fieldClasses('reactionDescription')}
-            placeholder="Describe los síntomas o reacciones que experimentas..."
+            placeholder={t('placeholders.reactionDescription')}
             rows={3}
             disabled={isFormLoading}
             data-testid={`${testId}-reaction-description`}
@@ -146,7 +146,7 @@ export const AllergyForm: React.FC<AllergyFormProps> = ({
         {/* Diagnosis Date */}
         <div>
           <label htmlFor="diagnosisDate" className={labelClasses}>
-            Fecha de Diagnóstico
+            {t('fields.diagnosisDate')}
           </label>
           <input
             type="date"
@@ -169,14 +169,14 @@ export const AllergyForm: React.FC<AllergyFormProps> = ({
         {/* Notes */}
         <div>
           <label htmlFor="notes" className={labelClasses}>
-            Notas Adicionales
+            {t('fields.notes')}
           </label>
           <textarea
             id="notes"
             value={formData.notes || ''}
             onChange={(e) => handleInputChange('notes', e.target.value)}
             className={fieldClasses('notes')}
-            placeholder="Información adicional, tratamientos, precauciones..."
+            placeholder={t('placeholders.notes')}
             rows={3}
             disabled={isFormLoading}
             data-testid={`${testId}-notes`}
@@ -198,7 +198,7 @@ export const AllergyForm: React.FC<AllergyFormProps> = ({
             className="px-4 py-2 text-sm font-medium text-vitalgo-dark bg-white border border-vitalgo-dark-lighter rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-vitalgo-green disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150"
             data-testid={`${testId}-cancel`}
           >
-            Cancelar
+            {t('actions.cancel')}
           </button>
           <button
             type="submit"
@@ -212,7 +212,7 @@ export const AllergyForm: React.FC<AllergyFormProps> = ({
                 <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>
             )}
-            {mode === 'edit' ? 'Actualizar' : 'Guardar'} Alergia
+            {t(mode === 'edit' ? 'actions.update' : 'actions.save')}
           </button>
         </div>
       </form>

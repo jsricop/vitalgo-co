@@ -5,6 +5,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { SurgeryFormProps, AnesthesiaTypeOption } from '../../types';
 import { useSurgeryForm } from '../../hooks/useSurgeryForm';
 
@@ -16,6 +17,8 @@ export const SurgeryForm: React.FC<SurgeryFormProps> = ({
   mode = 'create',
   'data-testid': testId
 }) => {
+  const t = useTranslations('surgeries.form');
+
   const {
     formData,
     errors,
@@ -47,14 +50,14 @@ export const SurgeryForm: React.FC<SurgeryFormProps> = ({
   const requiredClasses = "text-red-500";
 
   const anesthesiaOptions: AnesthesiaTypeOption[] = [
-    { value: '', label: 'No especificado' },
-    { value: 'general', label: 'Anestesia General' },
-    { value: 'local', label: 'Anestesia Local' },
-    { value: 'regional', label: 'Anestesia Regional' },
-    { value: 'spinal', label: 'Anestesia Espinal' },
-    { value: 'epidural', label: 'Anestesia Epidural' },
-    { value: 'conscious_sedation', label: 'Sedación Consciente' },
-    { value: 'other', label: 'Otro' }
+    { value: '', label: t('options.anesthesiaTypes.') },
+    { value: 'general', label: t('options.anesthesiaTypes.general') },
+    { value: 'local', label: t('options.anesthesiaTypes.local') },
+    { value: 'regional', label: t('options.anesthesiaTypes.regional') },
+    { value: 'spinal', label: t('options.anesthesiaTypes.spinal') },
+    { value: 'epidural', label: t('options.anesthesiaTypes.epidural') },
+    { value: 'conscious_sedation', label: t('options.anesthesiaTypes.conscious_sedation') },
+    { value: 'other', label: t('options.anesthesiaTypes.other') }
   ];
 
   return (
@@ -62,13 +65,10 @@ export const SurgeryForm: React.FC<SurgeryFormProps> = ({
       {/* Header */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold text-vitalgo-dark">
-          {mode === 'edit' ? 'Editar' : 'Agregar'} Cirugía
+          {t(mode === 'edit' ? 'title.edit' : 'title.create')}
         </h3>
         <p className="text-sm text-vitalgo-dark-light mt-1">
-          {mode === 'edit'
-            ? 'Actualiza la información de la cirugía'
-            : 'Completa la información de la nueva cirugía'
-          }
+          {t(mode === 'edit' ? 'subtitle.edit' : 'subtitle.create')}
         </p>
       </div>
 
@@ -76,7 +76,7 @@ export const SurgeryForm: React.FC<SurgeryFormProps> = ({
         {/* Procedure Name */}
         <div>
           <label htmlFor="procedureName" className={labelClasses}>
-            Nombre del Procedimiento <span className={requiredClasses}>*</span>
+            {t('fields.procedureName')} <span className={requiredClasses}>*</span>
           </label>
           <input
             type="text"
@@ -84,7 +84,7 @@ export const SurgeryForm: React.FC<SurgeryFormProps> = ({
             value={formData.procedureName}
             onChange={(e) => handleInputChange('procedureName', e.target.value)}
             className={fieldClasses('procedureName')}
-            placeholder="Ej: Apendicectomía, Cirugía de Vesícula Biliar"
+            placeholder={t('placeholders.procedureName')}
             disabled={isFormLoading}
             data-testid={`${testId}-procedure-name`}
             style={{ fontSize: '16px' }} // Prevents iOS zoom
@@ -100,7 +100,7 @@ export const SurgeryForm: React.FC<SurgeryFormProps> = ({
         {/* Surgery Date */}
         <div>
           <label htmlFor="surgeryDate" className={labelClasses}>
-            Fecha de la Cirugía <span className={requiredClasses}>*</span>
+            {t('fields.surgeryDate')} <span className={requiredClasses}>*</span>
           </label>
           <input
             type="date"
@@ -125,7 +125,7 @@ export const SurgeryForm: React.FC<SurgeryFormProps> = ({
           {/* Hospital Name */}
           <div>
             <label htmlFor="hospitalName" className={labelClasses}>
-              Hospital o Clínica
+              {t('fields.hospitalName')}
             </label>
             <input
               type="text"
@@ -133,7 +133,7 @@ export const SurgeryForm: React.FC<SurgeryFormProps> = ({
               value={formData.hospitalName || ''}
               onChange={(e) => handleInputChange('hospitalName', e.target.value)}
               className={fieldClasses('hospitalName')}
-              placeholder="Ej: Hospital Central"
+              placeholder={t('placeholders.hospitalName')}
               disabled={isFormLoading}
               data-testid={`${testId}-hospital-name`}
               style={{ fontSize: '16px' }} // Prevents iOS zoom
@@ -149,7 +149,7 @@ export const SurgeryForm: React.FC<SurgeryFormProps> = ({
           {/* Surgeon Name */}
           <div>
             <label htmlFor="surgeonName" className={labelClasses}>
-              Nombre del Cirujano
+              {t('fields.surgeonName')}
             </label>
             <input
               type="text"
@@ -157,7 +157,7 @@ export const SurgeryForm: React.FC<SurgeryFormProps> = ({
               value={formData.surgeonName || ''}
               onChange={(e) => handleInputChange('surgeonName', e.target.value)}
               className={fieldClasses('surgeonName')}
-              placeholder="Ej: Dr. Juan Pérez"
+              placeholder={t('placeholders.surgeonName')}
               disabled={isFormLoading}
               data-testid={`${testId}-surgeon-name`}
               style={{ fontSize: '16px' }} // Prevents iOS zoom
@@ -176,7 +176,7 @@ export const SurgeryForm: React.FC<SurgeryFormProps> = ({
           {/* Anesthesia Type */}
           <div>
             <label htmlFor="anesthesiaType" className={labelClasses}>
-              Tipo de Anestesia
+              {t('fields.anesthesiaType')}
             </label>
             <select
               id="anesthesiaType"
@@ -203,7 +203,7 @@ export const SurgeryForm: React.FC<SurgeryFormProps> = ({
           {/* Duration Hours */}
           <div>
             <label htmlFor="durationHours" className={labelClasses}>
-              Duración (horas)
+              {t('fields.durationHours')}
             </label>
             <input
               type="number"
@@ -211,7 +211,7 @@ export const SurgeryForm: React.FC<SurgeryFormProps> = ({
               value={formData.durationHours || ''}
               onChange={(e) => handleInputChange('durationHours', e.target.value ? parseInt(e.target.value) : undefined)}
               className={fieldClasses('durationHours')}
-              placeholder="Ej: 2"
+              placeholder={t('placeholders.durationHours')}
               min="0"
               max="24"
               step="1"
@@ -230,14 +230,14 @@ export const SurgeryForm: React.FC<SurgeryFormProps> = ({
         {/* Notes */}
         <div>
           <label htmlFor="notes" className={labelClasses}>
-            Notas Adicionales
+            {t('fields.notes')}
           </label>
           <textarea
             id="notes"
             value={formData.notes || ''}
             onChange={(e) => handleInputChange('notes', e.target.value)}
             className={fieldClasses('notes')}
-            placeholder="Información adicional sobre la cirugía, preparativos, recuperación..."
+            placeholder={t('placeholders.notes')}
             rows={3}
             disabled={isFormLoading}
             data-testid={`${testId}-notes`}
@@ -253,14 +253,14 @@ export const SurgeryForm: React.FC<SurgeryFormProps> = ({
         {/* Complications */}
         <div>
           <label htmlFor="complications" className={labelClasses}>
-            Complicaciones
+            {t('fields.complications')}
           </label>
           <textarea
             id="complications"
             value={formData.complications || ''}
             onChange={(e) => handleInputChange('complications', e.target.value)}
             className={fieldClasses('complications')}
-            placeholder="Describe cualquier complicación que haya surgido durante o después de la cirugía..."
+            placeholder={t('placeholders.complications')}
             rows={3}
             disabled={isFormLoading}
             data-testid={`${testId}-complications`}
@@ -282,7 +282,7 @@ export const SurgeryForm: React.FC<SurgeryFormProps> = ({
             className="px-4 py-2 text-sm font-medium text-vitalgo-dark bg-white border border-vitalgo-dark-lighter rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-vitalgo-green disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150"
             data-testid={`${testId}-cancel`}
           >
-            Cancelar
+            {t('actions.cancel')}
           </button>
           <button
             type="submit"
@@ -296,7 +296,7 @@ export const SurgeryForm: React.FC<SurgeryFormProps> = ({
                 <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>
             )}
-            {mode === 'edit' ? 'Actualizar' : 'Guardar'} Cirugía
+            {t(mode === 'edit' ? 'actions.update' : 'actions.save')}
           </button>
         </div>
       </form>

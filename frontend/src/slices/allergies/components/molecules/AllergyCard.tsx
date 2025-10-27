@@ -5,37 +5,28 @@
 'use client';
 
 import React from 'react';
+import { useTranslations, useLocale } from 'next-intl';
 import { AllergyCardProps } from '../../types';
 import { AllergyIcon } from '../atoms/AllergyIcon';
 import { SeverityBadge } from '../atoms/SeverityBadge';
-import { formatDateShort } from '../../../medications/utils/medicationHelpers';
 
 // Helper function to format dates
-const formatDate = (dateString?: string): string => {
-  if (!dateString) return 'No especificada';
-
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  } catch {
-    return 'Fecha inválida';
-  }
+const formatDate = (dateString: string, locale: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString(locale, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
 };
 
-// Helper function to create allergy summary
-const getAllergySummary = (allergy: any): string => {
-  const parts = [];
-  if (allergy.reactionDescription) {
-    parts.push(`Reacción: ${allergy.reactionDescription.substring(0, 50)}${allergy.reactionDescription.length > 50 ? '...' : ''}`);
-  }
-  if (allergy.diagnosisDate) {
-    parts.push(`Diagnóstico: ${formatDate(allergy.diagnosisDate)}`);
-  }
-  return parts.join(' • ') || 'Sin detalles adicionales';
+const formatDateShort = (dateString: string, locale: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString(locale, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
 };
 
 export const AllergyCard: React.FC<AllergyCardProps> = ({
@@ -46,6 +37,21 @@ export const AllergyCard: React.FC<AllergyCardProps> = ({
   compact = false,
   'data-testid': testId
 }) => {
+  const t = useTranslations('allergies.card');
+  const locale = useLocale();
+
+  // Helper function to create allergy summary with translations
+  const getAllergySummary = (allergy: any): string => {
+    const parts = [];
+    if (allergy.reactionDescription) {
+      parts.push(`${t('labels.reaction')}: ${allergy.reactionDescription.substring(0, 50)}${allergy.reactionDescription.length > 50 ? '...' : ''}`);
+    }
+    if (allergy.diagnosisDate) {
+      parts.push(`${t('labels.diagnosed')}: ${formatDate(allergy.diagnosisDate, locale)}`);
+    }
+    return parts.join(' • ') || t('emptyStates.noDetails');
+  };
+
   const cardClasses = `
     bg-white rounded-xl border border-vitalgo-dark-lightest p-4
     hover:shadow-md transition-shadow duration-200
@@ -114,7 +120,7 @@ export const AllergyCard: React.FC<AllergyCardProps> = ({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <span className={metadataClasses}>
-                  Diagnóstico: {formatDate(allergy.diagnosisDate)}
+                  {t('labels.diagnosed')}: {formatDate(allergy.diagnosisDate, locale)}
                 </span>
               </div>
             )}
@@ -126,7 +132,7 @@ export const AllergyCard: React.FC<AllergyCardProps> = ({
       {allergy.notes && !compact && (
         <div className="mb-3">
           <p className={`${subtitleClasses} line-clamp-2`} title={allergy.notes}>
-            <span className="font-medium">Notas:</span> {allergy.notes}
+            <span className="font-medium">{t('labels.notes')}:</span> {allergy.notes}
           </p>
         </div>
       )}
@@ -139,7 +145,7 @@ export const AllergyCard: React.FC<AllergyCardProps> = ({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <span className={metadataClasses}>
-            Actualizado: {formatDateShort(allergy.updatedAt)}
+            {t('labels.updated')}: {formatDateShort(allergy.updatedAt, locale)}
           </span>
         </div>
 
@@ -155,7 +161,7 @@ export const AllergyCard: React.FC<AllergyCardProps> = ({
                 <svg className="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
-                Editar
+                {t('actions.edit')}
               </button>
             )}
             {onDelete && (
@@ -167,7 +173,7 @@ export const AllergyCard: React.FC<AllergyCardProps> = ({
                 <svg className="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
-                Eliminar
+                {t('actions.delete')}
               </button>
             )}
           </div>

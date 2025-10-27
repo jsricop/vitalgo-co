@@ -123,6 +123,14 @@
       "emailExists": "Este correo electrónico ya está registrado",
       "weakPassword": "La contraseña debe tener al menos 8 caracteres",
       "mustAcceptTerms": "Debes aceptar los términos y condiciones"
+    },
+    "page": {
+      "title": "Registro de Paciente",
+      "subtitle": "Crea tu cuenta para acceder a tus expedientes médicos digitales",
+      "successMessage": "¡Cuenta creada exitosamente!",
+      "autoLoginMessage": "Te estamos iniciando sesión automáticamente...",
+      "backToHome": "Volver al inicio",
+      "benefits": "Al registrarte, podrás acceder de forma segura a tus expedientes médicos, compartir información con profesionales de la salud autorizados y gestionar tu historial médico digital."
     }
   },
   "dashboard": {
@@ -737,6 +745,66 @@
     },
     "errors": {
       "loadFailed": "Error al cargar medicamentos"
+    },
+    "form": {
+      "title": {
+        "create": "Agregar Medicamento",
+        "edit": "Editar Medicamento"
+      },
+      "subtitle": {
+        "create": "Completa la información del nuevo medicamento",
+        "edit": "Actualiza la información del medicamento"
+      },
+      "fields": {
+        "medicationName": "Nombre del Medicamento",
+        "dosage": "Dosis",
+        "frequency": "Frecuencia",
+        "startDate": "Fecha de Inicio",
+        "endDate": "Fecha de Fin",
+        "prescribedBy": "Doctor que Prescribe",
+        "isActive": "Medicamento activo",
+        "notes": "Notas Adicionales"
+      },
+      "placeholders": {
+        "medicationName": "Ej: Paracetamol",
+        "dosage": "Ej: 500mg",
+        "frequency": "Ej: Cada 8 horas",
+        "prescribedBy": "Ej: Dr. Juan Pérez",
+        "notes": "Información adicional sobre el medicamento..."
+      },
+      "helpers": {
+        "endDate": "Opcional. Deja vacío si es un tratamiento indefinido.",
+        "isActive": "Los medicamentos inactivos no aparecerán en los resúmenes principales.",
+        "charactersCount": "{count}/1000 caracteres"
+      },
+      "actions": {
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "update": "Actualizar",
+        "saving": "Guardando..."
+      },
+      "validation": {
+        "errorTitle": "Por favor corrige los siguientes errores:"
+      }
+    },
+    "card": {
+      "labels": {
+        "prescribed": "Prescrito por",
+        "start": "Inicio",
+        "end": "Fin",
+        "updated": "Actualizado"
+      },
+      "actions": {
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "activate": "Activar",
+        "deactivate": "Desactivar"
+      },
+      "emptyStates": {
+        "noDate": "No especificada",
+        "invalidDate": "Fecha inválida",
+        "noDetails": "Sin detalles adicionales"
+      }
     }
   },
   "allergies": {
@@ -817,6 +885,58 @@
     },
     "errors": {
       "loadFailed": "Error al cargar alergias"
+    },
+    "form": {
+      "title": {
+        "create": "Agregar Alergia",
+        "edit": "Editar Alergia"
+      },
+      "subtitle": {
+        "create": "Completa la información de la nueva alergia",
+        "edit": "Actualiza la información de la alergia"
+      },
+      "fields": {
+        "allergen": "Alérgeno",
+        "severityLevel": "Nivel de Severidad",
+        "reactionDescription": "Descripción de la Reacción",
+        "diagnosisDate": "Fecha de Diagnóstico",
+        "notes": "Notas Adicionales"
+      },
+      "placeholders": {
+        "allergen": "Ej: Polen, Nueces, Penicilina",
+        "reactionDescription": "Describe los síntomas o reacciones que experimentas...",
+        "notes": "Información adicional, tratamientos, precauciones..."
+      },
+      "options": {
+        "severityLevels": {
+          "leve": "Leve",
+          "moderada": "Moderada",
+          "severa": "Severa",
+          "critica": "Crítica"
+        }
+      },
+      "actions": {
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "update": "Actualizar",
+        "saving": "Guardando..."
+      }
+    },
+    "card": {
+      "labels": {
+        "diagnosis": "Diagnóstico",
+        "notes": "Notas",
+        "updated": "Actualizado"
+      },
+      "actions": {
+        "edit": "Editar",
+        "delete": "Eliminar"
+      },
+      "emptyStates": {
+        "noDate": "No especificada",
+        "invalidDate": "Fecha inválida",
+        "noDetails": "Sin detalles adicionales"
+      }
     }
   },
   "illnesses": {
@@ -903,6 +1023,59 @@
     },
     "errors": {
       "loadFailed": "Error al cargar enfermedades"
+    },
+    "form": {
+      "title": {
+        "create": "Agregar Enfermedad",
+        "edit": "Editar Enfermedad"
+      },
+      "subtitle": {
+        "create": "Completa la información de la nueva enfermedad",
+        "edit": "Actualiza la información de la enfermedad"
+      },
+      "fields": {
+        "illnessName": "Nombre de la Enfermedad",
+        "diagnosisDate": "Fecha de Diagnóstico",
+        "status": "Estado",
+        "isChronic": "Condición crónica",
+        "cie10Code": "Código CIE-10",
+        "diagnosedBy": "Diagnosticado por",
+        "treatmentDescription": "Descripción del Tratamiento",
+        "notes": "Notas Adicionales"
+      },
+      "placeholders": {
+        "illnessName": "Ej: Hipertensión arterial",
+        "cie10Code": "Ej: I10",
+        "diagnosedBy": "Dr. Juan Pérez",
+        "treatmentDescription": "Descripción del tratamiento actual...",
+        "notes": "Notas adicionales sobre la enfermedad..."
+      },
+      "actions": {
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "update": "Actualizar",
+        "saving": "Guardando..."
+      }
+    },
+    "card": {
+      "labels": {
+        "diagnosed": "Diagnosticada",
+        "diagnosedBy": "Diagnosticado por",
+        "treatment": "Tratamiento",
+        "cie10": "CIE-10",
+        "updated": "Actualizado"
+      },
+      "actions": {
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "markAsCured": "Marcar como curada",
+        "markAsActive": "Marcar como activa"
+      },
+      "emptyStates": {
+        "noDate": "No especificada",
+        "invalidDate": "Fecha inválida",
+        "noDetails": "Sin detalles adicionales"
+      }
     }
   },
   "surgeries": {
@@ -986,6 +1159,70 @@
     },
     "errors": {
       "loadFailed": "Error al cargar cirugías"
+    },
+    "form": {
+      "title": {
+        "create": "Agregar Cirugía",
+        "edit": "Editar Cirugía"
+      },
+      "subtitle": {
+        "create": "Completa la información de la nueva cirugía",
+        "edit": "Actualiza la información de la cirugía"
+      },
+      "fields": {
+        "procedureName": "Nombre del Procedimiento",
+        "surgeryDate": "Fecha de la Cirugía",
+        "hospitalName": "Hospital o Clínica",
+        "surgeonName": "Nombre del Cirujano",
+        "anesthesiaType": "Tipo de Anestesia",
+        "durationHours": "Duración (horas)",
+        "notes": "Notas Adicionales",
+        "complications": "Complicaciones"
+      },
+      "placeholders": {
+        "procedureName": "Ej: Apendicectomía, Cirugía de Vesícula Biliar",
+        "hospitalName": "Ej: Hospital Central",
+        "surgeonName": "Ej: Dr. Juan Pérez",
+        "durationHours": "Ej: 2",
+        "notes": "Información adicional sobre la cirugía, preparativos, recuperación...",
+        "complications": "Describe cualquier complicación que haya surgido durante o después de la cirugía..."
+      },
+      "options": {
+        "anesthesiaTypes": {
+          "": "No especificado",
+          "general": "Anestesia General",
+          "local": "Anestesia Local",
+          "regional": "Anestesia Regional",
+          "spinal": "Anestesia Espinal",
+          "epidural": "Anestesia Epidural",
+          "conscious_sedation": "Sedación Consciente",
+          "other": "Otro"
+        }
+      },
+      "actions": {
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "update": "Actualizar",
+        "saving": "Guardando..."
+      }
+    },
+    "card": {
+      "labels": {
+        "doctor": "Dr.",
+        "duration": "de duración",
+        "notes": "Notas",
+        "complications": "Complicaciones",
+        "updated": "Actualizado"
+      },
+      "actions": {
+        "edit": "Editar",
+        "delete": "Eliminar"
+      },
+      "emptyStates": {
+        "noDate": "No especificada",
+        "invalidDate": "Fecha inválida",
+        "noDetails": "Sin detalles adicionales"
+      }
     }
   },
   "qr": {
