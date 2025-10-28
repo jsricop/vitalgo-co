@@ -115,20 +115,20 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
           <div className="text-xs text-gray-600 space-y-1">
             <p>La contraseña debe tener:</p>
             <ul className="space-y-0.5 ml-2">
-              <li className={value.length >= 8 ? 'text-vitalgo-green' : 'text-gray-400'}>
+              <li className={value.length >= 8 ? 'text-vitalgo-green' : 'text-red-500'}>
                 • Mínimo 8 caracteres
               </li>
-              <li className={/[A-Z]/.test(value) ? 'text-vitalgo-green' : 'text-gray-400'}>
+              <li className={/[A-Z]/.test(value) ? 'text-vitalgo-green' : 'text-red-500'}>
                 • Una letra mayúscula
               </li>
-              <li className={/[a-z]/.test(value) ? 'text-vitalgo-green' : 'text-gray-400'}>
+              <li className={/[a-z]/.test(value) ? 'text-vitalgo-green' : 'text-red-500'}>
                 • Una letra minúscula
               </li>
-              <li className={/\d/.test(value) ? 'text-vitalgo-green' : 'text-gray-400'}>
+              <li className={/\d/.test(value) ? 'text-vitalgo-green' : 'text-red-500'}>
                 • Un número
               </li>
-              <li className={/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(value) ? 'text-vitalgo-green' : 'text-gray-400'}>
-                • Un carácter especial
+              <li className={/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(value) ? 'text-vitalgo-green' : 'text-red-500'}>
+                • Un carácter especial (ej: !@#$%&*)
               </li>
             </ul>
           </div>

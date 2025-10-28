@@ -5,39 +5,27 @@
 'use client';
 
 import React from 'react';
+import { useTranslations, useLocale } from 'next-intl';
 import { SurgeryCardProps } from '../../types';
 import { SurgeryIcon } from '../atoms/SurgeryIcon';
-import { formatDateShort } from '../../utils/surgeryHelpers';
 
-// Helper function to format dates
-const formatDate = (dateString?: string): string => {
-  if (!dateString) return 'No especificada';
-
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  } catch {
-    return 'Fecha inválida';
-  }
+// Helper functions
+const formatDate = (dateString: string, locale: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString(locale, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
 };
 
-// Helper function to create surgery summary
-const getSurgerySummary = (surgery: any): string => {
-  const parts = [];
-  if (surgery.hospitalName) {
-    parts.push(`Hospital: ${surgery.hospitalName}`);
-  }
-  if (surgery.surgeonName) {
-    parts.push(`Cirujano: ${surgery.surgeonName}`);
-  }
-  if (surgery.durationHours) {
-    parts.push(`Duración: ${surgery.durationHours}h`);
-  }
-  return parts.join(' • ') || 'Sin detalles adicionales';
+const formatDateShort = (dateString: string, locale: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString(locale, {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  });
 };
 
 export const SurgeryCard: React.FC<SurgeryCardProps> = ({
@@ -48,6 +36,24 @@ export const SurgeryCard: React.FC<SurgeryCardProps> = ({
   compact = false,
   'data-testid': testId
 }) => {
+  const t = useTranslations('surgeries.card');
+  const locale = useLocale();
+
+  // Helper function to create surgery summary with translations
+  const getSurgerySummary = (surgery: any): string => {
+    const parts = [];
+    if (surgery.hospitalName) {
+      parts.push(`${t('labels.hospital')}: ${surgery.hospitalName}`);
+    }
+    if (surgery.surgeonName) {
+      parts.push(`${t('labels.surgeon')}: ${surgery.surgeonName}`);
+    }
+    if (surgery.durationHours) {
+      parts.push(`${t('labels.duration')}: ${surgery.durationHours}h`);
+    }
+    return parts.join(' • ') || t('emptyStates.noDetails');
+  };
+
   const cardClasses = `
     bg-white rounded-xl border border-vitalgo-dark-lightest p-4
     hover:shadow-md transition-shadow duration-200
@@ -89,7 +95,7 @@ export const SurgeryCard: React.FC<SurgeryCardProps> = ({
               {surgery.procedureName}
             </h3>
             <p className={`${subtitleClasses} mt-1`}>
-              {formatDate(surgery.surgeryDate)}
+              {formatDate(surgery.surgeryDate, locale)}
               {surgery.hospitalName && ` • ${surgery.hospitalName}`}
             </p>
           </div>
@@ -106,7 +112,7 @@ export const SurgeryCard: React.FC<SurgeryCardProps> = ({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
                 <span className={metadataClasses}>
-                  Dr. {surgery.surgeonName}
+                  {t('labels.doctor')} {surgery.surgeonName}
                 </span>
               </div>
             )}
@@ -126,7 +132,7 @@ export const SurgeryCard: React.FC<SurgeryCardProps> = ({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span className={metadataClasses}>
-                  {surgery.durationHours}h de duración
+                  {surgery.durationHours}h {t('labels.durationSuffix')}
                 </span>
               </div>
             )}
@@ -138,7 +144,7 @@ export const SurgeryCard: React.FC<SurgeryCardProps> = ({
       {surgery.notes && !compact && (
         <div className="mb-3">
           <p className={`${subtitleClasses} line-clamp-2`} title={surgery.notes}>
-            <span className="font-medium">Notas:</span> {surgery.notes}
+            <span className="font-medium">{t('labels.notes')}:</span> {surgery.notes}
           </p>
         </div>
       )}
@@ -147,7 +153,7 @@ export const SurgeryCard: React.FC<SurgeryCardProps> = ({
       {surgery.complications && !compact && (
         <div className="mb-3 p-2 bg-red-50 border border-red-200 rounded-lg">
           <p className={`${subtitleClasses} line-clamp-2 text-red-700`} title={surgery.complications}>
-            <span className="font-medium">Complicaciones:</span> {surgery.complications}
+            <span className="font-medium">{t('labels.complications')}:</span> {surgery.complications}
           </p>
         </div>
       )}
@@ -160,7 +166,7 @@ export const SurgeryCard: React.FC<SurgeryCardProps> = ({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <span className={metadataClasses}>
-            Actualizado: {formatDateShort(surgery.updatedAt)}
+            {t('labels.updated')}: {formatDateShort(surgery.updatedAt, locale)}
           </span>
         </div>
 
@@ -176,7 +182,7 @@ export const SurgeryCard: React.FC<SurgeryCardProps> = ({
                 <svg className="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
-                Editar
+                {t('actions.edit')}
               </button>
             )}
             {onDelete && (
@@ -188,7 +194,7 @@ export const SurgeryCard: React.FC<SurgeryCardProps> = ({
                 <svg className="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
-                Eliminar
+                {t('actions.delete')}
               </button>
             )}
           </div>

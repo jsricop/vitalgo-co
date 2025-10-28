@@ -5,6 +5,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { IllnessFormProps, ILLNESS_STATUS_OPTIONS } from '../../types';
 import { useIllnessForm } from '../../hooks/useIllnessForm';
 
@@ -15,6 +16,8 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
   isLoading = false,
   'data-testid': testId
 }) => {
+  const t = useTranslations('illnesses.form');
+
   const {
     formData,
     errors,
@@ -49,13 +52,10 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
       {/* Header */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold text-vitalgo-dark">
-          {initialData ? 'Editar' : 'Agregar'} Enfermedad
+          {t(initialData ? 'title.edit' : 'title.create')}
         </h3>
         <p className="text-sm text-vitalgo-dark-light mt-1">
-          {initialData
-            ? 'Actualiza la información de la enfermedad'
-            : 'Completa la información de la nueva enfermedad'
-          }
+          {t(initialData ? 'subtitle.edit' : 'subtitle.create')}
         </p>
       </div>
 
@@ -66,7 +66,7 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
           {/* Illness Name */}
           <div>
             <label htmlFor="illnessName" className={labelClasses}>
-              Nombre de la Enfermedad <span className={requiredClasses}>*</span>
+              {t('fields.illnessName')} <span className={requiredClasses}>*</span>
             </label>
             <input
               type="text"
@@ -75,7 +75,7 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
               onChange={(e) => handleChange('illnessName', e.target.value)}
               className={fieldClasses('illnessName')}
               disabled={isFormLoading}
-              placeholder="Ej: Hipertensión arterial"
+              placeholder={t('placeholders.illnessName')}
               data-testid={`${testId}-illness-name`}
               style={{ fontSize: '16px' }}
               autoComplete="off"
@@ -88,7 +88,7 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
           {/* Diagnosis Date */}
           <div>
             <label htmlFor="diagnosisDate" className={labelClasses}>
-              Fecha de Diagnóstico <span className={requiredClasses}>*</span>
+              {t('fields.diagnosisDate')} <span className={requiredClasses}>*</span>
             </label>
             <input
               type="date"
@@ -112,7 +112,7 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
           {/* Status */}
           <div>
             <label htmlFor="status" className={labelClasses}>
-              Estado <span className={requiredClasses}>*</span>
+              {t('fields.status')} <span className={requiredClasses}>*</span>
             </label>
             <select
               id="status"
@@ -146,7 +146,7 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
               data-testid={`${testId}-is-chronic`}
             />
             <label htmlFor="isChronic" className="ml-2 text-sm text-gray-700">
-              Condición crónica
+              {t('fields.isChronic')}
             </label>
           </div>
         </div>
@@ -156,7 +156,7 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
           {/* CIE-10 Code */}
           <div>
             <label htmlFor="cie10Code" className={labelClasses}>
-              Código CIE-10
+              {t('fields.cie10Code')}
             </label>
             <input
               type="text"
@@ -165,7 +165,7 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
               onChange={(e) => handleChange('cie10Code', e.target.value)}
               className={fieldClasses('cie10Code')}
               disabled={isFormLoading}
-              placeholder="Ej: I10"
+              placeholder={t('placeholders.cie10Code')}
               maxLength={10}
               data-testid={`${testId}-cie10-code`}
               style={{ fontSize: '16px' }}
@@ -179,7 +179,7 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
           {/* Diagnosed By */}
           <div>
             <label htmlFor="diagnosedBy" className={labelClasses}>
-              Diagnosticado por
+              {t('fields.diagnosedBy')}
             </label>
             <input
               type="text"
@@ -188,7 +188,7 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
               onChange={(e) => handleChange('diagnosedBy', e.target.value)}
               className={fieldClasses('diagnosedBy')}
               disabled={isFormLoading}
-              placeholder="Dr. Juan Pérez"
+              placeholder={t('placeholders.diagnosedBy')}
               data-testid={`${testId}-diagnosed-by`}
               style={{ fontSize: '16px' }}
               autoComplete="off"
@@ -202,7 +202,7 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
         {/* Treatment Description */}
         <div>
           <label htmlFor="treatmentDescription" className={labelClasses}>
-            Descripción del Tratamiento
+            {t('fields.treatmentDescription')}
           </label>
           <textarea
             id="treatmentDescription"
@@ -211,7 +211,7 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
             className={`${fieldClasses('treatmentDescription')} resize-none`}
             rows={3}
             disabled={isFormLoading}
-            placeholder="Descripción del tratamiento actual..."
+            placeholder={t('placeholders.treatmentDescription')}
             data-testid={`${testId}-treatment-description`}
             style={{ fontSize: '16px' }}
           />
@@ -220,7 +220,7 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
         {/* Notes */}
         <div>
           <label htmlFor="notes" className={labelClasses}>
-            Notas Adicionales
+            {t('fields.notes')}
           </label>
           <textarea
             id="notes"
@@ -229,7 +229,7 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
             className={`${fieldClasses('notes')} resize-none`}
             rows={3}
             disabled={isFormLoading}
-            placeholder="Notas adicionales sobre la enfermedad..."
+            placeholder={t('placeholders.notes')}
             data-testid={`${testId}-notes`}
             style={{ fontSize: '16px' }}
           />
@@ -244,7 +244,7 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
             className="px-4 py-2 text-sm font-medium text-vitalgo-dark bg-white border border-vitalgo-dark-lighter rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-vitalgo-green disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150"
             data-testid={`${testId}-cancel-button`}
           >
-            Cancelar
+            {t('actions.cancel')}
           </button>
           <button
             type="submit"
@@ -258,7 +258,7 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
                 <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>
             )}
-            {initialData ? 'Actualizar' : 'Guardar'} Enfermedad
+            {t(initialData ? 'actions.update' : 'actions.save')}
           </button>
         </div>
       </form>

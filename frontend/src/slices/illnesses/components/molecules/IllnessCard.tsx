@@ -6,33 +6,26 @@
 'use client';
 
 import React from 'react';
+import { useTranslations, useLocale } from 'next-intl';
 import { IllnessCardProps } from '../../types';
 import { IllnessIcon } from '../atoms/IllnessIcon';
 import { IllnessStatus } from '../atoms/IllnessStatus';
 
 // Helper functions
-const formatDate = (dateString: string): string => {
-  return new Date(dateString).toLocaleDateString('es-ES', {
+const formatDate = (dateString: string, locale: string): string => {
+  return new Date(dateString).toLocaleDateString(locale, {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
   });
 };
 
-const formatDateShort = (dateString: string): string => {
-  return new Date(dateString).toLocaleDateString('es-ES', {
+const formatDateShort = (dateString: string, locale: string): string => {
+  return new Date(dateString).toLocaleDateString(locale, {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
   });
-};
-
-const getIllnessSummary = (illness: any): string => {
-  const parts = [];
-  if (illness.diagnosedBy) parts.push(`Diagnosticado por ${illness.diagnosedBy}`);
-  if (illness.cie10Code) parts.push(`CIE-10: ${illness.cie10Code}`);
-  if (illness.treatmentDescription) parts.push(illness.treatmentDescription);
-  return parts.join(' • ') || 'Sin detalles adicionales';
 };
 
 export const IllnessCard: React.FC<IllnessCardProps> = ({
@@ -44,6 +37,18 @@ export const IllnessCard: React.FC<IllnessCardProps> = ({
   compact = false,
   'data-testid': testId
 }) => {
+  const t = useTranslations('illnesses.card');
+  const locale = useLocale();
+
+  // Helper function for getting illness summary with translations
+  const getIllnessSummary = (illness: any): string => {
+    const parts = [];
+    if (illness.diagnosedBy) parts.push(`${t('labels.diagnosedBy')} ${illness.diagnosedBy}`);
+    if (illness.cie10Code) parts.push(`${t('labels.cie10')}: ${illness.cie10Code}`);
+    if (illness.treatmentDescription) parts.push(illness.treatmentDescription);
+    return parts.join(' • ') || t('emptyStates.noDetails');
+  };
+
   const cardClasses = `
     bg-white rounded-xl border border-vitalgo-dark-lightest p-4
     hover:shadow-md transition-shadow duration-200
@@ -85,11 +90,11 @@ export const IllnessCard: React.FC<IllnessCardProps> = ({
               {illness.illnessName}
             </h3>
             <p className={`${subtitleClasses} mt-1`}>
-              Diagnosticada: {formatDate(illness.diagnosisDate)}
+              {t('labels.diagnosed')}: {formatDate(illness.diagnosisDate, locale)}
             </p>
             {illness.diagnosedBy && !compact && (
               <p className={`${metadataClasses} mt-1`}>
-                Diagnosticado por: {illness.diagnosedBy}
+                {t('labels.diagnosedBy')}: {illness.diagnosedBy}
               </p>
             )}
           </div>
@@ -109,7 +114,7 @@ export const IllnessCard: React.FC<IllnessCardProps> = ({
       {!compact && illness.treatmentDescription && (
         <div className="mb-3">
           <p className={`${subtitleClasses} line-clamp-2`} title={illness.treatmentDescription}>
-            <span className="font-medium">Tratamiento:</span> {illness.treatmentDescription}
+            <span className="font-medium">{t('labels.treatment')}:</span> {illness.treatmentDescription}
           </p>
         </div>
       )}
@@ -122,7 +127,7 @@ export const IllnessCard: React.FC<IllnessCardProps> = ({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <span className={metadataClasses}>
-              CIE-10: {illness.cie10Code}
+              {t('labels.cie10')}: {illness.cie10Code}
             </span>
           </div>
         </div>
@@ -145,7 +150,7 @@ export const IllnessCard: React.FC<IllnessCardProps> = ({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <span className={metadataClasses}>
-            Actualizado: {formatDateShort(illness.updatedAt)}
+            {t('labels.updated')}: {formatDateShort(illness.updatedAt, locale)}
           </span>
         </div>
 
@@ -161,7 +166,7 @@ export const IllnessCard: React.FC<IllnessCardProps> = ({
                 <svg className="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
-                Editar
+                {t('actions.edit')}
               </button>
             )}
             {onToggleCured && (
@@ -173,7 +178,7 @@ export const IllnessCard: React.FC<IllnessCardProps> = ({
                 <svg className="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                {illness.status === 'curada' ? 'Marcar Activa' : 'Marcar Curada'}
+                {illness.status === 'curada' ? t('actions.markAsActive') : t('actions.markAsCured')}
               </button>
             )}
             {onDelete && (
@@ -185,7 +190,7 @@ export const IllnessCard: React.FC<IllnessCardProps> = ({
                 <svg className="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
-                Eliminar
+                {t('actions.delete')}
               </button>
             )}
           </div>

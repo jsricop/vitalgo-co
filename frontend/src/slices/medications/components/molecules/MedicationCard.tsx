@@ -5,10 +5,29 @@
 'use client';
 
 import React from 'react';
+import { useTranslations, useLocale } from 'next-intl';
 import { MedicationCardProps } from '../../types';
 import { MedicationIcon } from '../atoms/MedicationIcon';
 import { MedicationStatus } from '../atoms/MedicationStatus';
-import { formatDate, formatDateShort, formatDosage, formatFrequency, getMedicationSummary } from '../../utils/medicationHelpers';
+
+// Helper functions
+const formatDate = (dateString: string, locale: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString(locale, {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
+};
+
+const formatDateShort = (dateString: string, locale: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString(locale, {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  });
+};
 
 export const MedicationCard: React.FC<MedicationCardProps> = ({
   medication,
@@ -19,6 +38,19 @@ export const MedicationCard: React.FC<MedicationCardProps> = ({
   compact = false,
   'data-testid': testId
 }) => {
+  const t = useTranslations('medications.card');
+  const locale = useLocale();
+
+  // Helper function for getting medication summary with translations
+  const getMedicationSummary = (medication: any): string => {
+    const parts = [
+      medication.medicationName,
+      medication.dosage,
+      medication.frequency
+    ];
+    return parts.filter(Boolean).join(' - ');
+  };
+
   const cardClasses = `
     bg-white rounded-xl border border-vitalgo-dark-lightest p-4
     hover:shadow-md transition-shadow duration-200
@@ -60,11 +92,11 @@ export const MedicationCard: React.FC<MedicationCardProps> = ({
               {medication.medicationName}
             </h3>
             <p className={`${subtitleClasses} mt-1`}>
-              {formatDosage(medication.dosage)} • {formatFrequency(medication.frequency)}
+              {medication.dosage} • {medication.frequency}
             </p>
             {medication.prescribedBy && !compact && (
               <p className={`${metadataClasses} mt-1`}>
-                Prescrito por: {medication.prescribedBy}
+                {t('labels.prescribedBy')}: {medication.prescribedBy}
               </p>
             )}
           </div>
@@ -89,7 +121,7 @@ export const MedicationCard: React.FC<MedicationCardProps> = ({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
               <span className={metadataClasses}>
-                Inicio: {formatDate(medication.startDate)}
+                {t('labels.startDate')}: {formatDate(medication.startDate, locale)}
               </span>
             </div>
             {medication.endDate && (
@@ -98,7 +130,7 @@ export const MedicationCard: React.FC<MedicationCardProps> = ({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <span className={metadataClasses}>
-                  Fin: {formatDate(medication.endDate)}
+                  {t('labels.endDate')}: {formatDate(medication.endDate, locale)}
                 </span>
               </div>
             )}
@@ -123,7 +155,7 @@ export const MedicationCard: React.FC<MedicationCardProps> = ({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <span className={metadataClasses}>
-            Actualizado: {formatDateShort(medication.updatedAt)}
+            {t('labels.updated')}: {formatDateShort(medication.updatedAt, locale)}
           </span>
         </div>
 
@@ -139,7 +171,7 @@ export const MedicationCard: React.FC<MedicationCardProps> = ({
                 <svg className="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
-                Editar
+                {t('actions.edit')}
               </button>
             )}
             {onToggleActive && (
@@ -159,7 +191,7 @@ export const MedicationCard: React.FC<MedicationCardProps> = ({
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   )}
                 </svg>
-                {medication.isActive ? 'Desactivar' : 'Activar'}
+                {medication.isActive ? t('actions.deactivate') : t('actions.activate')}
               </button>
             )}
             {onDelete && (
@@ -171,7 +203,7 @@ export const MedicationCard: React.FC<MedicationCardProps> = ({
                 <svg className="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
-                Eliminar
+                {t('actions.delete')}
               </button>
             )}
           </div>

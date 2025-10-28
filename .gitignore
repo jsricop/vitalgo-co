@@ -156,3 +156,9 @@ CLEANUP_VIRGINIA_INFRASTRUCTURE.md
 *DATA_SYNC*.txt
 *VERIFICATION*.txt
 *FINAL_DATA*.txt
+
+
+
+backend/generate_password_hash.py
+backend/seed_test_data.sql
+backend/test_login.sh

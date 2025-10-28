@@ -5,6 +5,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { MedicationFormProps } from '../../types';
 import { useMedicationForm } from '../../hooks/useMedicationForm';
 
@@ -16,6 +17,8 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
   mode = 'create',
   'data-testid': testId
 }) => {
+  const t = useTranslations('medications.form');
+
   const {
     formData,
     errors,
@@ -51,13 +54,10 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
       {/* Header */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold text-vitalgo-dark">
-          {mode === 'edit' ? 'Editar' : 'Agregar'} Medicamento
+          {t(mode === 'edit' ? 'title.edit' : 'title.create')}
         </h3>
         <p className="text-sm text-vitalgo-dark-light mt-1">
-          {mode === 'edit'
-            ? 'Actualiza la información del medicamento'
-            : 'Completa la información del nuevo medicamento'
-          }
+          {t(mode === 'edit' ? 'subtitle.edit' : 'subtitle.create')}
         </p>
       </div>
 
@@ -65,7 +65,7 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
         {/* Medication Name */}
         <div>
           <label htmlFor="medicationName" className={labelClasses}>
-            Nombre del Medicamento <span className={requiredClasses}>*</span>
+            {t('fields.medicationName')} <span className={requiredClasses}>*</span>
           </label>
           <input
             type="text"
@@ -73,7 +73,7 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
             value={formData.medicationName}
             onChange={(e) => handleInputChange('medicationName', e.target.value)}
             className={fieldClasses('medicationName')}
-            placeholder="Ej: Paracetamol"
+            placeholder={t('placeholders.medicationName')}
             disabled={isFormLoading}
             data-testid={`${testId}-medication-name`}
             style={{ fontSize: '16px' }} // Prevents iOS zoom
@@ -91,7 +91,7 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
           {/* Dosage */}
           <div>
             <label htmlFor="dosage" className={labelClasses}>
-              Dosis <span className={requiredClasses}>*</span>
+              {t('fields.dosage')} <span className={requiredClasses}>*</span>
             </label>
             <input
               type="text"
@@ -99,7 +99,7 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
               value={formData.dosage}
               onChange={(e) => handleInputChange('dosage', e.target.value)}
               className={fieldClasses('dosage')}
-              placeholder="Ej: 500mg"
+              placeholder={t('placeholders.dosage')}
               disabled={isFormLoading}
               data-testid={`${testId}-dosage`}
               style={{ fontSize: '16px' }}
@@ -115,7 +115,7 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
           {/* Frequency */}
           <div>
             <label htmlFor="frequency" className={labelClasses}>
-              Frecuencia <span className={requiredClasses}>*</span>
+              {t('fields.frequency')} <span className={requiredClasses}>*</span>
             </label>
             <input
               type="text"
@@ -123,7 +123,7 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
               value={formData.frequency}
               onChange={(e) => handleInputChange('frequency', e.target.value)}
               className={fieldClasses('frequency')}
-              placeholder="Ej: Cada 8 horas"
+              placeholder={t('placeholders.frequency')}
               disabled={isFormLoading}
               data-testid={`${testId}-frequency`}
               style={{ fontSize: '16px' }}
@@ -142,7 +142,7 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
           {/* Start Date */}
           <div>
             <label htmlFor="startDate" className={labelClasses}>
-              Fecha de Inicio <span className={requiredClasses}>*</span>
+              {t('fields.startDate')} <span className={requiredClasses}>*</span>
             </label>
             <input
               type="date"
@@ -164,7 +164,7 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
           {/* End Date */}
           <div>
             <label htmlFor="endDate" className={labelClasses}>
-              Fecha de Fin
+              {t('fields.endDate')}
             </label>
             <input
               type="date"
@@ -183,7 +183,7 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
               </p>
             )}
             <p className="mt-1 text-xs text-vitalgo-dark-light">
-              Opcional. Deja vacío si es un tratamiento indefinido.
+              {t('helpers.endDate')}
             </p>
           </div>
         </div>
@@ -191,7 +191,7 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
         {/* Doctor Field */}
         <div>
           <label htmlFor="prescribedBy" className={labelClasses}>
-            Doctor que Prescribe
+            {t('fields.prescribedBy')}
           </label>
           <input
             type="text"
@@ -199,7 +199,7 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
             value={formData.prescribedBy || ''}
             onChange={(e) => handleInputChange('prescribedBy', e.target.value)}
             className={fieldClasses('prescribedBy')}
-            placeholder="Ej: Dr. Juan Pérez"
+            placeholder={t('placeholders.prescribedBy')}
             disabled={isFormLoading}
             data-testid={`${testId}-prescribed-by`}
             style={{ fontSize: '16px' }}
@@ -227,10 +227,10 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
           </div>
           <div className="ml-3">
             <label htmlFor="isActive" className="text-sm text-vitalgo-dark cursor-pointer">
-              Medicamento activo
+              {t('fields.isActive')}
             </label>
             <p className="text-xs text-vitalgo-dark-light">
-              Los medicamentos inactivos no aparecerán en los resúmenes principales.
+              {t('helpers.isActive')}
             </p>
           </div>
         </div>
@@ -238,7 +238,7 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
         {/* Notes Field */}
         <div>
           <label htmlFor="notes" className={labelClasses}>
-            Notas Adicionales
+            {t('fields.notes')}
           </label>
           <textarea
             id="notes"
@@ -246,7 +246,7 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
             onChange={(e) => handleInputChange('notes', e.target.value)}
             rows={3}
             className={`${fieldClasses('notes')} resize-none`}
-            placeholder="Información adicional sobre el medicamento..."
+            placeholder={t('placeholders.notes')}
             disabled={isFormLoading}
             data-testid={`${testId}-notes`}
             style={{ fontSize: '16px' }}
@@ -258,7 +258,7 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
             </p>
           )}
           <p className="mt-1 text-xs text-vitalgo-dark-light">
-            {formData.notes?.length || 0}/1000 caracteres
+            {t('helpers.charactersCount', { count: formData.notes?.length || 0 })}
           </p>
         </div>
 
@@ -271,7 +271,7 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
             className="px-4 py-2 text-sm font-medium text-vitalgo-dark bg-white border border-vitalgo-dark-lighter rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150 h-10 disabled:opacity-50 disabled:cursor-not-allowed"
             data-testid={`${testId}-cancel-button`}
           >
-            Cancelar
+            {t('actions.cancel')}
           </button>
           <button
             type="submit"
@@ -282,10 +282,10 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
             {isFormLoading ? (
               <div className="flex items-center">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                Guardando...
+                {t('actions.saving')}
               </div>
             ) : (
-              mode === 'edit' ? 'Actualizar' : 'Guardar'
+              t(mode === 'edit' ? 'actions.update' : 'actions.save')
             )}
           </button>
         </div>
@@ -299,7 +299,7 @@ export const MedicationForm: React.FC<MedicationFormProps> = ({
               </svg>
               <div className="ml-3">
                 <h4 className="text-sm font-medium text-red-800">
-                  Por favor corrige los siguientes errores:
+                  {t('validation.errorTitle')}
                 </h4>
                 <ul className="mt-2 text-sm text-red-700 list-disc list-inside">
                   {Object.values(errors).map((error, index) => (

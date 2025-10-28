@@ -4,6 +4,7 @@
  * URL: /signup/paciente
  */
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { PatientSignupForm } from '../organisms/PatientSignupForm';
 import { AutoLoginLoader } from '../atoms/AutoLoginLoader';
 import { RegistrationResponse } from '../../types';
@@ -12,6 +13,7 @@ import { MinimalFooter } from '../../../../shared/components/organisms/MinimalFo
 import { LocalStorageService } from '../../../../shared/services/local-storage-service';
 
 export default function PatientSignupPage() {
+  const t = useTranslations('signup.page');
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isAutoLogging, setIsAutoLogging] = useState<boolean>(false);
@@ -19,7 +21,7 @@ export default function PatientSignupPage() {
 
   const handleSuccess = (response: RegistrationResponse) => {
     setErrorMessage('');
-    setSuccessMessage('¡Cuenta creada exitosamente!');
+    setSuccessMessage(t('successMessage'));
     setRegistrationResponse(response);
 
     // Handle auto-login with tokens
@@ -56,7 +58,7 @@ export default function PatientSignupPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Header/Navbar */}
       <MinimalNavbar
-        backText="Volver al inicio"
+        backText={t('backToHome')}
         backUrl="/"
         showLogo={true}
       />
@@ -68,10 +70,10 @@ export default function PatientSignupPage() {
             {/* Page Header */}
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                Registro de Paciente
+                {t('title')}
               </h1>
               <p className="text-gray-600">
-                Crea tu cuenta para acceder a tus expedientes médicos digitales
+                {t('subtitle')}
               </p>
             </div>
 
@@ -99,7 +101,7 @@ export default function PatientSignupPage() {
                 <AutoLoginLoader
                   duration={3}
                   onComplete={handleAutoLoginComplete}
-                  message="Te estamos iniciando sesión automáticamente..."
+                  message={t('autoLoginMessage')}
                 />
               </div>
             )}
@@ -129,9 +131,7 @@ export default function PatientSignupPage() {
           {/* Additional Info */}
           <div className="mt-8 text-center">
             <p className="text-sm text-gray-600">
-              Al registrarte, podrás acceder de forma segura a tus expedientes médicos,
-              compartir información con profesionales de la salud autorizados y
-              gestionar tu historial médico digital.
+              {t('benefits')}
             </p>
           </div>
         </div>
