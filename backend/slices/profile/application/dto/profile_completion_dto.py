@@ -55,8 +55,18 @@ class ExtendedPatientProfileDTO(BaseModel):
     # RF002 Extended mandatory fields - Emergency Contact
     emergency_contact_name: Optional[str] = Field(None, description="Emergency contact name")
     emergency_contact_relationship: Optional[str] = Field(None, description="Emergency contact relationship")
-    emergency_contact_phone: Optional[str] = Field(None, description="Emergency contact phone")
-    emergency_contact_phone_alt: Optional[str] = Field(None, description="Emergency contact alternative phone")
+
+    # Primary emergency phone - new separated structure
+    emergency_contact_phone: Optional[str] = Field(None, description="Emergency contact phone (legacy)")
+    emergency_contact_country_code: Optional[str] = Field(None, description="Emergency contact country code")
+    emergency_contact_dial_code: Optional[str] = Field(None, description="Emergency contact dial code")
+    emergency_contact_phone_number: Optional[str] = Field(None, description="Emergency contact phone number")
+
+    # Alternative emergency phone - new separated structure
+    emergency_contact_phone_alt: Optional[str] = Field(None, description="Emergency contact alternative phone (legacy)")
+    emergency_contact_country_code_alt: Optional[str] = Field(None, description="Emergency contact alternative country code")
+    emergency_contact_dial_code_alt: Optional[str] = Field(None, description="Emergency contact alternative dial code")
+    emergency_contact_phone_number_alt: Optional[str] = Field(None, description="Emergency contact alternative phone number")
 
     # RF002 Gynecological Information Fields - for female patients only
     is_pregnant: Optional[bool] = Field(None, description="Is currently pregnant")

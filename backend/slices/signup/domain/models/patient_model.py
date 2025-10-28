@@ -64,10 +64,22 @@ class Patient(Base):
     complementary_plan = Column(String(100), nullable=True)
     complementary_plan_other = Column(String(100), nullable=True)
     blood_type = Column(String(10), nullable=True)
+
+    # Emergency contact fields
     emergency_contact_name = Column(String(200), nullable=True)
     emergency_contact_relationship = Column(String(50), nullable=True)
-    emergency_contact_phone = Column(String(20), nullable=True)
-    emergency_contact_phone_alt = Column(String(20), nullable=True)
+
+    # Primary emergency phone - new separated structure
+    emergency_contact_country_code = Column(String(2), nullable=True)  # "CO", "US", etc.
+    emergency_contact_dial_code = Column(String(5), nullable=True)     # "+57", "+1", etc.
+    emergency_contact_phone_number = Column(String(15), nullable=True) # "3001234567"
+    emergency_contact_phone = Column(String(20), nullable=True)        # Legacy field
+
+    # Alternative emergency phone - new separated structure
+    emergency_contact_country_code_alt = Column(String(2), nullable=True)
+    emergency_contact_dial_code_alt = Column(String(5), nullable=True)
+    emergency_contact_phone_number_alt = Column(String(15), nullable=True)
+    emergency_contact_phone_alt = Column(String(20), nullable=True)    # Legacy field
 
     # RF002 Gynecological Information Fields - for female patients only
     is_pregnant = Column(Boolean, nullable=True)

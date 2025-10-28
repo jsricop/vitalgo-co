@@ -26,8 +26,18 @@ export interface PersonalPatientInfo {
   blood_type?: string;
   emergency_contact_name?: string;
   emergency_contact_relationship?: string;
+
+  // Primary emergency phone - new separated structure
   emergency_contact_phone?: string;
+  emergency_contact_country_code?: string;
+  emergency_contact_dial_code?: string;
+  emergency_contact_phone_number?: string;
+
+  // Alternative emergency phone - new separated structure
   emergency_contact_phone_alt?: string;
+  emergency_contact_country_code_alt?: string;
+  emergency_contact_dial_code_alt?: string;
+  emergency_contact_phone_number_alt?: string;
 
   // Gynecological Information Fields (RF003)
   is_pregnant?: boolean | null;
@@ -65,8 +75,18 @@ export interface PersonalPatientUpdate {
   blood_type?: string;
   emergency_contact_name?: string;
   emergency_contact_relationship?: string;
+
+  // Primary emergency phone - new separated structure
   emergency_contact_phone?: string;
+  emergency_contact_country_code?: string;
+  emergency_contact_dial_code?: string;
+  emergency_contact_phone_number?: string;
+
+  // Alternative emergency phone - new separated structure
   emergency_contact_phone_alt?: string;
+  emergency_contact_country_code_alt?: string;
+  emergency_contact_dial_code_alt?: string;
+  emergency_contact_phone_number_alt?: string;
 
   // Gynecological Information Fields (RF003)
   is_pregnant?: boolean | null;

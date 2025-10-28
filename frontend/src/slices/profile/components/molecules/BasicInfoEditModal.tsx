@@ -10,6 +10,8 @@ import { BasicPatientInfo, BasicPatientUpdate } from '../../types';
 import { PhoneInputGroup } from '../../../../shared/components/molecules/PhoneInputGroup';
 import { Country, getCountryByCode } from '../../../signup/data/countries';
 import { splitPhoneInternational, combinePhoneInternational } from '../../utils/phoneUtils';
+import { useCountries } from '@/hooks/useCountries';
+import type { Country as APICountry } from '@/services/countriesService';
 
 interface BasicInfoEditModalProps {
   isOpen: boolean;
@@ -33,6 +35,17 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
   const [formData, setFormData] = useState<BasicPatientUpdate>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Load countries from API
+  const { countries: apiCountries, isLoading: countriesLoading, error: countriesError } = useCountries();
+
+  // Convert API countries to format expected by PhoneInputGroup
+  const convertedCountries: Country[] = apiCountries.map((country: APICountry) => ({
+    code: country.code,
+    name: country.name,
+    dialCode: country.phone_code,
+    flag: country.flag_emoji || '',
+  }));
 
   // Phone field states for separated input
   const [phoneCountryCode, setPhoneCountryCode] = useState<string>('CO');
@@ -402,6 +415,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
                   error={errors.phoneInternational}
                   disabled={isFormLoading}
                   data-testid={`${testId}-phone-group`}
+                  countries={convertedCountries.length > 0 ? convertedCountries : undefined}
                 />
               </div>
 
