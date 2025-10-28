@@ -10,13 +10,17 @@ import { PersonalPatientInfo, PersonalPatientUpdate } from '../../types/personal
 import { SelectField } from '../atoms/SelectField';
 import { TextAreaField } from '../atoms/TextAreaField';
 import { RadioButtonField } from '../atoms/RadioButtonField';
+import { PhoneInputGroup } from '../../../../shared/components/molecules/PhoneInputGroup';
+import { Country, getCountryByCode } from '../../../signup/data/countries';
+import { splitPhoneInternational, combinePhoneInternational } from '../../utils/phoneUtils';
+import { useCountries } from '@/hooks/useCountries';
+import type { Country as APICountry } from '@/services/countriesService';
 import {
   epsOptions,
   bloodTypeOptions,
   complementaryPlanOptions,
   emergencyContactRelationshipOptions,
-  isOtherValueRequired,
-  validatePhoneNumber
+  isOtherValueRequired
 } from '../../data/medicalData';
 
 interface MedicalInfoEditModalProps {
@@ -39,8 +43,16 @@ interface MedicalFormData {
   blood_type?: string;
   emergency_contact_name?: string;
   emergency_contact_relationship?: string;
+  // Primary emergency phone
   emergency_contact_phone?: string;
+  emergency_contact_country_code?: string;
+  emergency_contact_dial_code?: string;
+  emergency_contact_phone_number?: string;
+  // Alternative emergency phone
   emergency_contact_phone_alt?: string;
+  emergency_contact_country_code_alt?: string;
+  emergency_contact_dial_code_alt?: string;
+  emergency_contact_phone_number_alt?: string;
 }
 
 export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
@@ -57,6 +69,23 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Load countries from API
+  const { countries: apiCountries, isLoading: countriesLoading, error: countriesError } = useCountries();
+
+  // Convert API countries to format expected by PhoneInputGroup
+  const convertedCountries: Country[] = apiCountries.map((country: APICountry) => ({
+    code: country.code,
+    name: country.name,
+    dialCode: country.phone_code,
+    flag: country.flag_emoji || '',
+  }));
+
+  // Phone field states for separated input
+  const [emergencyPhoneCountryCode, setEmergencyPhoneCountryCode] = useState<string>('CO');
+  const [emergencyPhoneNumber, setEmergencyPhoneNumber] = useState<string>('');
+  const [emergencyPhoneAltCountryCode, setEmergencyPhoneAltCountryCode] = useState<string>('CO');
+  const [emergencyPhoneAltNumber, setEmergencyPhoneAltNumber] = useState<string>('');
+
   // Check if user resides in Colombia
   const residesInColombia = initialData?.residence_country === 'CO' ||
                             initialData?.residence_country === 'Colombia' ||
@@ -67,10 +96,38 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
     if (isOpen && initialData) {
       console.log('🔍 MedicalInfoEditModal initializing with data:', initialData);
 
+      // Parse primary emergency phone
+      let emergencyCountryCode = initialData.emergency_contact_country_code || 'CO';
+      let emergencyPhone = initialData.emergency_contact_phone_number || '';
+
+      if (!emergencyPhone && initialData.emergency_contact_phone) {
+        const phoneData = splitPhoneInternational(
+          initialData.emergency_contact_phone,
+          emergencyCountryCode,
+          true
+        );
+        emergencyCountryCode = phoneData.countryCode;
+        emergencyPhone = phoneData.phoneNumber;
+      }
+
+      // Parse alternative emergency phone
+      let emergencyAltCountryCode = initialData.emergency_contact_country_code_alt || 'CO';
+      let emergencyAltPhone = initialData.emergency_contact_phone_number_alt || '';
+
+      if (!emergencyAltPhone && initialData.emergency_contact_phone_alt) {
+        const phoneData = splitPhoneInternational(
+          initialData.emergency_contact_phone_alt,
+          emergencyAltCountryCode,
+          true
+        );
+        emergencyAltCountryCode = phoneData.countryCode;
+        emergencyAltPhone = phoneData.phoneNumber;
+      }
+
       setFormData({
         eps: initialData.eps || '',
         eps_other: initialData.eps_other || '',
-        health_service: initialData.additional_insurance || '', // Use additional_insurance field for now
+        health_service: initialData.additional_insurance || '',
         occupation: initialData.occupation || '',
         additional_insurance: initialData.additional_insurance || '',
         complementary_plan: initialData.complementary_plan || '',
@@ -82,8 +139,16 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
         emergency_contact_phone_alt: initialData.emergency_contact_phone_alt || ''
       });
 
+      setEmergencyPhoneCountryCode(emergencyCountryCode);
+      setEmergencyPhoneNumber(emergencyPhone);
+      setEmergencyPhoneAltCountryCode(emergencyAltCountryCode);
+      setEmergencyPhoneAltNumber(emergencyAltPhone);
+
       setErrors({});
-      console.log('✅ MedicalInfoEditModal initialized');
+      console.log('✅ MedicalInfoEditModal initialized with emergency phones:', {
+        primary: { country: emergencyCountryCode, phone: emergencyPhone },
+        alt: { country: emergencyAltCountryCode, phone: emergencyAltPhone }
+      });
     }
   }, [isOpen, initialData]);
 
@@ -111,6 +176,68 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
     // Clear error for this field when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
+
+  // Primary emergency phone handlers
+  const handleEmergencyCountryChange = (country: Country) => {
+    setEmergencyPhoneCountryCode(country.code);
+    const newPhoneInternational = combinePhoneInternational(country.code, emergencyPhoneNumber);
+    setFormData(prev => ({
+      ...prev,
+      emergency_contact_phone: newPhoneInternational,
+      emergency_contact_country_code: country.code,
+      emergency_contact_dial_code: country.dialCode,
+      emergency_contact_phone_number: emergencyPhoneNumber
+    }));
+    if (errors.emergency_contact_phone) {
+      setErrors(prev => ({ ...prev, emergency_contact_phone: '' }));
+    }
+  };
+
+  const handleEmergencyPhoneChange = (newPhoneNumber: string) => {
+    setEmergencyPhoneNumber(newPhoneNumber);
+    const newPhoneInternational = combinePhoneInternational(emergencyPhoneCountryCode, newPhoneNumber);
+    const country = getCountryByCode(emergencyPhoneCountryCode);
+    setFormData(prev => ({
+      ...prev,
+      emergency_contact_phone: newPhoneInternational,
+      emergency_contact_phone_number: newPhoneNumber,
+      emergency_contact_dial_code: country?.dialCode
+    }));
+    if (errors.emergency_contact_phone) {
+      setErrors(prev => ({ ...prev, emergency_contact_phone: '' }));
+    }
+  };
+
+  // Alternative emergency phone handlers
+  const handleEmergencyAltCountryChange = (country: Country) => {
+    setEmergencyPhoneAltCountryCode(country.code);
+    const newPhoneInternational = combinePhoneInternational(country.code, emergencyPhoneAltNumber);
+    setFormData(prev => ({
+      ...prev,
+      emergency_contact_phone_alt: newPhoneInternational,
+      emergency_contact_country_code_alt: country.code,
+      emergency_contact_dial_code_alt: country.dialCode,
+      emergency_contact_phone_number_alt: emergencyPhoneAltNumber
+    }));
+    if (errors.emergency_contact_phone_alt) {
+      setErrors(prev => ({ ...prev, emergency_contact_phone_alt: '' }));
+    }
+  };
+
+  const handleEmergencyPhoneAltChange = (newPhoneNumber: string) => {
+    setEmergencyPhoneAltNumber(newPhoneNumber);
+    const newPhoneInternational = combinePhoneInternational(emergencyPhoneAltCountryCode, newPhoneNumber);
+    const country = getCountryByCode(emergencyPhoneAltCountryCode);
+    setFormData(prev => ({
+      ...prev,
+      emergency_contact_phone_alt: newPhoneInternational,
+      emergency_contact_phone_number_alt: newPhoneNumber,
+      emergency_contact_dial_code_alt: country?.dialCode
+    }));
+    if (errors.emergency_contact_phone_alt) {
+      setErrors(prev => ({ ...prev, emergency_contact_phone_alt: '' }));
     }
   };
 
@@ -148,13 +275,13 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
 
     if (!formData.emergency_contact_phone) {
       newErrors.emergency_contact_phone = t('validation.emergencyPhoneRequired');
-    } else if (!validatePhoneNumber(formData.emergency_contact_phone)) {
-      newErrors.emergency_contact_phone = t('validation.phoneFormat');
+    } else if (formData.emergency_contact_phone.trim().replace(/[^0-9]/g, '').length < 10) {
+      newErrors.emergency_contact_phone = t('validation.phoneInvalid');
     }
 
     // Optional phone validation
-    if (formData.emergency_contact_phone_alt && !validatePhoneNumber(formData.emergency_contact_phone_alt)) {
-      newErrors.emergency_contact_phone_alt = t('validation.phoneFormat');
+    if (formData.emergency_contact_phone_alt && formData.emergency_contact_phone_alt.trim().replace(/[^0-9]/g, '').length < 10) {
+      newErrors.emergency_contact_phone_alt = t('validation.phoneInvalid');
     }
 
     if (formData.complementary_plan === 'OTRO' && !formData.complementary_plan_other) {
@@ -411,36 +538,108 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
                     />
                   </div>
 
-                  <SelectField
-                    label={t('labels.emergencyRelationship')}
-                    value={formData.emergency_contact_relationship || ''}
-                    onChange={(value) => handleFieldChange('emergency_contact_relationship', value)}
-                    options={emergencyContactRelationshipOptions}
-                    placeholder={t('placeholders.emergencyRelationship')}
-                    required
-                    error={errors.emergency_contact_relationship}
-                  />
+                  <div className="md:col-span-2">
+                    <SelectField
+                      label={t('labels.emergencyRelationship')}
+                      value={formData.emergency_contact_relationship || ''}
+                      onChange={(value) => handleFieldChange('emergency_contact_relationship', value)}
+                      options={emergencyContactRelationshipOptions}
+                      placeholder={t('placeholders.emergencyRelationship')}
+                      required
+                      error={errors.emergency_contact_relationship}
+                    />
+                  </div>
 
-                  <div></div>
+                  {/* Primary Emergency Phone */}
+                  <div className="md:col-span-2">
+                    <PhoneInputGroup
+                      countryCode={emergencyPhoneCountryCode}
+                      phoneNumber={emergencyPhoneNumber}
+                      onCountryChange={handleEmergencyCountryChange}
+                      onPhoneChange={handleEmergencyPhoneChange}
+                      error={errors.emergency_contact_phone}
+                      disabled={isFormLoading}
+                      data-testid={`${testId}-emergency-phone-group`}
+                      countries={convertedCountries.length > 0 ? convertedCountries : undefined}
+                    />
+                  </div>
 
-                  <TextAreaField
-                    label={t('labels.emergencyPhone')}
-                    value={formData.emergency_contact_phone || ''}
-                    onChange={(value) => handleFieldChange('emergency_contact_phone', value)}
-                    placeholder={t('placeholders.emergencyPhone')}
-                    required
-                    error={errors.emergency_contact_phone}
-                    rows={1}
-                  />
-
-                  <TextAreaField
-                    label={t('labels.emergencyPhoneAlt')}
-                    value={formData.emergency_contact_phone_alt || ''}
-                    onChange={(value) => handleFieldChange('emergency_contact_phone_alt', value)}
-                    placeholder={t('placeholders.emergencyPhoneAlt')}
-                    error={errors.emergency_contact_phone_alt}
-                    rows={1}
-                  />
+                  {/* Alternative Emergency Phone */}
+                  <div className="md:col-span-2">
+                    <div className="space-y-4">
+                      <div className="space-y-1">
+                        <h4 className="text-sm font-medium text-gray-900">
+                          {t('labels.emergencyPhoneAlt')}
+                        </h4>
+                        <p className="text-xs text-gray-600">
+                          Teléfono alternativo de contacto (opcional)
+                        </p>
+                      </div>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="lg:col-span-1">
+                          <label className="block text-sm font-medium text-vitalgo-dark mb-1">
+                            Indicativo <span className="text-red-500">*</span>
+                          </label>
+                          <select
+                            value={emergencyPhoneAltCountryCode}
+                            onChange={(e) => {
+                              const country = convertedCountries.find(c => c.code === e.target.value);
+                              if (country) handleEmergencyAltCountryChange(country);
+                            }}
+                            disabled={isFormLoading}
+                            className="w-full px-3 py-2 border rounded-md text-base focus:outline-none focus:ring-2 transition-colors duration-150 border-vitalgo-dark-lighter focus:ring-vitalgo-green focus:border-vitalgo-green"
+                          >
+                            {convertedCountries.map((country) => (
+                              <option key={country.code} value={country.code}>
+                                {country.flag} {country.dialCode} {country.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="lg:col-span-1">
+                          <label className="block text-sm font-medium text-vitalgo-dark mb-1">
+                            Número de teléfono
+                          </label>
+                          <input
+                            type="tel"
+                            value={emergencyPhoneAltNumber}
+                            onChange={(e) => handleEmergencyPhoneAltChange(e.target.value)}
+                            disabled={isFormLoading}
+                            placeholder="3001234567"
+                            className="w-full px-3 py-2 border rounded-md text-base focus:outline-none focus:ring-2 transition-colors duration-150 border-vitalgo-dark-lighter focus:ring-vitalgo-green focus:border-vitalgo-green"
+                            style={{ fontSize: '16px' }}
+                          />
+                          {errors.emergency_contact_phone_alt && (
+                            <p className="mt-1 text-sm text-red-600 font-medium">
+                              {errors.emergency_contact_phone_alt}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      {emergencyPhoneAltNumber && (
+                        <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+                          <div className="flex items-center space-x-3">
+                            <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                              Número completo:
+                            </span>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-lg flex-shrink-0" role="img">
+                                {getCountryByCode(emergencyPhoneAltCountryCode)?.flag || '🏳️'}
+                              </span>
+                              <span className="font-mono text-sm text-gray-900 flex items-center">
+                                <span className="text-blue-600 font-medium">
+                                  {getCountryByCode(emergencyPhoneAltCountryCode)?.dialCode || ''}
+                                </span>
+                                <span className="ml-1">
+                                  {emergencyPhoneAltNumber.replace(/\D/g, '')}
+                                </span>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
 

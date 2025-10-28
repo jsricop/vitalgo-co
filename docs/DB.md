@@ -53,8 +53,14 @@
 - `blood_type`: String(10, nullable) - Blood type (A+, B-, AB+, O-, etc.) - ✅ IMPLEMENTED
 - `emergency_contact_name`: String(200, nullable) - Emergency contact full name - ✅ IMPLEMENTED
 - `emergency_contact_relationship`: String(50, nullable) - Relationship to patient - ✅ IMPLEMENTED
-- `emergency_contact_phone`: String(20, nullable) - Emergency contact phone - ✅ IMPLEMENTED
-- `emergency_contact_phone_alt`: String(20, nullable) - Alternative emergency contact phone - ✅ IMPLEMENTED
+- `emergency_contact_country_code`: String(2, nullable) - Emergency contact country code (e.g., "CO", "US") - ✅ IMPLEMENTED
+- `emergency_contact_dial_code`: String(5, nullable) - Emergency contact dial code (e.g., "+57", "+1") - ✅ IMPLEMENTED
+- `emergency_contact_phone_number`: String(15, nullable) - Emergency contact phone number only - ✅ IMPLEMENTED
+- `emergency_contact_phone`: String(20, nullable) - Emergency contact phone (legacy field) - ✅ IMPLEMENTED
+- `emergency_contact_country_code_alt`: String(2, nullable) - Alternative emergency contact country code - ✅ IMPLEMENTED
+- `emergency_contact_dial_code_alt`: String(5, nullable) - Alternative emergency contact dial code - ✅ IMPLEMENTED
+- `emergency_contact_phone_number_alt`: String(15, nullable) - Alternative emergency contact phone number - ✅ IMPLEMENTED
+- `emergency_contact_phone_alt`: String(20, nullable) - Alternative emergency contact phone (legacy field) - ✅ IMPLEMENTED
 - `is_pregnant`: Boolean(nullable) - Pregnancy status (female patients only) - ✅ IMPLEMENTED
 - `pregnancy_weeks`: Integer(nullable) - Weeks of pregnancy (1-42) - ✅ IMPLEMENTED
 - `last_menstruation_date`: Date(nullable) - Last menstruation date - ✅ IMPLEMENTED
@@ -73,6 +79,36 @@
 - `name`: String - Full document type name
 - `description`: Text - Purpose and usage details
 - `is_active`: Boolean - Available for selection flag
+
+### countries
+- `id`: Integer (PK) - Country identifier (auto-increment)
+- `name`: String(100) - Full country name (e.g., "Colombia", "Nicaragua", "Estados Unidos")
+- `code`: String(2, unique, indexed) - ISO 3166-1 alpha-2 country code (e.g., "CO", "NI", "US")
+- `flag_emoji`: String(10, nullable) - Country flag emoji (e.g., "🇨🇴", "🇳🇮", "🇺🇸")
+- `phone_code`: String(10) - International phone dialing code (e.g., "+57", "+505", "+1")
+- `is_active`: Boolean - Whether country is available for selection (default: true)
+- `created_at`: DateTime(timezone) - Record creation timestamp (auto-generated)
+- `updated_at`: DateTime(timezone) - Last modification timestamp (auto-updated)
+
+**Coverage**: 218 countries and territories including:
+- All UN member states (193 countries)
+- Major territories and dependencies
+- Special administrative regions (Hong Kong, Macao)
+- Caribbean territories
+- Pacific island nations
+
+**Regional Distribution**:
+- **Americas**: 55+ countries/territories (Colombia first, then neighbors by proximity)
+- **Europe**: 50+ countries/territories
+- **Asia**: 50+ countries/territories
+- **Africa**: 54+ countries
+- **Oceania**: 20+ countries/territories
+
+**Data Quality**:
+- All entries include ISO 3166-1 alpha-2 codes
+- Flag emojis for all countries
+- International dialing codes
+- Ordered by relevance (Colombia first, then by geographic proximity)
 
 ## Authentication & Security Tables
 
@@ -312,6 +348,7 @@ Uses BigInteger PKs for optimal performance in high-volume operations.
 - `users` - User accounts (19 records as of Oct 2025)
 - `patients` - Patient profiles (18 records)
 - `document_types` - Government ID types (7 types)
+- `countries` - Global country reference data (218 countries and territories)
 
 **Authentication & Security:**
 - `user_sessions` - Active sessions (58 sessions)

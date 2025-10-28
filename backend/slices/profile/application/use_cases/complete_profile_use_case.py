@@ -110,8 +110,18 @@ class CompleteProfileUseCase:
             blood_type=patient.blood_type,
             emergency_contact_name=patient.emergency_contact_name,
             emergency_contact_relationship=patient.emergency_contact_relationship,
+
+            # Primary emergency phone fields
             emergency_contact_phone=patient.emergency_contact_phone,
+            emergency_contact_country_code=patient.emergency_contact_country_code,
+            emergency_contact_dial_code=patient.emergency_contact_dial_code,
+            emergency_contact_phone_number=patient.emergency_contact_phone_number,
+
+            # Alternative emergency phone fields
             emergency_contact_phone_alt=patient.emergency_contact_phone_alt,
+            emergency_contact_country_code_alt=patient.emergency_contact_country_code_alt,
+            emergency_contact_dial_code_alt=patient.emergency_contact_dial_code_alt,
+            emergency_contact_phone_number_alt=patient.emergency_contact_phone_number_alt,
 
             # Gynecological information fields - now reading from database
             is_pregnant=patient.is_pregnant,
@@ -189,10 +199,26 @@ class CompleteProfileUseCase:
                 patient.emergency_contact_name = profile_data.emergency_contact_name
             if profile_data.emergency_contact_relationship is not None:
                 patient.emergency_contact_relationship = profile_data.emergency_contact_relationship
+
+            # Update primary emergency phone fields
             if profile_data.emergency_contact_phone is not None:
                 patient.emergency_contact_phone = profile_data.emergency_contact_phone
+            if profile_data.emergency_contact_country_code is not None:
+                patient.emergency_contact_country_code = profile_data.emergency_contact_country_code
+            if profile_data.emergency_contact_dial_code is not None:
+                patient.emergency_contact_dial_code = profile_data.emergency_contact_dial_code
+            if profile_data.emergency_contact_phone_number is not None:
+                patient.emergency_contact_phone_number = profile_data.emergency_contact_phone_number
+
+            # Update alternative emergency phone fields
             if profile_data.emergency_contact_phone_alt is not None:
                 patient.emergency_contact_phone_alt = profile_data.emergency_contact_phone_alt
+            if profile_data.emergency_contact_country_code_alt is not None:
+                patient.emergency_contact_country_code_alt = profile_data.emergency_contact_country_code_alt
+            if profile_data.emergency_contact_dial_code_alt is not None:
+                patient.emergency_contact_dial_code_alt = profile_data.emergency_contact_dial_code_alt
+            if profile_data.emergency_contact_phone_number_alt is not None:
+                patient.emergency_contact_phone_number_alt = profile_data.emergency_contact_phone_number_alt
 
             # Update gynecological information fields (only for female patients)
             if profile_data.is_pregnant is not None:

@@ -211,7 +211,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return response.redirectUrl;
     } catch (error) {
       console.error('🔍 AUTH CONTEXT: Login failed', error);
-      setError(error instanceof Error ? error.message : 'Login failed');
+
+      // Extract error message from different error types
+      let errorMessage = 'Login failed';
+      if (error && typeof error === 'object' && 'message' in error) {
+        errorMessage = String(error.message);
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
+
+      setError(errorMessage);
       setIsAuthenticated(false);
       setUser(null);
       throw error;
