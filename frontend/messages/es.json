@@ -1080,7 +1080,7 @@
         "diagnosisDate": "Fecha de Diagnóstico",
         "status": "Estado",
         "isChronic": "Condición crónica",
-        "cie10Code": "Código CIE-10",
+        "cie10Code": "Código CIE-11",
         "diagnosedBy": "Diagnosticado por",
         "treatmentDescription": "Descripción del Tratamiento",
         "notes": "Notas Adicionales"
@@ -1097,14 +1097,18 @@
         "save": "Guardar",
         "update": "Actualizar",
         "saving": "Guardando..."
-      }
+      },
+      "cie10Brief": "Código de clasificación internacional de enfermedades",
+      "cie10Explanation": "Sistema estandarizado de la OMS para clasificar enfermedades. Ayuda a los médicos a identificar y registrar diagnósticos de forma uniforme a nivel mundial."
     },
     "card": {
       "labels": {
         "diagnosed": "Diagnosticada",
         "diagnosedBy": "Diagnosticado por",
         "treatment": "Tratamiento",
-        "cie10": "CIE-10",
+        "cie10": "CIE-11",
+        "cie10Brief": "Código de clasificación internacional",
+        "cie10Explanation": "Clasificación Internacional de Enfermedades - 11ª revisión",
         "updated": "Actualizado"
       },
       "actions": {

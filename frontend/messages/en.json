@@ -1307,7 +1307,7 @@
         "diagnosisDate": "Diagnosis Date",
         "status": "Status",
         "isChronic": "Chronic condition",
-        "cie10Code": "ICD-10 Code",
+        "cie10Code": "ICD-11 Code",
         "diagnosedBy": "Diagnosed by",
         "treatmentDescription": "Treatment Description",
         "notes": "Additional Notes"
@@ -1324,14 +1324,18 @@
         "save": "Save",
         "update": "Update",
         "saving": "Saving..."
-      }
+      },
+      "cie10Brief": "International disease classification code",
+      "cie10Explanation": "WHO standardized system for classifying diseases. Helps doctors identify and record diagnoses uniformly worldwide."
     },
     "card": {
       "labels": {
         "diagnosed": "Diagnosed",
         "diagnosedBy": "Diagnosed by",
         "treatment": "Treatment",
-        "cie10": "ICD-10",
+        "cie10": "ICD-11",
+        "cie10Brief": "International classification code",
+        "cie10Explanation": "International Classification of Diseases - 11th revision",
         "updated": "Updated"
       },
       "actions": {

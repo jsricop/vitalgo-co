@@ -121,12 +121,14 @@ export const SurgeriesCard: React.FC<SurgeriesCardProps> = ({
 
   return (
     <div
-      className={`bg-white rounded-xl border border-vitalgo-dark-lightest p-6 cursor-pointer hover:shadow-lg hover:border-vitalgo-green transition-all duration-200 ${className}`}
+      className={`bg-white rounded-xl border border-vitalgo-dark-lightest p-6 hover:shadow-lg hover:border-vitalgo-green transition-all duration-200 ${className}`}
       data-testid={testId}
-      onClick={handleViewAll}
     >
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div
+        className="flex items-center justify-between mb-6 cursor-pointer"
+        onClick={handleViewAll}
+      >
         <div className="flex items-center flex-1">
           <SurgeryIcon
             size="lg"
