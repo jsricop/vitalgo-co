@@ -31,6 +31,7 @@ interface MedicalInfoEditModalProps {
 interface MedicalFormData {
   eps?: string;
   eps_other?: string;
+  health_service?: string;  // For non-Colombia residents
   occupation?: string;
   additional_insurance?: string;
   complementary_plan?: string;
@@ -56,6 +57,11 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Check if user resides in Colombia
+  const residesInColombia = initialData?.residence_country === 'CO' ||
+                            initialData?.residence_country === 'Colombia' ||
+                            initialData?.residence_country === 'COLOMBIA';
+
   // Initialize form data when modal opens
   useEffect(() => {
     if (isOpen && initialData) {
@@ -64,6 +70,7 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
       setFormData({
         eps: initialData.eps || '',
         eps_other: initialData.eps_other || '',
+        health_service: initialData.additional_insurance || '', // Use additional_insurance field for now
         occupation: initialData.occupation || '',
         additional_insurance: initialData.additional_insurance || '',
         complementary_plan: initialData.complementary_plan || '',
@@ -107,11 +114,15 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
     }
   };
 
+  // Debug log
+  console.log('🌎 MedicalInfoEditModal - residence_country:', initialData?.residence_country);
+  console.log('🇨🇴 MedicalInfoEditModal - residesInColombia:', residesInColombia);
+
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    // Required fields validation
-    if (!formData.eps) {
+    // Required fields validation - EPS only required for Colombia residents
+    if (residesInColombia && !formData.eps) {
       newErrors.eps = t('validation.epsRequired');
     }
 
@@ -163,7 +174,13 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
 
     setIsSubmitting(true);
     try {
-      const result = await onSubmit(formData);
+      // If user doesn't reside in Colombia, save health_service to additional_insurance field
+      const dataToSubmit = { ...formData };
+      if (!residesInColombia && formData.health_service) {
+        dataToSubmit.additional_insurance = formData.health_service;
+      }
+
+      const result = await onSubmit(dataToSubmit);
       if (result.success) {
         onClose();
       } else {
@@ -253,25 +270,42 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
                   {t('sectionTitles.socialSecurityOccupation')}
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <SelectField
-                    label={t('labels.eps')}
-                    value={formData.eps || ''}
-                    onChange={(value) => handleFieldChange('eps', value)}
-                    options={epsOptions}
-                    placeholder={t('placeholders.selectEps')}
-                    required
-                    error={errors.eps}
-                  />
+                  {/* EPS field only for Colombia residents */}
+                  {residesInColombia ? (
+                    <>
+                      <SelectField
+                        label={t('labels.eps')}
+                        value={formData.eps || ''}
+                        onChange={(value) => handleFieldChange('eps', value)}
+                        options={epsOptions}
+                        placeholder={t('placeholders.selectEps')}
+                        required
+                        error={errors.eps}
+                      />
 
-                  {isOtherValueRequired(formData.eps || '') && (
+                      {isOtherValueRequired(formData.eps || '') && (
+                        <div className="md:col-span-2">
+                          <TextAreaField
+                            label={t('labels.epsOther')}
+                            value={formData.eps_other || ''}
+                            onChange={(value) => handleFieldChange('eps_other', value)}
+                            placeholder={t('placeholders.epsOther')}
+                            required
+                            error={errors.eps_other}
+                            rows={2}
+                          />
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    /* Health Service field for non-Colombia residents */
                     <div className="md:col-span-2">
                       <TextAreaField
-                        label={t('labels.epsOther')}
-                        value={formData.eps_other || ''}
-                        onChange={(value) => handleFieldChange('eps_other', value)}
-                        placeholder={t('placeholders.epsOther')}
-                        required
-                        error={errors.eps_other}
+                        label="Servicio de Salud"
+                        value={formData.health_service || ''}
+                        onChange={(value) => handleFieldChange('health_service', value)}
+                        placeholder="Ingresa tu servicio de salud o seguro médico"
+                        error={errors.health_service}
                         rows={2}
                       />
                     </div>
@@ -289,36 +323,44 @@ export const MedicalInfoEditModal: React.FC<MedicalInfoEditModalProps> = ({
                     />
                   </div>
 
-                  <div className="md:col-span-2">
-                    <TextAreaField
-                      label={t('labels.additionalInsurance')}
-                      value={formData.additional_insurance || ''}
-                      onChange={(value) => handleFieldChange('additional_insurance', value)}
-                      placeholder={t('placeholders.additionalInsurance')}
-                      error={errors.additional_insurance}
-                      rows={2}
-                    />
-                  </div>
+                  {/* Show additional insurance only for non-Colombia residents */}
+                  {!residesInColombia && (
+                    <div className="md:col-span-2">
+                      <TextAreaField
+                        label={t('labels.additionalInsurance')}
+                        value={formData.additional_insurance || ''}
+                        onChange={(value) => handleFieldChange('additional_insurance', value)}
+                        placeholder={t('placeholders.additionalInsurance')}
+                        error={errors.additional_insurance}
+                        rows={2}
+                      />
+                    </div>
+                  )}
 
-                  <SelectField
-                    label={t('labels.complementaryPlan')}
-                    value={formData.complementary_plan || ''}
-                    onChange={(value) => handleFieldChange('complementary_plan', value)}
-                    options={complementaryPlanOptions}
-                    placeholder={t('placeholders.complementaryPlan')}
-                    error={errors.complementary_plan}
-                  />
+                  {/* Complementary plan only for Colombia residents */}
+                  {residesInColombia && (
+                    <>
+                      <SelectField
+                        label={t('labels.complementaryPlan')}
+                        value={formData.complementary_plan || ''}
+                        onChange={(value) => handleFieldChange('complementary_plan', value)}
+                        options={complementaryPlanOptions}
+                        placeholder={t('placeholders.complementaryPlan')}
+                        error={errors.complementary_plan}
+                      />
 
-                  {isOtherValueRequired(formData.complementary_plan || '') && (
-                    <TextAreaField
-                      label={t('labels.complementaryPlanOther')}
-                      value={formData.complementary_plan_other || ''}
-                      onChange={(value) => handleFieldChange('complementary_plan_other', value)}
-                      placeholder={t('placeholders.complementaryPlanOther')}
-                      required
-                      error={errors.complementary_plan_other}
-                      rows={2}
-                    />
+                      {isOtherValueRequired(formData.complementary_plan || '') && (
+                        <TextAreaField
+                          label={t('labels.complementaryPlanOther')}
+                          value={formData.complementary_plan_other || ''}
+                          onChange={(value) => handleFieldChange('complementary_plan_other', value)}
+                          placeholder={t('placeholders.complementaryPlanOther')}
+                          required
+                          error={errors.complementary_plan_other}
+                          rows={2}
+                        />
+                      )}
+                    </>
                   )}
                 </div>
               </div>
