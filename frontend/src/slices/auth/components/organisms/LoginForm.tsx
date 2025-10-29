@@ -3,7 +3,7 @@
  * Login Form organism component - Pure UI form using centralized AuthContext
  * No direct API calls or router logic - uses AuthContext for authentication
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { LoginCredentialsForm } from '../molecules/LoginCredentialsForm';
@@ -42,6 +42,18 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     error: null
   });
   const [passwordError, setPasswordError] = useState<string | null>(null);
+
+  // Log error type for debugging
+  useEffect(() => {
+    if (error) {
+      console.log('🔍 LOGIN FORM: Error from context', {
+        error,
+        errorType: typeof error,
+        isString: typeof error === 'string',
+        errorConstructor: error?.constructor?.name
+      });
+    }
+  }, [error]);
 
   // Validation helpers
   const validateEmail = (email: string): boolean => {
@@ -204,7 +216,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                 </svg>
               </div>
               <div className="ml-3">
-                <p className="text-sm text-red-800">{generalError || error}</p>
+                <p className="text-sm text-red-800">
+                  {generalError || (typeof error === 'string' ? error : (error && typeof error === 'object' && 'message' in error ? String(error.message) : 'Error de conexión'))}
+                </p>
               </div>
             </div>
           </div>

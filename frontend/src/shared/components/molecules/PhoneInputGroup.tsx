@@ -20,6 +20,7 @@ interface PhoneInputGroupProps {
   error?: string;
   disabled?: boolean;
   'data-testid'?: string;
+  countries?: Country[]; // Optional: provide custom countries list (e.g., from API)
 }
 
 export const PhoneInputGroup: React.FC<PhoneInputGroupProps> = ({
@@ -31,7 +32,8 @@ export const PhoneInputGroup: React.FC<PhoneInputGroupProps> = ({
   validation,
   error,
   disabled = false,
-  'data-testid': testId = 'phone-input-group'
+  'data-testid': testId = 'phone-input-group',
+  countries
 }) => {
   return (
     <div className="space-y-4" data-testid={testId}>
@@ -56,6 +58,7 @@ export const PhoneInputGroup: React.FC<PhoneInputGroupProps> = ({
             onChange={onCountryChange}
             disabled={disabled}
             data-testid="country-select"
+            countries={countries}
           />
         </div>
 

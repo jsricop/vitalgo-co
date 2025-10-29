@@ -5,7 +5,7 @@
  * Shared component for use across multiple slices
  */
 import React, { useState, useRef, useEffect } from 'react';
-import { countries, Country, searchCountries, getDefaultCountry } from '../../../slices/signup/data/countries';
+import { countries as defaultCountries, Country, searchCountries, getDefaultCountry } from '../../../slices/signup/data/countries';
 
 interface CountryCodeSelectProps {
   id: string;
@@ -16,6 +16,7 @@ interface CountryCodeSelectProps {
   'data-testid'?: string;
   disabled?: boolean;
   error?: string;
+  countries?: Country[]; // Optional: provide custom countries list (e.g., from API)
 }
 
 export const CountryCodeSelect: React.FC<CountryCodeSelectProps> = ({
@@ -26,15 +27,27 @@ export const CountryCodeSelect: React.FC<CountryCodeSelectProps> = ({
   onBlur,
   'data-testid': testId,
   disabled = false,
-  error
+  error,
+  countries: customCountries
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
+  // Use custom countries if provided, otherwise use default
+  const countries = customCountries || defaultCountries;
+
   const selectedCountry = countries.find(c => c.code === value) || getDefaultCountry();
-  const filteredCountries = searchTerm ? searchCountries(searchTerm) : countries;
+
+  // Search in the countries list (custom or default)
+  const filteredCountries = searchTerm
+    ? countries.filter(country =>
+        country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        country.dialCode.includes(searchTerm) ||
+        country.code.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : countries;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
