@@ -133,13 +133,14 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
   };
 
   return (
-    <div className={cardClasses} data-testid={testId}>
+    <div
+      className={`${cardClasses} cursor-pointer hover:shadow-lg hover:border-vitalgo-green transition-all duration-200`}
+      data-testid={testId}
+      onClick={handleViewAll}
+    >
       {/* Card Header */}
       <div className="flex items-center justify-between p-6">
-        <div
-          className="flex items-center space-x-3 flex-1 cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={handleViewAll}
-        >
+        <div className="flex items-center space-x-3 flex-1">
           <IllnessIcon size="lg" color="primary" />
           <div>
             <h2 className="text-lg font-semibold text-vitalgo-dark">
@@ -152,8 +153,11 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
         </div>
         {showAddButton && !showAddForm && !editingIllness && (
           <button
-            onClick={handleAddClick}
-            className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-vitalgo-green transition-colors duration-200"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAddClick();
+            }}
+            className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-vitalgo-green transition-colors duration-200 z-10"
             data-testid={`${testId}-add-button`}
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -179,8 +183,11 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
           <div className="text-center py-8">
             <div className="text-red-600 text-sm mb-2">{t('errors.loadFailed')}</div>
             <button
-              onClick={() => refetch()}
-              className="text-xs text-vitalgo-green hover:text-vitalgo-green-dark"
+              onClick={(e) => {
+                e.stopPropagation();
+                refetch();
+              }}
+              className="text-xs text-vitalgo-green hover:text-vitalgo-green-dark z-10"
             >
               {tCommon('retry')}
             </button>
@@ -226,9 +233,12 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
             </p>
             {showAddButton && (
               <button
-                onClick={handleAddClick}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddClick();
+                }}
                 disabled={isActionsLoading}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150 disabled:opacity-50"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150 disabled:opacity-50 z-10"
                 data-testid={`${testId}-empty-add-button`}
               >
                 <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -259,7 +269,10 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
         {sortedIllnesses.length >= 1 && onNavigateToFull && (
           <div className="mt-4 pt-4 border-t border-gray-200">
             <button
-              onClick={onNavigateToFull}
+              onClick={(e) => {
+                e.stopPropagation();
+                onNavigateToFull();
+              }}
               className="w-full text-center text-sm text-vitalgo-green hover:text-vitalgo-green-dark font-medium"
               data-testid={`${testId}-show-more`}
             >

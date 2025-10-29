@@ -139,15 +139,13 @@ export const MedicationsCard: React.FC<MedicationsCardProps> = ({
 
   return (
     <div
-      className={`bg-white rounded-xl border border-vitalgo-dark-lightest p-6 ${className}`}
+      className={`bg-white rounded-xl border border-vitalgo-dark-lightest p-6 cursor-pointer hover:shadow-lg hover:border-vitalgo-green transition-all duration-200 ${className}`}
       data-testid={testId}
+      onClick={handleViewAll}
     >
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <div
-            className="flex items-center flex-1 cursor-pointer hover:opacity-80 transition-opacity"
-            onClick={handleViewAll}
-          >
+          <div className="flex items-center flex-1">
             <MedicationIcon
               size="lg"
               color="primary"
@@ -166,9 +164,12 @@ export const MedicationsCard: React.FC<MedicationsCardProps> = ({
 
           {showAddButton && (
             <button
-              onClick={handleAddNew}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddNew();
+              }}
               disabled={loading || actionLoading}
-              className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150 disabled:opacity-50"
+              className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150 disabled:opacity-50 z-10"
               data-testid={`${testId}-add-button`}
             >
               <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -207,7 +208,10 @@ export const MedicationsCard: React.FC<MedicationsCardProps> = ({
             {medications.length >= 1 && onNavigateToFull && (
               <div className="pt-4 border-t border-vitalgo-dark-lightest">
                 <button
-                  onClick={handleViewAll}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleViewAll();
+                  }}
                   className="w-full text-center text-sm text-vitalgo-green hover:text-vitalgo-green-light font-medium"
                   data-testid={`${testId}-view-all-footer`}
                 >
@@ -233,9 +237,12 @@ export const MedicationsCard: React.FC<MedicationsCardProps> = ({
             </p>
             {showAddButton && (
               <button
-                onClick={handleAddNew}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddNew();
+                }}
                 disabled={actionLoading}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150 disabled:opacity-50"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150 disabled:opacity-50 z-10"
                 data-testid={`${testId}-empty-add-button`}
               >
                 <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

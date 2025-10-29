@@ -6,6 +6,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
+import { useRouter, useParams } from 'next/navigation';
 import { DashboardStats } from '../molecules/DashboardStats';
 import { MedicationsCard } from '../../../medications/components/molecules/MedicationsCard';
 import { AllergiesCard } from '../../../allergies/components/molecules/AllergiesCard';
@@ -22,6 +23,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   'data-testid': testId
 }) => {
   const t = useTranslations('dashboard');
+  const router = useRouter();
+  const params = useParams();
+  const locale = params?.locale as string || 'es';
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -117,7 +121,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         <MedicationsCard
           maxItems={3}
           showAddButton={true}
-          onNavigateToFull={() => window.location.href = '/medications'}
+          onNavigateToFull={() => router.push(`/${locale}/medications`)}
           data-testid="dashboard-medications-card"
         />
 
@@ -125,7 +129,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         <AllergiesCard
           maxItems={3}
           showAddButton={true}
-          onNavigateToFull={() => window.location.href = '/allergies'}
+          onNavigateToFull={() => router.push(`/${locale}/allergies`)}
           data-testid="dashboard-allergies-card"
         />
 
@@ -133,7 +137,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         <IllnessesCard
           maxItems={3}
           showAddButton={true}
-          onNavigateToFull={() => window.location.href = '/illnesses'}
+          onNavigateToFull={() => router.push(`/${locale}/illnesses`)}
           data-testid="dashboard-illnesses-card"
         />
 
@@ -141,7 +145,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         <SurgeriesCard
           maxItems={3}
           showAddButton={true}
-          onNavigateToFull={() => window.location.href = '/surgeries'}
+          onNavigateToFull={() => router.push(`/${locale}/surgeries`)}
           data-testid="dashboard-surgeries-card"
         />
       </div>
