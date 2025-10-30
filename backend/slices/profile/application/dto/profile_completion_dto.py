@@ -79,6 +79,13 @@ class ExtendedPatientProfileDTO(BaseModel):
     abortions_count: Optional[int] = Field(None, ge=0, description="Number of abortions")
     contraceptive_method: Optional[str] = Field(None, max_length=100, description="Contraceptive method")
 
+    # Donor Preference (Voluntad de la Persona)
+    organ_donor_preference: Optional[str] = Field(None, max_length=30, description="Organ donor preference: DONANTE, NO_DONANTE, PREFIERO_NO_RESPONDER")
+
+    # Physical Measurements
+    height: Optional[int] = Field(None, ge=50, le=250, description="Height in centimeters (50-250 cm)")
+    weight: Optional[int] = Field(None, ge=10, le=300, description="Weight in kilograms (10-300 kg)")
+
     class Config:
         str_strip_whitespace = True
         validate_assignment = True

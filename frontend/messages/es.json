@@ -326,7 +326,10 @@
         "births": "Número de partos",
         "cesareans": "Número de cesáreas",
         "abortions": "Número de abortos",
-        "contraceptiveMethod": "Método anticonceptivo actual"
+        "contraceptiveMethod": "Método anticonceptivo actual",
+        "organDonorPreference": "¿Deseas ser donante de órganos?",
+        "height": "Talla (cm)",
+        "weight": "Peso (kg)"
       },
       "placeholders": {
         "firstName": "Ej: Juan Carlos",
@@ -350,7 +353,9 @@
         "contraceptiveMethod": "Selecciona un método",
         "searchPlaceholder": "Buscar...",
         "specifyOther": "Especifica...",
-        "selectDefault": "Seleccionar..."
+        "selectDefault": "Seleccionar...",
+        "height": "Ej: 170",
+        "weight": "Ej: 70"
       },
       "options": {
         "documentTypes": {
@@ -381,7 +386,10 @@
           "natural": "Métodos naturales",
           "other": "Otro"
         },
-        "other": "Otro"
+        "other": "Otro",
+        "donorYes": "Sí, deseo ser donante",
+        "donorNo": "No deseo ser donante",
+        "donorPreferNotToSay": "Prefiero no responder"
       },
       "buttons": {
         "save": "Guardar Cambios",
@@ -405,7 +413,9 @@
         "reproductiveHistory": "Historial Reproductivo",
         "contraception": "Anticoncepción",
         "medicalSecurity": "Seguridad Social y Ocupación",
-        "additionalInfo": "Seguro Adicional"
+        "additionalInfo": "Seguro Adicional",
+        "donorPreference": "Voluntad de la Persona",
+        "physicalMeasurements": "Medidas Físicas"
       },
       "messages": {
         "updateBasicInfo": "Actualiza tu información personal registrada",
