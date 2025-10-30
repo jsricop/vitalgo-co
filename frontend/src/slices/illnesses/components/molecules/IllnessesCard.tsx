@@ -124,7 +124,7 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
   const displayedIllnesses = sortedIllnesses.slice(0, maxItems);
   const hasMoreItems = sortedIllnesses.length > maxItems;
 
-  const cardClasses = `bg-white rounded-xl border border-gray-200 shadow-sm cursor-pointer transition-all hover:shadow-lg hover:border-vitalgo-green ${className}`;
+  const cardClasses = `bg-white rounded-xl border border-gray-200 shadow-sm ${className}`;
 
   const handleViewAll = () => {
     if (onNavigateToFull) {
@@ -133,10 +133,13 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
   };
 
   return (
-    <div className={cardClasses} onClick={handleViewAll} data-testid={testId}>
+    <div className={cardClasses} data-testid={testId}>
       {/* Card Header */}
       <div className="flex items-center justify-between p-6">
-        <div className="flex items-center space-x-3">
+        <div
+          className="flex items-center space-x-3 flex-1 cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={handleViewAll}
+        >
           <IllnessIcon size="lg" color="primary" />
           <div>
             <h2 className="text-lg font-semibold text-vitalgo-dark">
@@ -149,10 +152,7 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
         </div>
         {showAddButton && !showAddForm && !editingIllness && (
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleAddClick();
-            }}
+            onClick={handleAddClick}
             className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-vitalgo-green transition-colors duration-200"
             data-testid={`${testId}-add-button`}
           >
@@ -241,17 +241,16 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
         ) : (
           <div className="space-y-4">
             {displayedIllnesses.map((illness, index) => (
-              <div key={illness.id} onClick={(e) => e.stopPropagation()}>
-                <IllnessCard
-                  illness={illness}
-                  onEdit={handleEditClick}
-                  onDelete={handleDeleteIllness}
-                  onToggleCured={handleToggleCured}
+              <IllnessCard
+                key={illness.id}
+                illness={illness}
+                onEdit={handleEditClick}
+                onDelete={handleDeleteIllness}
+                onToggleCured={handleToggleCured}
                 showActions={!showAddForm && !editingIllness}
                 compact={true}
                 data-testid={`${testId}-illness-${index}`}
-                />
-              </div>
+              />
             ))}
           </div>
         )}
@@ -260,10 +259,7 @@ export const IllnessesCard: React.FC<IllnessesCardProps> = ({
         {sortedIllnesses.length >= 1 && onNavigateToFull && (
           <div className="mt-4 pt-4 border-t border-gray-200">
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onNavigateToFull();
-              }}
+              onClick={onNavigateToFull}
               className="w-full text-center text-sm text-vitalgo-green hover:text-vitalgo-green-dark font-medium"
               data-testid={`${testId}-show-more`}
             >
