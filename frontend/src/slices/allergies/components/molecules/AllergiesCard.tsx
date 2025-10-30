@@ -110,7 +110,11 @@ export const AllergiesCard: React.FC<AllergiesCardProps> = ({
   }
 
   return (
-    <div className={`bg-white rounded-xl border border-vitalgo-dark-lightest p-6 ${className}`} data-testid={testId}>
+    <div
+      className={`bg-white rounded-xl border border-vitalgo-dark-lightest p-6 cursor-pointer transition-all hover:shadow-lg hover:border-vitalgo-green ${className}`}
+      onClick={handleViewAll}
+      data-testid={testId}
+    >
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center">
@@ -129,7 +133,10 @@ export const AllergiesCard: React.FC<AllergiesCardProps> = ({
 
         {showAddButton && (
           <button
-            onClick={handleAddNew}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAddNew();
+            }}
             disabled={actionLoading}
             className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-vitalgo-green rounded-lg hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green transition-colors duration-150 disabled:opacity-50"
             data-testid={`${testId}-add-button`}
@@ -202,14 +209,15 @@ export const AllergiesCard: React.FC<AllergiesCardProps> = ({
           <div className="space-y-4">
             {/* Allergies List */}
             {recentAllergies.map((allergy) => (
-              <AllergyCard
-                key={allergy.id}
-                allergy={allergy}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                compact={true}
-                data-testid={`${testId}-allergy-${allergy.id}`}
-              />
+              <div key={allergy.id} onClick={(e) => e.stopPropagation()}>
+                <AllergyCard
+                  allergy={allergy}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  compact={true}
+                  data-testid={`${testId}-allergy-${allergy.id}`}
+                />
+              </div>
             ))}
 
             {/* View All Footer */}
