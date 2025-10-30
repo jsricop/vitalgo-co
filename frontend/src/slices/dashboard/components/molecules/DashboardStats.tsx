@@ -79,7 +79,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
         title={t('stats.allergies')}
         value={stats.active_allergies}
         icon={allergyIcon}
-        variant="warning"
+        variant="info"
         data-testid="stats-allergies"
       />
 
@@ -87,7 +87,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
         title={t('stats.surgeries')}
         value={stats.active_surgeries}
         icon={surgeryIcon}
-        variant="default"
+        variant="info"
         data-testid="stats-surgeries"
       />
 
@@ -95,7 +95,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
         title={t('stats.illnesses')}
         value={stats.active_illnesses}
         icon={illnessIcon}
-        variant={stats.active_illnesses > 0 ? "warning" : "success"}
+        variant="info"
         data-testid="stats-illnesses"
       />
     </div>
