@@ -62,22 +62,22 @@ export function HeroSection() {
             {t('hero.description')}
           </p>
 
-          <div className="flex flex-col gap-4 justify-center items-center mb-12 max-w-md mx-auto">
-            <Link href="/login" className="w-full">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            <Link href="/login">
               <Button
                 size="lg"
-                className="bg-vitalgo-green hover:bg-vitalgo-green/90 text-white px-8 py-4 text-lg w-full"
+                className="bg-vitalgo-green hover:bg-vitalgo-green/90 hover:scale-105 text-white hover:text-gray-100 px-8 py-3 text-base transition-all duration-200"
                 data-testid="home-hero-login-button"
               >
                 {t('hero.loginButton')}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Link href="/signup/paciente" className="w-full">
+            <Link href="/signup/paciente">
               <Button
                 variant="outline"
                 size="lg"
-                className="border-black text-black hover:bg-gray-50 px-8 py-4 text-lg w-full"
+                className="bg-white border-gray-300 text-gray-600 hover:bg-white hover:border-vitalgo-green hover:text-vitalgo-green hover:scale-105 px-8 py-3 text-base transition-all duration-200"
                 data-testid="home-hero-patient-button"
               >
                 {t('hero.patientButton')}
