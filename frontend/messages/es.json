@@ -82,6 +82,19 @@
       "connectionError": "Error de conexión. Verifica tu internet."
     }
   },
+  "onboarding": {
+    "title": "Completa tu Perfil",
+    "subtitle": "Ayúdanos a conocerte mejor completando tu información médica",
+    "skip": "Saltar este paso",
+    "next": "Siguiente",
+    "complete": "Finalizar",
+    "step1": "Información Básica",
+    "step2": "Información Personal",
+    "step3": "Información Médica",
+    "completedTitle": "¡Perfil Completado!",
+    "completedMessage": "Has completado tu información médica. Redirigiendo a tu panel de control...",
+    "progress": "Paso {current} de {total}"
+  },
   "signup": {
     "title": "Crear Cuenta",
     "subtitle": "Únete a VitalGo y ten tu historial médico siempre a la mano",
@@ -177,7 +190,16 @@
           "placeholder": "Ingresa tu contraseña nuevamente"
         }
       }
-    }
+    },
+    "legal": {
+      "acceptTermsText": "Acepto los",
+      "acceptPrivacyText": "Acepto la"
+    },
+    "legalSectionTitle": "Aceptación Legal",
+    "legalSectionSubtitle": "Por favor lee y acepta nuestros términos",
+    "createAccountButton": "Siguiente",
+    "alreadyHaveAccount": "¿Ya tienes cuenta?",
+    "loginLink": "Inicia sesión aquí"
   },
   "dashboard": {
     "title": "Panel de Control",

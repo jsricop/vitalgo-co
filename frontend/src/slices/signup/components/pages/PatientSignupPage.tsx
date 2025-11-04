@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { PatientSignupForm } from '../organisms/PatientSignupForm';
 import { AutoLoginLoader } from '../atoms/AutoLoginLoader';
+import { ProfileOnboarding } from '../organisms/ProfileOnboarding';
 import { RegistrationResponse } from '../../types';
 import { MinimalNavbar } from '../../../../shared/components/organisms/MinimalNavbar';
 import { MinimalFooter } from '../../../../shared/components/organisms/MinimalFooter';
@@ -17,6 +18,7 @@ export default function PatientSignupPage() {
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isAutoLogging, setIsAutoLogging] = useState<boolean>(false);
+  const [showOnboarding, setShowOnboarding] = useState<boolean>(false);
   const [registrationResponse, setRegistrationResponse] = useState<RegistrationResponse | null>(null);
 
   const handleSuccess = (response: RegistrationResponse) => {
@@ -41,9 +43,15 @@ export default function PatientSignupPage() {
       // Use centralized localStorage service for consistent token storage
       LocalStorageService.setAuthDataFromRegistration(registrationResponse);
 
-      // Redirect to dashboard
-      window.location.href = registrationResponse.redirect_url || '/dashboard';
+      // Show onboarding instead of redirecting directly
+      setIsAutoLogging(false);
+      setShowOnboarding(true);
     }
+  };
+
+  const handleOnboardingComplete = () => {
+    // Redirect to dashboard after onboarding is complete
+    window.location.href = '/dashboard';
   };
 
   const handleError = (error: string) => {
@@ -67,15 +75,17 @@ export default function PatientSignupPage() {
       <main className="py-12">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-lg shadow-sm p-8">
-            {/* Page Header */}
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                {t('title')}
-              </h1>
-              <p className="text-gray-600">
-                {t('subtitle')}
-              </p>
-            </div>
+            {/* Page Header - Solo se muestra si NO está en onboarding */}
+            {!showOnboarding && (
+              <div className="text-center mb-8">
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                  {t('title')}
+                </h1>
+                <p className="text-gray-600">
+                  {t('subtitle')}
+                </p>
+              </div>
+            )}
 
             {/* Success Message & Auto-Login Loader */}
             {successMessage && !isAutoLogging && (
@@ -119,12 +129,17 @@ export default function PatientSignupPage() {
             )}
 
             {/* Registration Form */}
-            {!successMessage && !isAutoLogging && (
+            {!successMessage && !isAutoLogging && !showOnboarding && (
               <PatientSignupForm
                 onSuccess={handleSuccess}
                 onError={handleError}
                 allowedDocumentTypes={['CC', 'CE', 'PA']}
               />
+            )}
+
+            {/* Onboarding - Replaces form after successful registration */}
+            {showOnboarding && (
+              <ProfileOnboarding onComplete={handleOnboardingComplete} />
             )}
           </div>
 

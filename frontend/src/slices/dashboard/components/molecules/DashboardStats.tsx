@@ -21,6 +21,21 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
   'data-testid': testId
 }) => {
   const t = useTranslations('dashboard');
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const offset = 80; // Offset for navbar
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8" data-testid={testId}>
@@ -72,6 +87,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
         value={stats.active_medications}
         icon={medicationIcon}
         variant="info"
+        onClick={() => scrollToSection('medications-section')}
         data-testid="stats-medications"
       />
 
@@ -80,6 +96,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
         value={stats.active_allergies}
         icon={allergyIcon}
         variant="info"
+        onClick={() => scrollToSection('allergies-section')}
         data-testid="stats-allergies"
       />
 
@@ -88,6 +105,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
         value={stats.active_surgeries}
         icon={surgeryIcon}
         variant="info"
+        onClick={() => scrollToSection('surgeries-section')}
         data-testid="stats-surgeries"
       />
 
@@ -96,6 +114,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
         value={stats.active_illnesses}
         icon={illnessIcon}
         variant="info"
+        onClick={() => scrollToSection('illnesses-section')}
         data-testid="stats-illnesses"
       />
     </div>

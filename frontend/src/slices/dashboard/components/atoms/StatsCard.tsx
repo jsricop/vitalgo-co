@@ -10,6 +10,7 @@ interface StatsCardProps {
   icon: React.ReactNode;
   variant?: 'default' | 'success' | 'warning' | 'info';
   suffix?: string;
+  onClick?: () => void;
   'data-testid'?: string;
 }
 
@@ -19,6 +20,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   icon,
   variant = 'default',
   suffix = '',
+  onClick,
   'data-testid': testId
 }) => {
   const getVariantClasses = () => {
@@ -49,8 +51,17 @@ export const StatsCard: React.FC<StatsCardProps> = ({
 
   return (
     <div
-      className={`p-6 rounded-lg border-2 ${getVariantClasses()}`}
+      className={`p-6 rounded-lg border-2 ${getVariantClasses()} ${onClick ? 'cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-200' : ''}`}
+      onClick={onClick}
       data-testid={testId}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      } : undefined}
     >
       <div className="flex items-center justify-between">
         <div>
