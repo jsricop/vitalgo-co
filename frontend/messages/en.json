@@ -386,7 +386,10 @@
         "births": "Births",
         "cesareans": "Cesarean Sections",
         "abortions": "Abortions",
-        "contraceptiveMethod": "Contraceptive Method"
+        "contraceptiveMethod": "Contraceptive Method",
+        "organDonorPreference": "Do you wish to be an organ donor?",
+        "height": "Height (cm)",
+        "weight": "Weight (kg)"
       },
       "placeholders": {
         "firstName": "e.g., John Michael",
@@ -409,7 +412,9 @@
         "selectDate": "Select date",
         "selectMenstrualStatus": "Select status",
         "pregnancyWeeks": "e.g., 12",
-        "selectContraceptiveMethod": "Select method"
+        "selectContraceptiveMethod": "Select method",
+        "height": "e.g., 170",
+        "weight": "e.g., 70"
       },
       "options": {
         "documentTypes": {
@@ -471,7 +476,10 @@
           "naturalMethods": "Natural Methods",
           "sterilization": "Sterilization",
           "other": "Other"
-        }
+        },
+        "donorYes": "Yes, I wish to be a donor",
+        "donorNo": "No, I don't wish to be a donor",
+        "donorPreferNotToSay": "Prefer not to say"
       },
       "buttons": {
         "save": "Save Changes",
@@ -496,7 +504,9 @@
         "reproductiveHistory": "Reproductive History",
         "contraception": "Contraception",
         "editBasicInfo": "Edit Basic Information",
-        "editPersonalInfo": "Edit Personal Information"
+        "editPersonalInfo": "Edit Personal Information",
+        "donorPreference": "Personal Will",
+        "physicalMeasurements": "Physical Measurements"
       },
       "messages": {
         "updateBasicInfo": "Update your registered personal information",
@@ -1307,7 +1317,7 @@
         "diagnosisDate": "Diagnosis Date",
         "status": "Status",
         "isChronic": "Chronic condition",
-        "cie10Code": "ICD-10 Code",
+        "cie10Code": "ICD-11 Code",
         "diagnosedBy": "Diagnosed by",
         "treatmentDescription": "Treatment Description",
         "notes": "Additional Notes"
@@ -1324,14 +1334,18 @@
         "save": "Save",
         "update": "Update",
         "saving": "Saving..."
-      }
+      },
+      "cie10Brief": "International disease classification code",
+      "cie10Explanation": "WHO standardized system for classifying diseases. Helps doctors identify and record diagnoses uniformly worldwide."
     },
     "card": {
       "labels": {
         "diagnosed": "Diagnosed",
         "diagnosedBy": "Diagnosed by",
         "treatment": "Treatment",
-        "cie10": "ICD-10",
+        "cie10": "ICD-11",
+        "cie10Brief": "International classification code",
+        "cie10Explanation": "International Classification of Diseases - 11th revision",
         "updated": "Updated"
       },
       "actions": {
@@ -1651,7 +1665,7 @@
     "cta": {
       "title": "Your health deserves to be in good hands",
       "description": "Join thousands of people who already have their secure and always accessible digital medical record. Quick registration with medical identity verification.",
-      "patientButton": "Sign Up as Patient",
+      "patientButton": "Create Personal Account",
       "professionalButton": "Sign Up as Professional",
       "note": "Medical data protection • Identity verification • Authorized access only"
     }

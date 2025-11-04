@@ -49,6 +49,13 @@ export interface PersonalPatientInfo {
   cesareans_count?: number | null;
   abortions_count?: number | null;
   contraceptive_method?: string | null;
+
+  // Donor Preference (Voluntad de la Persona)
+  organ_donor_preference?: string | null; // 'DONANTE' | 'NO_DONANTE' | 'PREFIERO_NO_RESPONDER' | null
+
+  // Physical Measurements
+  height?: number | null; // Height in centimeters
+  weight?: number | null; // Weight in kilograms
 }
 
 export interface PersonalPatientUpdate {
@@ -98,6 +105,13 @@ export interface PersonalPatientUpdate {
   cesareans_count?: number | null;
   abortions_count?: number | null;
   contraceptive_method?: string | null;
+
+  // Donor Preference (Voluntad de la Persona)
+  organ_donor_preference?: string | null; // 'DONANTE' | 'NO_DONANTE' | 'PREFIERO_NO_RESPONDER' | null
+
+  // Physical Measurements
+  height?: number | null; // Height in centimeters
+  weight?: number | null; // Weight in kilograms
 }
 
 export interface UsePersonalPatientInfoResult {
