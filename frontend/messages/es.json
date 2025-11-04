@@ -1453,9 +1453,9 @@
       "title": "Tu salud.",
       "titleHighlight": "Simplificada.",
       "description": "Tu expediente médico digital completo y seguro. Acceso inmediato a tu historial clínico, exámenes, diagnósticos y tratamientos desde cualquier centro de salud autorizado. Consultas más rápidas que te ahorran hasta 70% del tiempo de espera.",
-      "patientButton": "Soy Paciente",
+      "patientButton": "Registrarse",
       "professionalButton": "Soy Profesional de Salud",
-      "loginButton": "Ya tengo cuenta - Iniciar sesión",
+      "loginButton": "Iniciar Sesión",
       "stats": {
         "patients": "Pacientes Confían en Nosotros",
         "healthCenters": "Centros de Salud Conectados",

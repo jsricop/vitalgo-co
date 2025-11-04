@@ -1625,9 +1625,9 @@
       "title": "Your health.",
       "titleHighlight": "Simplified.",
       "description": "Your complete and secure digital medical record. Instant access to your medical history, exams, diagnoses, and treatments from any authorized health center. Faster consultations that save you up to 70% of waiting time.",
-      "patientButton": "I'm a Patient",
+      "patientButton": "Sign Up",
       "professionalButton": "I'm a Health Professional",
-      "loginButton": "Already have an account - Log In",
+      "loginButton": "Log In",
       "stats": {
         "patients": "Patients Trust Us",
         "healthCenters": "Connected Health Centers",

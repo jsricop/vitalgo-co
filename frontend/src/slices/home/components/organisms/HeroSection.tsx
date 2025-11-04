@@ -62,18 +62,29 @@ export function HeroSection() {
             {t('hero.description')}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-            <Link href="/signup/paciente">
+          <div className="flex flex-col gap-4 justify-center items-center mb-12 max-w-md mx-auto">
+            <Link href="/login" className="w-full">
               <Button
                 size="lg"
-                className="bg-vitalgo-green hover:bg-vitalgo-green/90 text-white px-8 py-4 text-lg"
-                data-testid="home-hero-patient-button"
+                className="bg-vitalgo-green hover:bg-vitalgo-green/90 text-white px-8 py-4 text-lg w-full"
+                data-testid="home-hero-login-button"
               >
-                {t('hero.patientButton')}
+                {t('hero.loginButton')}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Link href="/signup/paramedico">
+            <Link href="/signup/paciente" className="w-full">
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-black text-black hover:bg-gray-50 px-8 py-4 text-lg w-full"
+                data-testid="home-hero-patient-button"
+              >
+                {t('hero.patientButton')}
+              </Button>
+            </Link>
+            {/* Temporarily hidden - Health Professional button */}
+            {/* <Link href="/signup/paramedico">
               <Button
                 size="lg"
                 className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg"
@@ -82,20 +93,7 @@ export function HeroSection() {
                 {t('hero.professionalButton')}
                 <Stethoscope className="ml-2 h-5 w-5" />
               </Button>
-            </Link>
-          </div>
-
-          <div className="flex justify-center mb-12">
-            <Link href="/login">
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-gray-300 text-gray-700 hover:bg-gray-100 hover:text-gray-900 px-8 py-4 text-lg"
-                data-testid="home-hero-login-button"
-              >
-                {t('hero.loginButton')}
-              </Button>
-            </Link>
+            </Link> */}
           </div>
 
           {/* Stats */}
