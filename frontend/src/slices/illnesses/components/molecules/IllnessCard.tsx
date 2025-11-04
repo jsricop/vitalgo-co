@@ -40,11 +40,10 @@ export const IllnessCard: React.FC<IllnessCardProps> = ({
   const t = useTranslations('illnesses.card');
   const locale = useLocale();
 
-  // Helper function for getting illness summary with translations
+  // Helper function for getting illness summary with translations (for compact mode)
   const getIllnessSummary = (illness: any): string => {
     const parts = [];
     if (illness.diagnosedBy) parts.push(`${t('labels.diagnosedBy')} ${illness.diagnosedBy}`);
-    if (illness.cie10Code) parts.push(`${t('labels.cie10')}: ${illness.cie10Code}`);
     if (illness.treatmentDescription) parts.push(illness.treatmentDescription);
     return parts.join(' • ') || t('emptyStates.noDetails');
   };
@@ -119,16 +118,33 @@ export const IllnessCard: React.FC<IllnessCardProps> = ({
         </div>
       )}
 
-      {/* CIE-10 Code */}
-      {!compact && illness.cie10Code && (
-        <div className="mb-3">
-          <div className="flex items-center">
-            <svg className="h-3 w-3 text-vitalgo-dark-lighter mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      {/* CIE-11 Code */}
+      {illness.cie10Code && (
+        <div className={`mb-3 bg-blue-50 border border-blue-100 rounded-lg ${compact ? 'p-1.5' : 'p-2'}`}>
+          <div className="flex items-start space-x-2">
+            <svg className={`${compact ? 'h-3 w-3' : 'h-4 w-4'} text-blue-600 mt-0.5 flex-shrink-0`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <span className={metadataClasses}>
-              {t('labels.cie10')}: {illness.cie10Code}
-            </span>
+            <div className="flex-1">
+              <div className="flex items-center group relative">
+                <span className="text-xs font-semibold text-blue-900">
+                  {t('labels.cie10')}: <span className="font-mono text-blue-700">{illness.cie10Code}</span>
+                </span>
+                <svg className={`${compact ? 'h-2.5 w-2.5' : 'h-3 w-3'} text-blue-600 ml-1 cursor-help`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {/* Tooltip with full explanation */}
+                <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block z-50 w-64 px-3 py-2 text-xs text-white bg-gray-900 rounded-lg shadow-lg">
+                  {t('labels.cie10Explanation')}
+                  <div className="absolute left-4 top-full w-2 h-2 bg-gray-900 transform rotate-45 -mt-1"></div>
+                </div>
+              </div>
+              {!compact && (
+                <p className="text-xs text-blue-700 mt-1">
+                  {t('labels.cie10Brief')}
+                </p>
+              )}
+            </div>
           </div>
         </div>
       )}

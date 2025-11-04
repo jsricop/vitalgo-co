@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowRight, Stethoscope } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { Button } from '../atoms/Button'
@@ -37,16 +37,6 @@ export function CTASection() {
               >
                 {t('cta.patientButton')}
                 <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link href="/signup/paramedico">
-              <Button
-                size="lg"
-                className="bg-blue-600 hover:bg-blue-700 text-white border-2 border-white px-8 py-4 text-lg"
-                data-testid="home-cta-professional-button"
-              >
-                {t('cta.professionalButton')}
-                <Stethoscope className="ml-2 h-5 w-5" />
               </Button>
             </Link>
           </div>

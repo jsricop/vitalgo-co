@@ -16,6 +16,7 @@ interface PersonalInfoEditModalProps {
   initialData: PersonalPatientInfo | null;
   onSubmit: (data: PersonalPatientUpdate) => Promise<{ success: boolean; message: string }>;
   isLoading?: boolean;
+  inline?: boolean; // New prop for inline rendering without overlay
   'data-testid'?: string;
 }
 
@@ -25,6 +26,7 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
   initialData,
   onSubmit,
   isLoading = false,
+  inline = false,
   'data-testid': testId = 'personal-info-edit-modal'
 }) => {
   const t = useTranslations('profile.forms');
@@ -50,7 +52,10 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
         residence_country: initialData.residence_country || '',
         residence_country_other: initialData.residence_country_other || '',
         residence_department: initialData.residence_department || '',
-        residence_city: initialData.residence_city || ''
+        residence_city: initialData.residence_city || '',
+        organ_donor_preference: initialData.organ_donor_preference || '',
+        height: initialData.height || undefined,
+        weight: initialData.weight || undefined
       });
 
       setErrors({});
@@ -58,7 +63,7 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
     }
   }, [isOpen, initialData]);
 
-  // Close modal on ESC key
+  // Close modal on ESC key (only for non-inline modals)
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -66,16 +71,18 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
       }
     };
 
-    if (isOpen) {
+    if (isOpen && !inline) {
       document.addEventListener('keydown', handleEsc);
       document.body.style.overflow = 'hidden';
     }
 
     return () => {
       document.removeEventListener('keydown', handleEsc);
-      document.body.style.overflow = 'unset';
+      if (!inline) {
+        document.body.style.overflow = 'unset';
+      }
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, inline]);
 
   const handleFieldChange = (field: keyof PersonalPatientUpdate, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -175,6 +182,63 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
 
   if (!isOpen) return null;
 
+  // Inline rendering (no overlay, no fixed positioning)
+  if (inline) {
+    return (
+      <div data-testid={testId} className="w-full">
+        <div className="bg-white rounded-lg border border-gray-200" data-testid="modal-content">
+          {/* Header */}
+          <div className="bg-white px-6 pt-6 pb-4 border-b border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <h3
+                className="text-xl font-semibold text-vitalgo-dark"
+                id="modal-title"
+                data-testid="modal-title"
+              >
+                {t('modals.editPersonalInfo')}
+              </h3>
+            </div>
+            <p className="text-sm text-vitalgo-dark-light">
+              {t('messages.updatePersonalInfo')}
+            </p>
+          </div>
+
+          {/* Content */}
+          <form onSubmit={handleSubmit} className="px-6 pb-4">
+            <div className="space-y-6">
+              {/* Demographic Information Section */}
+              <DemographicInfoSection
+                data={formData}
+                onChange={handleFieldChange}
+                errors={errors}
+              />
+
+              {/* Residence Information Section */}
+              <ResidenceInfoSection
+                data={formData}
+                onChange={handleFieldChange}
+                errors={errors}
+              />
+
+              {/* General Error */}
+              {errors.general && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <div className="flex items-start">
+                    <svg className="h-5 w-5 text-red-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.866-.833-2.464 0L4.348 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                    <p className="ml-3 text-sm text-red-700">{errors.general}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // Default modal rendering (with overlay)
   return (
     <div
       className="fixed inset-0 z-50 overflow-y-auto"
@@ -236,20 +300,6 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
           {/* Content */}
           <form onSubmit={handleSubmit} className="px-6 pb-4">
             <div className="space-y-6">
-              {/* Demographic Information Section */}
-              <DemographicInfoSection
-                data={formData}
-                onChange={handleFieldChange}
-                errors={errors}
-              />
-
-              {/* Residence Information Section */}
-              <ResidenceInfoSection
-                data={formData}
-                onChange={handleFieldChange}
-                errors={errors}
-              />
-
               {/* General Error */}
               {errors.general && (
                 <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -261,6 +311,24 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
                   </div>
                 </div>
               )}
+
+              {/* Demographic Information Section */}
+              <DemographicInfoSection
+                formData={formData}
+                errors={errors}
+                isFormLoading={isFormLoading}
+                onChange={handleInputChange}
+                testId={testId}
+              />
+
+              {/* Residence Information Section */}
+              <ResidenceInfoSection
+                formData={formData}
+                errors={errors}
+                isFormLoading={isFormLoading}
+                onChange={handleInputChange}
+                testId={testId}
+              />
             </div>
           </form>
 
@@ -279,7 +347,7 @@ export const PersonalInfoEditModal: React.FC<PersonalInfoEditModalProps> = ({
                   {t('buttons.saving')}
                 </div>
               ) : (
-                t('buttons.savePersonalInfo')
+                t('buttons.save')
               )}
             </button>
             <button

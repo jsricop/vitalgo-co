@@ -19,6 +19,7 @@ interface BasicInfoEditModalProps {
   initialData: BasicPatientInfo | null;
   onSubmit: (data: BasicPatientUpdate) => Promise<{ success: boolean; message: string }>;
   isLoading?: boolean;
+  inline?: boolean; // New prop for inline rendering without overlay
   'data-testid'?: string;
 }
 
@@ -28,6 +29,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
   initialData,
   onSubmit,
   isLoading = false,
+  inline = false,
   'data-testid': testId = 'basic-info-edit-modal'
 }) => {
   const t = useTranslations('profile.forms');
@@ -95,7 +97,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
     }
   }, [isOpen, initialData]);
 
-  // Close modal on ESC key
+  // Close modal on ESC key (only for non-inline modals)
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -103,16 +105,18 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
       }
     };
 
-    if (isOpen) {
+    if (isOpen && !inline) {
       document.addEventListener('keydown', handleEsc);
       document.body.style.overflow = 'hidden';
     }
 
     return () => {
       document.removeEventListener('keydown', handleEsc);
-      document.body.style.overflow = 'unset';
+      if (!inline) {
+        document.body.style.overflow = 'unset';
+      }
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, inline]);
 
   const handleInputChange = (field: keyof BasicPatientUpdate, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -240,6 +244,211 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
 
   if (!isOpen) return null;
 
+  // Inline rendering (no overlay, no fixed positioning)
+  if (inline) {
+    return (
+      <div data-testid={testId} className="w-full">
+        <div className="bg-white rounded-lg border border-gray-200" data-testid="modal-content">
+          {/* Header */}
+          <div className="bg-white px-6 pt-6 pb-4 border-b border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <h3
+                className="text-xl font-semibold text-vitalgo-dark"
+                id="modal-title"
+                data-testid="modal-title"
+              >
+                {t('modals.editBasicInfo')}
+              </h3>
+            </div>
+            <p className="text-sm text-vitalgo-dark-light">
+              {t('messages.updateBasicInfo')}
+            </p>
+          </div>
+
+          {/* Content */}
+          <form onSubmit={handleSubmit} className="px-6 pb-4">
+            <div className="space-y-4">
+              {/* Name Fields Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* First Name */}
+                <div>
+                  <label htmlFor="firstName" className={labelClasses}>
+                    {t('labels.firstName')} <span className={requiredClasses}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    value={formData.firstName || ''}
+                    onChange={(e) => handleInputChange('firstName', e.target.value)}
+                    className={fieldClasses('firstName')}
+                    placeholder={t('placeholders.firstName')}
+                    disabled={isFormLoading}
+                    data-testid={`${testId}-first-name`}
+                    style={{ fontSize: '16px' }}
+                    autoComplete="given-name"
+                  />
+                  {errors.firstName && (
+                    <p className={errorClasses} data-testid={`${testId}-first-name-error`}>
+                      {errors.firstName}
+                    </p>
+                  )}
+                </div>
+
+                {/* Last Name */}
+                <div>
+                  <label htmlFor="lastName" className={labelClasses}>
+                    {t('labels.lastName')} <span className={requiredClasses}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    value={formData.lastName || ''}
+                    onChange={(e) => handleInputChange('lastName', e.target.value)}
+                    className={fieldClasses('lastName')}
+                    placeholder={t('placeholders.lastName')}
+                    disabled={isFormLoading}
+                    data-testid={`${testId}-last-name`}
+                    style={{ fontSize: '16px' }}
+                    autoComplete="family-name"
+                  />
+                  {errors.lastName && (
+                    <p className={errorClasses} data-testid={`${testId}-last-name-error`}>
+                      {errors.lastName}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Document Fields Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Document Type */}
+                <div>
+                  <label htmlFor="documentType" className={labelClasses}>
+                    {t('labels.documentType')} <span className={requiredClasses}>*</span>
+                  </label>
+                  <select
+                    id="documentType"
+                    value={formData.documentType || ''}
+                    onChange={(e) => handleInputChange('documentType', e.target.value)}
+                    className={fieldClasses('documentType')}
+                    disabled={isFormLoading}
+                    data-testid={`${testId}-document-type`}
+                  >
+                    <option value="">{t('placeholders.selectDocumentType')}</option>
+                    <option value="CC">{t('options.documentTypes.cc')}</option>
+                    <option value="TI">{t('options.documentTypes.ti')}</option>
+                    <option value="CE">{t('options.documentTypes.ce')}</option>
+                    <option value="PAS">{t('options.documentTypes.passport')}</option>
+                  </select>
+                  {errors.documentType && (
+                    <p className={errorClasses} data-testid={`${testId}-document-type-error`}>
+                      {errors.documentType}
+                    </p>
+                  )}
+                </div>
+
+                {/* Document Number */}
+                <div>
+                  <label htmlFor="documentNumber" className={labelClasses}>
+                    {t('labels.documentNumber')} <span className={requiredClasses}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="documentNumber"
+                    value={formData.documentNumber || ''}
+                    onChange={(e) => handleInputChange('documentNumber', e.target.value)}
+                    className={fieldClasses('documentNumber')}
+                    placeholder={t('placeholders.documentNumber')}
+                    disabled={isFormLoading}
+                    data-testid={`${testId}-document-number`}
+                    style={{ fontSize: '16px' }}
+                    autoComplete="off"
+                  />
+                  {errors.documentNumber && (
+                    <p className={errorClasses} data-testid={`${testId}-document-number-error`}>
+                      {errors.documentNumber}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Contact Fields - Phone Input Group */}
+              <div>
+                <PhoneInputGroup
+                  countryCode={phoneCountryCode}
+                  phoneNumber={phoneNumber}
+                  onCountryChange={handleCountryChange}
+                  onPhoneChange={handlePhoneChange}
+                  error={errors.phoneInternational}
+                  disabled={isFormLoading}
+                  data-testid={`${testId}-phone-group`}
+                  countries={convertedCountries.length > 0 ? convertedCountries : undefined}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="email" className={labelClasses}>
+                  Email <span className={requiredClasses}>*</span>
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  value={formData.email || ''}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  className={fieldClasses('email')}
+                  placeholder={t('placeholders.phone')}
+                  disabled={isFormLoading}
+                  data-testid={`${testId}-email`}
+                  style={{ fontSize: '16px' }}
+                  autoComplete="email"
+                />
+                {errors.email && (
+                  <p className={errorClasses} data-testid={`${testId}-email-error`}>
+                    {errors.email}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="birthDate" className={labelClasses}>
+                  {t('labels.birthDate')} <span className={requiredClasses}>*</span>
+                </label>
+                <input
+                  type="date"
+                  id="birthDate"
+                  value={formData.birthDate || ''}
+                  onChange={(e) => handleInputChange('birthDate', e.target.value)}
+                  className={fieldClasses('birthDate')}
+                  disabled={isFormLoading}
+                  data-testid={`${testId}-birth-date`}
+                  style={{ fontSize: '16px' }}
+                />
+                {errors.birthDate && (
+                  <p className={errorClasses} data-testid={`${testId}-birth-date-error`}>
+                    {errors.birthDate}
+                  </p>
+                )}
+              </div>
+
+              {/* General Error */}
+              {errors.general && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <div className="flex items-start">
+                    <svg className="h-5 w-5 text-red-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.866-.833-2.464 0L4.348 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                    <p className="ml-3 text-sm text-red-700">{errors.general}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // Default modal rendering (with overlay)
   return (
     <div
       className="fixed inset-0 z-50 overflow-y-auto"

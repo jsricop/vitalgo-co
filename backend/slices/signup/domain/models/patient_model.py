@@ -92,6 +92,13 @@ class Patient(Base):
     abortions_count = Column(Integer, nullable=True)  # 0 or greater
     contraceptive_method = Column(String(100), nullable=True)
 
+    # Donor Preference (Voluntad de la Persona)
+    organ_donor_preference = Column(String(30), nullable=True)  # 'DONANTE', 'NO_DONANTE', 'PREFIERO_NO_RESPONDER', or NULL
+
+    # Physical Measurements
+    height = Column(Integer, nullable=True)  # Height in centimeters
+    weight = Column(Integer, nullable=True)  # Weight in kilograms
+
     # Relationships
     user = relationship("User", backref="patient")
     document_type = relationship("DocumentType", backref="patients")

@@ -153,10 +153,21 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
 
         {/* Row 3: CIE-10 Code and Diagnosed By */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* CIE-10 Code */}
+          {/* CIE-11 Code */}
           <div>
             <label htmlFor="cie10Code" className={labelClasses}>
               {t('fields.cie10Code')}
+              <span className="ml-2 inline-flex items-center group relative">
+                <svg className="h-3.5 w-3.5 text-blue-600 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {/* Tooltip */}
+                <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block z-50 w-72 px-3 py-2 text-xs text-white bg-gray-900 rounded-lg shadow-lg">
+                  <strong className="block mb-1">{t('fields.cie10Code')}</strong>
+                  {t('cie10Explanation')}
+                  <div className="absolute left-4 top-full w-2 h-2 bg-gray-900 transform rotate-45 -mt-1"></div>
+                </div>
+              </span>
             </label>
             <input
               type="text"
@@ -171,6 +182,13 @@ export const IllnessForm: React.FC<IllnessFormProps> = ({
               style={{ fontSize: '16px' }}
               autoComplete="off"
             />
+            {/* Help text */}
+            <p className="mt-1 text-xs text-blue-700 flex items-start">
+              <svg className="h-3.5 w-3.5 text-blue-600 mr-1 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>{t('cie10Brief')}</span>
+            </p>
             {errors.cie10Code && (
               <p className={errorClasses}>{errors.cie10Code}</p>
             )}
