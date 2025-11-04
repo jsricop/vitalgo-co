@@ -137,7 +137,13 @@ async def login(
         raise
 
     except Exception as e:
-        # Handle unexpected errors
+        # Handle unexpected errors - log for debugging
+        import traceback
+        print(f"🔍 LOGIN ERROR DEBUG - Exception caught:")
+        print(f"   Exception type: {type(e).__name__}")
+        print(f"   Exception message: {str(e)}")
+        print(f"   Traceback: {traceback.format_exc()}")
+
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail={

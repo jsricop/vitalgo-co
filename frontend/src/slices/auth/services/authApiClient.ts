@@ -200,8 +200,9 @@ class AuthApiClientImpl implements AuthApiClient {
         isError: error instanceof Error,
         hasSuccess: error && typeof error === 'object' && 'success' in error,
         hasMessage: error && typeof error === 'object' && 'message' in error,
-        error: error,
-        errorKeys: error && typeof error === 'object' ? Object.keys(error) : []
+        errorMessage: error instanceof Error ? error.message : (error && typeof error === 'object' && 'message' in error ? (error as any).message : String(error)),
+        errorKeys: error && typeof error === 'object' ? Object.keys(error) : [],
+        errorStack: error instanceof Error ? error.stack : undefined
       });
 
       // Persist error debug info
