@@ -81,6 +81,19 @@
       "connectionError": "Connection error. Check your internet."
     }
   },
+  "onboarding": {
+    "title": "Complete Your Profile",
+    "subtitle": "Help us get to know you better by completing your medical information",
+    "skip": "Skip this step",
+    "next": "Next",
+    "complete": "Finish",
+    "step1": "Basic Information",
+    "step2": "Personal Information",
+    "step3": "Medical Information",
+    "completedTitle": "Profile Completed!",
+    "completedMessage": "You have completed your medical information. Redirecting to your dashboard...",
+    "progress": "Step {current} of {total}"
+  },
   "signup": {
     "title": "Create Your VitalGo Account",
     "subtitle": "Start managing your health digitally",
