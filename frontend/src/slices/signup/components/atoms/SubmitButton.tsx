@@ -20,10 +20,10 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({
     <button
       type="submit"
       disabled={disabled || loading}
-      className={`w-full py-3 px-4 rounded-lg font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+      className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
         disabled || loading
-          ? 'bg-gray-400 cursor-not-allowed'
-          : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'
+          ? 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-60'
+          : 'bg-vitalgo-green text-white hover:bg-vitalgo-green-light focus:ring-vitalgo-green shadow-sm hover:shadow-md'
       }`}
       data-testid={testId}
     >

@@ -173,7 +173,16 @@
           "placeholder": "Ingresa tu contraseña nuevamente"
         }
       }
-    }
+    },
+    "legal": {
+      "acceptTermsText": "Acepto los",
+      "acceptPrivacyText": "Acepto la"
+    },
+    "legalSectionTitle": "Aceptación Legal",
+    "legalSectionSubtitle": "Por favor lee y acepta nuestros términos",
+    "createAccountButton": "Siguiente",
+    "alreadyHaveAccount": "¿Ya tienes cuenta?",
+    "loginLink": "Inicia sesión aquí"
   },
   "dashboard": {
     "title": "Panel de Control",

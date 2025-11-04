@@ -151,8 +151,10 @@
     },
     "alreadyHaveAccount": "Already have an account?",
     "loginLink": "Log in here",
-    "createAccountButton": "Create Account",
+    "createAccountButton": "Next",
     "creatingAccount": "Creating account...",
+    "legalSectionTitle": "Legal Acceptance",
+    "legalSectionSubtitle": "Please read and accept our terms",
     "errors": {
       "registrationFailed": "Registration failed. Please try again.",
       "connectionError": "Connection error. Check your internet connection.",
