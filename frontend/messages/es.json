@@ -85,6 +85,10 @@
   "signup": {
     "title": "Crear Cuenta",
     "subtitle": "Únete a VitalGo y ten tu historial médico siempre a la mano",
+    "personalInfoTitle": "Información Personal",
+    "accountInfoTitle": "Información de la Cuenta",
+    "legalSectionTitle": "Aceptación Legal",
+    "legalSectionSubtitle": "Por favor revisa y acepta nuestros términos para continuar",
     "step1": "Información Personal",
     "step2": "Información Médica",
     "step3": "Seguridad",
@@ -976,6 +980,8 @@
     },
     "card": {
       "labels": {
+        "reaction": "Reacción",
+        "diagnosed": "Diagnosticada",
         "diagnosis": "Diagnóstico",
         "notes": "Notas",
         "updated": "Actualizado"
@@ -1264,8 +1270,11 @@
     },
     "card": {
       "labels": {
+        "hospital": "Hospital",
+        "surgeon": "Cirujano",
         "doctor": "Dr.",
         "duration": "de duración",
+        "durationSuffix": "",
         "notes": "Notas",
         "complications": "Complicaciones",
         "updated": "Actualizado"

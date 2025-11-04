@@ -87,6 +87,7 @@
     "personalInfoTitle": "Personal Information",
     "accountInfoTitle": "Account Information",
     "legalSectionTitle": "Legal Acceptance",
+    "legalSectionSubtitle": "Please review and accept our terms to continue",
     "firstName": "First Name",
     "lastName": "Last Name",
     "documentType": "Document Type",
@@ -882,8 +883,11 @@
     "card": {
       "labels": {
         "prescribed": "Prescribed by",
+        "prescribedBy": "Prescribed by",
         "start": "Start",
+        "startDate": "Start",
         "end": "End",
+        "endDate": "End",
         "updated": "Updated"
       },
       "actions": {
@@ -1029,6 +1033,8 @@
     },
     "card": {
       "labels": {
+        "reaction": "Reaction",
+        "diagnosed": "Diagnosed",
         "diagnosis": "Diagnosis",
         "notes": "Notes",
         "updated": "Updated"
@@ -1186,8 +1192,11 @@
     },
     "card": {
       "labels": {
+        "hospital": "Hospital",
+        "surgeon": "Surgeon",
         "doctor": "Dr.",
         "duration": "duration",
+        "durationSuffix": "",
         "notes": "Notes",
         "complications": "Complications",
         "updated": "Updated"
