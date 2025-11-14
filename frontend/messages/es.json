@@ -170,6 +170,10 @@
           "label": "País de Origen",
           "placeholder": "Selecciona tu país"
         },
+        "birthCountry": {
+          "label": "País de Nacimiento",
+          "placeholder": "Selecciona tu país de nacimiento"
+        },
         "birthDate": "Fecha de Nacimiento"
       }
     },
@@ -335,7 +339,7 @@
         "residenceCity": "Ciudad de Residencia",
         "eps": "EPS *",
         "epsOther": "Especifique su EPS *",
-        "occupation": "Ocupación *",
+        "occupation": "Ocupación",
         "additionalInsurance": "Seguro Adicional",
         "complementaryPlan": "Plan Complementario",
         "complementaryPlanOther": "Especifique el Plan *",
@@ -343,7 +347,7 @@
         "emergencyName": "Nombre Completo *",
         "emergencyRelationship": "Parentesco *",
         "emergencyPhone": "Teléfono Principal *",
-        "emergencyPhoneAlt": "Teléfono Alternativo",
+        "emergencyPhoneAlt": "Teléfono Alternativo (opcional)",
         "isPregnant": "¿Estás embarazada?",
         "pregnancyWeeks": "Semanas de embarazo",
         "menstrualStatus": "Estado menstrual",
@@ -508,7 +512,7 @@
       },
       "fields": {
         "birthDate": "Fecha de nacimiento",
-        "originCountry": "País de origen",
+        "originCountry": "País de nacimiento",
         "documentType": "Tipo de documento",
         "documentNumber": "N° Documento",
         "phone": "Teléfono"
