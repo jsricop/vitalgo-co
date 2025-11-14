@@ -12,6 +12,8 @@ import { Country, getCountryByCode } from '../../../signup/data/countries';
 import { splitPhoneInternational, combinePhoneInternational } from '../../utils/phoneUtils';
 import { useCountries } from '@/hooks/useCountries';
 import type { Country as APICountry } from '@/services/countriesService';
+import { SignupApiService } from '../../../signup/services/signupApi';
+import type { DocumentType } from '../../../signup/types';
 
 interface BasicInfoEditModalProps {
   isOpen: boolean;
@@ -20,6 +22,7 @@ interface BasicInfoEditModalProps {
   onSubmit: (data: BasicPatientUpdate) => Promise<{ success: boolean; message: string }>;
   isLoading?: boolean;
   inline?: boolean; // New prop for inline rendering without overlay
+  showButtons?: boolean; // Show form buttons (default: true)
   'data-testid'?: string;
 }
 
@@ -30,6 +33,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
   onSubmit,
   isLoading = false,
   inline = false,
+  showButtons = true,
   'data-testid': testId = 'basic-info-edit-modal'
 }) => {
   const t = useTranslations('profile.forms');
@@ -49,9 +53,35 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
     flag: country.flag_emoji || '',
   }));
 
+  // Document types state
+  const [documentTypes, setDocumentTypes] = useState<DocumentType[]>([]);
+  const [documentTypesLoading, setDocumentTypesLoading] = useState(true);
+
   // Phone field states for separated input
   const [phoneCountryCode, setPhoneCountryCode] = useState<string>('CO');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
+
+  // Load document types on mount - filtered to DNI and PA only
+  useEffect(() => {
+    const loadDocumentTypes = async () => {
+      try {
+        setDocumentTypesLoading(true);
+        const types = await SignupApiService.getDocumentTypes();
+
+        // Filter to only show DNI and Pasaporte (universal document types)
+        const filteredTypes = types.filter(type => ['DNI', 'PA'].includes(type.code));
+        setDocumentTypes(filteredTypes);
+      } catch (error) {
+        console.error('Error loading document types:', error);
+        // Fallback to empty array on error
+        setDocumentTypes([]);
+      } finally {
+        setDocumentTypesLoading(false);
+      }
+    };
+
+    loadDocumentTypes();
+  }, []);
 
   // Initialize form data when modal opens
   useEffect(() => {
@@ -266,7 +296,7 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
           </div>
 
           {/* Content */}
-          <form onSubmit={handleSubmit} className="px-6 pb-4">
+          <form id="onboarding-basic-form" onSubmit={handleSubmit} className="px-6 pb-4">
             <div className="space-y-4">
               {/* Name Fields Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -333,12 +363,14 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
                     className={fieldClasses('documentType')}
                     disabled={isFormLoading}
                     data-testid={`${testId}-document-type`}
+                    disabled={isFormLoading || documentTypesLoading}
                   >
                     <option value="">{t('placeholders.selectDocumentType')}</option>
-                    <option value="CC">{t('options.documentTypes.cc')}</option>
-                    <option value="TI">{t('options.documentTypes.ti')}</option>
-                    <option value="CE">{t('options.documentTypes.ce')}</option>
-                    <option value="PAS">{t('options.documentTypes.passport')}</option>
+                    {documentTypes.map((docType) => (
+                      <option key={docType.id} value={docType.code}>
+                        {docType.code} - {docType.name}
+                      </option>
+                    ))}
                   </select>
                   {errors.documentType && (
                     <p className={errorClasses} data-testid={`${testId}-document-type-error`}>
@@ -575,12 +607,14 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
                     className={fieldClasses('documentType')}
                     disabled={isFormLoading}
                     data-testid={`${testId}-document-type`}
+                    disabled={isFormLoading || documentTypesLoading}
                   >
                     <option value="">{t('placeholders.selectDocumentType')}</option>
-                    <option value="CC">{t('options.documentTypes.cc')}</option>
-                    <option value="TI">{t('options.documentTypes.ti')}</option>
-                    <option value="CE">{t('options.documentTypes.ce')}</option>
-                    <option value="PAS">{t('options.documentTypes.passport')}</option>
+                    {documentTypes.map((docType) => (
+                      <option key={docType.id} value={docType.code}>
+                        {docType.code} - {docType.name}
+                      </option>
+                    ))}
                   </select>
                   {errors.documentType && (
                     <p className={errorClasses} data-testid={`${testId}-document-type-error`}>
@@ -686,34 +720,36 @@ export const BasicInfoEditModal: React.FC<BasicInfoEditModalProps> = ({
             </div>
           </form>
 
-          {/* Footer */}
-          <div className="bg-gray-50 px-6 py-4 sm:flex sm:flex-row-reverse sm:px-6">
-            <button
-              type="submit"
-              onClick={handleSubmit}
-              disabled={isFormLoading}
-              className="inline-flex w-full justify-center rounded-md bg-vitalgo-green px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green sm:ml-3 sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
-              data-testid={`${testId}-submit-button`}
-            >
-              {isFormLoading ? (
-                <div className="flex items-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  {t('buttons.saving')}
-                </div>
-              ) : (
-                t('buttons.save')
-              )}
-            </button>
-            <button
-              type="button"
-              className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto disabled:opacity-50"
-              onClick={onClose}
-              disabled={isFormLoading}
-              data-testid={`${testId}-cancel-button`}
-            >
-              {t('buttons.cancel')}
-            </button>
-          </div>
+          {/* Footer - Only shown if showButtons is true */}
+          {showButtons && (
+            <div className="bg-gray-50 px-6 py-4 sm:flex sm:flex-row-reverse sm:px-6">
+              <button
+                type="submit"
+                onClick={handleSubmit}
+                disabled={isFormLoading}
+                className="inline-flex w-full justify-center rounded-md bg-vitalgo-green px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-vitalgo-green-light focus:outline-none focus:ring-2 focus:ring-vitalgo-green sm:ml-3 sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
+                data-testid={`${testId}-submit-button`}
+              >
+                {isFormLoading ? (
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    {t('buttons.saving')}
+                  </div>
+                ) : (
+                  t('buttons.save')
+                )}
+              </button>
+              <button
+                type="button"
+                className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto disabled:opacity-50"
+                onClick={onClose}
+                disabled={isFormLoading}
+                data-testid={`${testId}-cancel-button`}
+              >
+                {t('buttons.cancel')}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -3,26 +3,30 @@
  * CountrySelect component for selecting country of origin
  */
 import React, { useState, useRef, useEffect } from 'react';
-import { Country, countries, getCountryByCode } from '../../data/countries';
+import { Country } from '../../data/countries';
 import { ChevronDown, Search } from 'lucide-react';
 
 interface CountrySelectProps {
   value: string; // Country code (e.g., "CO")
   onChange: (country: Country) => void;
+  countries: Country[]; // Countries list passed as prop
   placeholder?: string;
   label?: string;
   error?: string;
   required?: boolean;
+  isLoading?: boolean;
   'data-testid'?: string;
 }
 
 export const CountrySelect: React.FC<CountrySelectProps> = ({
   value,
   onChange,
+  countries,
   placeholder = "Selecciona tu país",
   label = "País",
   error,
   required = false,
+  isLoading = false,
   'data-testid': testId
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,16 +35,16 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const selectedCountry = getCountryByCode(value);
+  const selectedCountry = countries.find(c => c.code === value);
 
-  // Filter countries based on search term
+  // Update filtered countries when countries prop or search term changes
   useEffect(() => {
     const filtered = countries.filter(country =>
       country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       country.code.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredCountries(filtered);
-  }, [searchTerm]);
+  }, [searchTerm, countries]);
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -91,17 +95,21 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
         <button
           type="button"
           onClick={toggleDropdown}
+          disabled={isLoading}
           className={`
             relative w-full bg-white border rounded-lg px-3 py-3 text-left cursor-pointer
             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
             ${error ? 'border-red-300' : 'border-gray-300'}
             ${isOpen ? 'ring-2 ring-blue-500 border-blue-500' : 'hover:border-gray-400'}
+            ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}
           `}
           data-testid={`${testId}-button`}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              {selectedCountry ? (
+              {isLoading ? (
+                <span className="text-gray-500">Cargando países...</span>
+              ) : selectedCountry ? (
                 <>
                   <span className="text-xl">{selectedCountry.flag}</span>
                   <span className="text-gray-900">{selectedCountry.name}</span>
